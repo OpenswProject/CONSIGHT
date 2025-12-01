@@ -1,0 +1,80 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 10px;
+  border: 2px solid #e3e5e7;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 213px;
+  height: 70px;
+}
+
+.frame304 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  height: 48px;
+}
+
+.div2 {
+  color: #797d86;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  width: 183px;
+}
+
+.line5 {
+  border-top: 1.5px solid #eaedee;
+  width: 190px;
+}
+
+.frame303 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center; /* Adjusted for better alignment */
+  justify-content: center;
+  width: 171px;
+}
+
+.div3, .div4 {
+  color: #797d86;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  width: 75px;
+  cursor: pointer; /* Add cursor pointer for clickable elements */
+}
+
+.div4 {
+  width: 76px;
+}
+
+.line6 {
+  border-left: 1.5px solid #eaedee;
+  height: 20px;
+}

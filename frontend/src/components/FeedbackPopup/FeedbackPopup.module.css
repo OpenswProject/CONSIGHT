@@ -1,0 +1,845 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  max-width: 90%; /* 팝업의 최대 너비 */
+  max-height: 90%; /* 팝업의 최대 높이 */
+  overflow-y: auto; /* 내용이 길어지면 스크롤 */
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* 기존 style.css 내용을 CSS Modules에 맞게 조정 */
+.div {
+  /* padding: 10px; */ /* overlay와 popup에서 이미 패딩 처리 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* position: relative; */ /* popup이 relative이므로 제거 */
+}
+.div2 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 882px;
+  /* height: 684px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* popup이 relative이므로 제거 */
+}
+.frame300 {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 744px;
+  /* height: 566px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* div2가 relative이므로 제거 */
+}
+._10 {
+  color: #505050;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  /* position: relative; */ /* div2가 relative이므로 제거 */
+  width: 697px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.frame294 {
+  display: flex;
+  flex-direction: row;
+  gap: 52px;
+  align-items: flex-start;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame300이 relative이므로 제거 */
+}
+.frame261 {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame294가 relative이므로 제거 */
+}
+.frame41 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* height: 129px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* frame261이 relative이므로 제거 */
+}
+.div3 {
+  color: #535353;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  /* position: relative; */ /* frame41이 relative이므로 제거 */
+  width: 246px;
+}
+.frame20 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 277px;
+  /* height: 97px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* frame41이 relative이므로 제거 */
+}
+.frame37 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame20이 relative이므로 제거 */
+}
+.frame36 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 180px;
+  /* position: relative; */ /* frame37이 relative이므로 제거 */
+}
+._140 {
+  color: #82b79e;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  /* position: relative; */ /* frame36이 relative이므로 제거 */
+  width: 53px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+._200 {
+  color: #505050;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  /* position: relative; */ /* frame36이 relative이므로 제거 */
+  width: 85px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.mdiPencil { /* mdi-pencil -> mdiPencil */
+  border-radius: 20px;
+  padding: 3px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 21.75px;
+  height: 21.75px;
+  /* position: relative; */ /* frame36이 relative이므로 제거 */
+  overflow: hidden;
+}
+.frame301 {
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame37이 relative이므로 제거 */
+}
+.frame31 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 186px;
+  /* position: relative; */ /* frame301이 relative이므로 제거 */
+}
+.frame32 {
+  background: #e9eaeb;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2.5px;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 149px;
+  height: 32px;
+  /* position: relative; */ /* frame31이 relative이므로 제거 */
+}
+.frame27 {
+  background: linear-gradient(
+    -90deg,
+    rgba(130, 183, 158, 0.8) 0%,
+    rgba(221, 236, 231, 1) 100%
+  );
+  border-radius: 20px 10px 10px 20px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 126px;
+  height: 26px;
+  /* position: relative; */ /* frame32이 relative이므로 제거 */
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, -1);
+}
+.labelValue { /* label-value -> labelValue */
+  color: #676767;
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  /* position: relative; */ /* frame31이 relative이므로 제거 */
+  width: 41px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.frame268 {
+  background: #cde3da;
+  border-radius: 10px;
+  padding: 5px 8px 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 35px;
+  height: 23px;
+  /* position: relative; */ /* frame301이 relative이므로 제거 */
+}
+.div4 {
+  color: #4e5c56;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  /* position: relative; */ /* frame268이 relative이므로 제거 */
+}
+.frame277 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame261이 relative이므로 제거 */
+}
+.frame273 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 282px;
+  /* position: relative; */ /* frame277이 relative이므로 제거 */
+}
+.polygon1 { /* polygon-1 -> polygon1 */
+  border-radius: 0px;
+  flex-shrink: 0;
+  width: 10px;
+  height: 8px;
+  /* position: relative; */ /* frame273이 relative이므로 제거 */
+  overflow: visible;
+}
+._102 {
+  color: #535353;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  /* position: relative; */ /* frame273이 relative이므로 제거 */
+  width: 115px;
+}
+.frame34 {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 282px;
+  /* height: 317px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* frame277이 relative이므로 제거 */
+}
+.frame252 {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame34이 relative이므로 제거 */
+}
+.frame258 {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame252이 relative이므로 제거 */
+}
+.frame40 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame26 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 48px;
+  height: 23px;
+  /* position: relative; */ /* frame40이 relative이므로 제거 */
+}
+.ellipseFill { /* ellipse-fill -> ellipseFill */
+  background: #c9d3d0;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  /* position: relative; */ /* frame26이 relative이므로 제거 */
+}
+.div5 {
+  color: rgba(92, 92, 92, 0.7);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  /* position: relative; */ /* frame26이 relative이므로 제거 */
+}
+.frame322 {
+  background: #e9eaeb;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2.5px;
+  padding: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 139px;
+  height: 31px;
+  /* position: relative; */ /* frame40이 relative이므로 제거 */
+}
+.frame272 {
+  background: linear-gradient(
+    -90deg,
+    rgba(201, 211, 208, 1) 0%,
+    rgba(233, 240, 238, 1) 100%
+  );
+  border-radius: 15px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 63px;
+  height: 25px;
+  /* position: relative; */ /* frame322이 relative이므로 제거 */
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, -1);
+}
+.labelValue2 { /* label-value2 -> labelValue2 */
+  color: #9d9d9d;
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  /* position: relative; */ /* frame40이 relative이므로 제거 */
+  width: 41px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.frame44 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame45 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame46 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame47 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame42 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame274 {
+  background: linear-gradient(
+    -90deg,
+    rgba(217, 221, 223, 1) 0%,
+    rgba(243, 243, 243, 1) 100%
+  );
+  border-radius: 15px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 103px;
+  height: 25px;
+  /* position: relative; */ /* frame322이 relative이므로 제거 */
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, -1);
+}
+.frame48 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame49 {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  /* position: relative; */ /* frame258이 relative이므로 제거 */
+}
+.frame295 {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 362px;
+  /* position: relative; */ /* frame294이 relative이므로 제거 */
+}
+.frame297 {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame295이 relative이므로 제거 */
+}
+._103 {
+  color: #535353;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  /* position: relative; */ /* frame297이 relative이므로 제거 */
+  width: 279px;
+}
+.frame21 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  align-items: center;
+  justify-content: flex-end;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* height: 265px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* frame297이 relative이므로 제거 */
+}
+.frame298 {
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame21이 relative이므로 제거 */
+}
+.frame271 {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 280px;
+  /* position: relative; */ /* frame298이 relative이므로 제거 */
+}
+.frame265 {
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 2px;
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 53px;
+  /* position: relative; */ /* frame271이 relative이므로 제거 */
+}
+.frame267 {
+  display: flex;
+  flex-direction: row;
+  gap: 19px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 202px;
+  /* position: relative; */ /* frame265이 relative이므로 제거 */
+}
+.div6 {
+  color: #535353;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  /* position: relative; */ /* frame267이 relative이므로 제거 */
+  width: 42px;
+}
+.frame269 {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame267이 relative이므로 제거 */
+}
+.frame266 {
+  display: flex;
+  flex-direction: row;
+  gap: 11px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 105px;
+  /* position: relative; */ /* frame269이 relative이므로 제거 */
+}
+.ellipseFill2 { /* ellipse-fill2 -> ellipseFill2 */
+  background: #abcebe;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  /* position: relative; */ /* frame266이 relative이므로 제거 */
+  aspect-ratio: 1;
+}
+.ellipseFill3 { /* ellipse-fill3 -> ellipseFill3 */
+  background: #c9d3d0;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  /* position: relative; */ /* frame266이 relative이므로 제거 */
+  aspect-ratio: 1;
+}
+._3-5 { /* _3-5 -> _3-5 */
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  /* position: relative; */ /* frame269이 relative이므로 제거 */
+  width: 42px;
+}
+._3-5Span { /* _3-5-span -> _3-5Span */
+  color: #82b79e;
+}
+.frame91 { /* frame-91 -> frame91 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #c7d9d1;
+  border-width: 2px;
+  padding: 5px 8px 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 43px;
+  height: 28px;
+  /* position: relative; */ /* frame271이 relative이므로 제거 */
+}
+.div7 {
+  color: #676767;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  /* position: relative; */ /* frame91이 relative이므로 제거 */
+}
+.div8 {
+  text-align: left;
+  /* position: relative; */ /* frame298이 relative이므로 제거 */
+  width: 280px;
+  /* height: 161px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+}
+.div8Span { /* div-8-span -> div8Span */
+  color: #535353;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+.div8Span2 { /* div-8-span2 -> div8Span2 */
+  color: #535353;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+.div8Span3 { /* div-8-span3 -> div8Span3 */
+  color: #676767;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+.div8Span4 { /* div-8-span4 -> div8Span4 */
+  color: #676767;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+.frame2732 {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* position: relative; */ /* frame295이 relative이므로 제거 */
+}
+.frame259 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 21px;
+  /* position: relative; */ /* frame2732이 relative이므로 제거 */
+}
+.div9 {
+  color: #535353;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  /* position: relative; */ /* frame259이 relative이므로 제거 */
+  align-self: stretch;
+}
+.frame212 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* height: 159px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+  /* position: relative; */ /* frame2732이 relative이므로 제거 */
+}
+.div10 {
+  text-align: left;
+  /* position: relative; */ /* frame212이 relative이므로 제거 */
+  width: 248px;
+  /* height: 129px; */ /* 내용에 따라 유동적으로 조절되도록 제거 */
+}
+.div10Span { /* div-10-span -> div10Span */
+  color: #535353;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+.div10Span2 { /* div-10-span2 -> div10Span2 */
+  color: #535353;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+.div10Span3 { /* div-10-span3 -> div10Span3 */
+  color: #676767;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+.div10Span4 { /* div-10-span4 -> div10Span4 */
+  color: #676767;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+}
+.vector {
+  flex-shrink: 0;
+  width: 1.93%;
+  height: 2.49%;
+  /* position: absolute; */ /* popup이 relative이므로 제거 */
+  /* right: 3.4%; */ /* closeButton으로 대체 */
+  /* left: 94.67%; */ /* closeButton으로 대체 */
+  /* bottom: 93.71%; */ /* closeButton으로 대체 */
+  /* top: 3.8%; */ /* closeButton으로 대체 */
+  overflow: visible;
+}

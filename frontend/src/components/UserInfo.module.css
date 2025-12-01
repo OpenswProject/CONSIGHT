@@ -1,0 +1,187 @@
+.userInfo {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 2px;
+  padding: 0px 8px 0px 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 245px;
+  height: 128px;
+  position: absolute;
+  left: 99px;
+  top: 110px;
+}
+
+.frame281 {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame280 {
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.profile {
+  background: #dbdfe0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+
+.frame225 {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.usernameInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 99px;
+  height: 29px;
+  position: relative;
+}
+
+.frame224 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame223 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 93px;
+  position: relative;
+}
+
+.username {
+  color: #595e69;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 93px;
+  height: 25px;
+}
+
+.userinfo1 {
+  margin: -8px 0 0 0;
+  color: #9999a0;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+  height: 11px;
+}
+
+.riMoreLine {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame282 {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.vector {
+  flex-shrink: 0;
+  width: 20px;
+  height: 14.53px;
+  position: relative;
+  overflow: visible;
+  aspect-ratio: 20/14.53;
+}
+
+.frame91 {
+  background: #f3f3f3;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 1.5px;
+  padding: 5px 8px 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 47px;
+  height: 28px;
+  position: relative;
+}
+
+._4000 {
+  color: #4b858f;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+}
+
+._6000Pt {
+  color: #9999a0;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+}

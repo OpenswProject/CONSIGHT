@@ -1,0 +1,369 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 기존 style.css 내용을 CSS Modules에 맞게 조정 */
+.div {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 2px;
+  padding: 39px 37px 39px 37px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  height: 578px;
+  position: relative;
+}
+.vector {
+  flex-shrink: 0;
+  width: 2.01%;
+  height: 2.94%;
+  position: absolute;
+  right: 2.49%;
+  left: 95.5%;
+  bottom: 94.64%;
+  top: 2.42%;
+  overflow: visible;
+  cursor: pointer; /* 닫기 버튼이므로 커서 추가 */
+}
+.frame154 { /* frame-154 -> frame154 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 701px;
+  position: relative;
+}
+.frame151 { /* frame-151 -> frame151 */
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame107 { /* frame-107 -> frame107 */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame106 { /* frame-106 -> frame106 */
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 109px;
+  position: relative;
+}
+.frame150 { /* frame-150 -> frame150 */
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 220px;
+  position: relative;
+}
+.frame149 { /* frame-149 -> frame149 */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.username {
+  color: #575757;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 220px;
+}
+.frame148 { /* frame-148 -> frame148 */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 87px;
+  position: relative;
+}
+.frame111 { /* frame-111 -> frame111 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 36px;
+  position: relative;
+}
+.frame1072 { /* frame-1072 -> frame1072 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 63px;
+  position: relative;
+}
+.frame1062 { /* frame-1062 -> frame1062 */
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame141 { /* frame-141 -> frame141 */
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 410px;
+  position: relative;
+}
+.frame140 { /* frame-140 -> frame140 */
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.profile {
+  background: #dbdfe0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+.username2 {
+  color: #575757;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  width: 75px;
+}
+.userinfo1 { /* userinfo-1 -> userinfo1 */
+  color: #9999a0;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+  flex: 1;
+  height: 11px;
+}
+.riMoreLine { /* ri-more-line -> riMoreLine */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame198 { /* frame-198 -> frame198 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 64px;
+  position: relative;
+}
+.riMoreLine2 { /* ri-more-line2 -> riMoreLine2 */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame199 { /* frame-199 -> frame199 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 64px;
+  position: relative;
+}
+.riMoreLine3 { /* ri-more-line3 -> riMoreLine3 */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame203 { /* frame-203 -> frame203 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 64px;
+  position: relative;
+}
+.riMoreLine4 { /* ri-more-line4 -> riMoreLine4 */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame204 { /* frame-204 -> frame204 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 64px;
+  position: relative;
+}
+.riMoreLine5 { /* ri-more-line5 -> riMoreLine5 */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame205 { /* frame-205 -> frame205 */
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 578px;
+  height: 64px;
+  position: relative;
+}
+.riMoreLine6 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame197 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 535px;
+  height: 12px;
+  position: relative;
+}

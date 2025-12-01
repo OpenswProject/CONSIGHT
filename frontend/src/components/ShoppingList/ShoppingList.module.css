@@ -1,0 +1,245 @@
+.card { /* Corresponds to .frame-59 */
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 280px;
+  position: relative;
+  background-color: unset; /* Remove existing background */
+  border: none; /* Remove existing border */
+  box-shadow: none; /* Remove existing shadow */
+  padding: 0; /* Remove existing padding */
+}
+
+.title { /* Corresponds to .div18 */
+  color: var(--gray-57);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  width: 348px;
+}
+
+.list { /* Corresponds to .frame-85 and .frame-86 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.listItemsWrapper { /* Corresponds to .frame-86 */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.listItem { /* Corresponds to .frame-98, .frame-99, etc. */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 265px;
+  height: 49px;
+  position: relative;
+}
+
+.itemText { /* Corresponds to .div19, ._12 */
+  color: var(--gray-78);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px; /* Adjust as needed */
+}
+
+.categoryTagWrapper { /* Corresponds to .frame-91 */
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.categoryTag { /* Corresponds to .div10 */
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+  background-color: unset; /* Remove existing background */
+  padding: 0; /* Remove existing padding */
+  border-radius: 0; /* Remove existing border-radius */
+}
+
+.buttonsContainer { /* Corresponds to .frame-104 */
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 265px;
+  height: 49px;
+  position: relative;
+  margin-top: 0; /* Remove existing margin-top */
+}
+
+.buttonsInnerWrapper { /* Corresponds to .frame-1052 */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 247px;
+  height: 59px;
+  position: relative;
+}
+
+.button {
+  background: none;
+  border: none;
+  padding: 0;
+  width: auto;
+  height: auto;
+  flex: unset;
+  font-size: unset;
+  font-weight: unset;
+  color: unset;
+  text-align: unset;
+  transition: unset;
+  cursor: pointer;
+}
+
+.commonButtonStyle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center; /* Center text horizontally */
+  flex-shrink: 0;
+  position: relative;
+  height: 35px; /* Common height */
+  border-radius: 20px; /* Common border-radius */
+  border-style: solid;
+  border-width: 2px;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-57); /* Common text color */
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  /* Unified background and border from addButton */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-color: var(--gray-da); /* #dadee1 */
+  width: 113px; /* Unified width */
+}
+
+.moreButton {
+  composes: commonButtonStyle; /* Inherit common styles */
+}
+
+.addButton {
+  composes: commonButtonStyle; /* Inherit common styles */
+}
+
+.itemActions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px; /* Gap between category tag and the line */
+}
+
+.itemActionLine {
+  width: 10px; /* Horizontal line, shorter */
+  height: 2px; /* Thin line */
+  background-color: var(--gray-c5); /* Using a gray color from vars.css */
+  flex-shrink: 0; /* Prevent it from shrinking */
+}
+
+.addItemForm {
+  height: auto;
+  padding: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.addItemInput {
+  border: 1px solid var(--gray-c5);
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 13px;
+  font-family: "Inter-Regular", sans-serif;
+  width: 100%;
+}
+
+.categorySelect {
+  border: 1px solid var(--gray-c5);
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 12px;
+  font-family: "Inter-Regular", sans-serif;
+  flex-grow: 1;
+}
+
+.saveButton, .cancelButton {
+  composes: commonButtonStyle;
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+}
+
+.cancelButton {
+  background: #f0f0f0;
+  border-color: #ccc;
+  color: #333;
+}
+
+.removeItemButton {
+  color: var(--gray-78); /* 아이템 텍스트와 유사한 색상 */
+  font-size: 18px; /* 좀 더 크게 */
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 10px; /* 카테고리 태그와의 간격 */
+  padding: 0 5px; /* 클릭 영역 확보 */
+}

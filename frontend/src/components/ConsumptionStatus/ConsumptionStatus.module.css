@@ -1,0 +1,858 @@
+.container { /* This is the wrapper for frame-6 content */
+  /* The actual frame-6 styles are applied to the parent div in App.jsx */
+  /* This container is just a logical grouping for the content within frame-6 */
+  display: flex;
+  flex-direction: row;
+  gap: 45px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 945px;
+  height: 347px;
+  position: relative;
+  border-radius: 20px;
+  padding: 12px 111px 0px 111px;
+}
+
+.frame21 { /* Corresponds to .frame-21 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 285px;
+  position: relative;
+}
+
+.pieChart { /* Corresponds to .pie-chart */
+  padding: 0px 8px 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 277px;
+  height: 321px;
+  position: relative;
+}
+
+.frame25 { /* Corresponds to .frame-25 */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 232px;
+  position: relative;
+}
+
+.frame33 { /* Corresponds to .frame-33 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame24 { /* Corresponds to .frame-24 */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame196 { /* Corresponds to .frame-196 */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.div3 { /* Corresponds to .div3 */
+  color: var(--gray-51);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+
+.line4 { /* Corresponds to .line-4 */
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 250px;
+  height: 0px;
+  position: relative;
+}
+
+._11 { /* Corresponds to ._11 */
+  color: var(--gray-53);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  width: 170px;
+}
+
+.frame22 { /* Corresponds to .frame-22 */
+  margin: -9px 0 0 0;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 179px;
+  position: relative;
+}
+
+.frame23 { /* Corresponds to .frame-23 */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 1;
+  height: 179px;
+  position: relative;
+}
+
+.frame44 { /* Corresponds to .frame-44 */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.legends { /* Corresponds to .legends */
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-end;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 80px;
+  height: 195px;
+  position: relative;
+  overflow: hidden;
+}
+
+.frame35 { /* Corresponds to .frame-35 */
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.legend { /* Corresponds to .legend */
+  padding: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.frame27 { /* Corresponds to .frame-27 */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ellipseFill { /* Corresponds to .ellipse-fill */
+  background: var(--green-ab);
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+
+.div4 { /* Corresponds to .div4 */
+  color: rgba(92, 92, 92, 0.7);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  position: relative;
+}
+
+.legendNode { /* Corresponds to .legend-node */
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.basicNode { /* Corresponds to .basic-node */
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  left: 8px;
+  top: 8px;
+}
+
+.ellipseFill2 { /* Corresponds to .ellipse-fill2 */
+  background: var(--gray-c9);
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: calc(50% - 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ellipseFill3 { /* Corresponds to .ellipse-fill3 */
+  background: var(--gray-e0);
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: calc(50% - 8px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.mainChart { /* Corresponds to .main-chart */
+  flex-shrink: 0;
+  width: 159px;
+  height: 198px;
+  position: relative;
+}
+
+.pieLayer { /* Corresponds to .pie-layer */
+  width: 75.96%;
+  height: 79%;
+  position: absolute;
+  right: 20.4%;
+  left: 3.64%;
+  bottom: 12.73%;
+  top: 8.27%;
+}
+
+.pie3 { /* Corresponds to .pie-3 */
+  background: var(--gray-e0);
+  border-radius: 50%;
+  width: 129px;
+  height: 129px;
+  position: absolute;
+  left: calc(50% - 56.67px);
+  top: calc(50% - 58.09px);
+}
+
+.pie2 { /* Corresponds to .pie-2 */
+  background: var(--gray-c9);
+  border-radius: 50%;
+  width: 129px;
+  height: 129px;
+  position: absolute;
+  left: calc(50% - 56.67px);
+  top: calc(50% - 58.09px);
+}
+
+.pie1 { /* Corresponds to .pie-1 */
+  background: var(--green-ab);
+  border-radius: 50%;
+  width: 129px;
+  height: 129px;
+  position: absolute;
+  left: calc(50% - 56.67px);
+  top: calc(50% - 58.09px);
+}
+
+.labelContent { /* Corresponds to .label-content */
+  width: 33px;
+  height: 23px;
+  position: static;
+}
+
+.labelName { /* Corresponds to .label-name */
+  color: var(--gray-9d);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: absolute;
+  left: calc(50% - 51.67px);
+  top: calc(50% - 74.09px);
+  width: 30px;
+  height: 10px;
+}
+
+.labelValue { /* Corresponds to .label-value */
+  color: var(--gray-9d);
+  text-align: left;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  position: absolute;
+  left: calc(50% - 47.67px);
+  top: calc(50% - 62.09px);
+  width: 29px;
+  height: 11px;
+}
+
+.frame34 { /* Corresponds to .frame-34 */
+  margin: -16px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 76px;
+  position: relative;
+}
+
+.frame31 { /* Corresponds to .frame-31 */
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 262px;
+  position: relative;
+}
+
+.frame26 { /* Corresponds to .frame-26 */
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 48px;
+  height: 23px;
+  position: relative;
+}
+
+.ellipseFill4 { /* Corresponds to .ellipse-fill4 */
+  background: var(--gray-c9);
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+
+.progressBarContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 7px; /* Adjusted gap */
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 148px; /* Original width */
+  height: 22px; /* Original height */
+}
+
+.progressBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2.5px solid var(--gray-da);
+  background-color: var(--gray-e9);
+}
+
+.progressBar .rc-progress-line-wrap {
+  padding: 3px; /* Simulate original padding */
+}
+
+.progressBar .rc-progress-line-path {
+  border-radius: 8px; /* Original border-radius for progress */
+  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
+}
+
+.progressLabel {
+  position: absolute;
+  color: var(--gray-9d);
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Center the label */
+}
+
+.frame322 { /* Corresponds to .frame-322 */
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ellipseFill5 { /* Corresponds to .ellipse-fill5 */
+  background: var(--gray-e0);
+  border-radius: 50%;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 1px;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  position: relative;
+}
+
+.frame49 { /* Corresponds to .frame-49 */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame222 { /* Corresponds to .frame-222 */
+  border-radius: 20px;
+  padding: 0px 0px 11px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 277px;
+  height: 325px;
+  position: relative;
+}
+
+.frame42 { /* Corresponds to .frame-42 */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame41 { /* Corresponds to .frame-41 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.div5 { /* Corresponds to .div5 */
+  color: var(--gray-53);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 246px;
+}
+
+.frame19 { /* Corresponds to .frame-19 */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e3);
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 277px;
+  height: 97px;
+  position: relative;
+}
+
+.frame37 { /* Corresponds to .frame-37 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 219px;
+  position: relative;
+}
+
+.frame36 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  gap: 8px;
+}
+
+.viewAmountWrapper, .editAmountWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+._140 {
+  color: var(--green-ab);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: relative;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+._200 {
+  color: #505050;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  position: relative;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.frame312 { /* Corresponds to .frame-312 */
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 186px;
+  position: relative;
+}
+
+.frame40 { /* Corresponds to .frame-40 */
+  display: flex;
+  flex-direction: column;
+  gap: 19px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame39 { /* Corresponds to .frame-39 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.div6 { /* Corresponds to .div6 */
+  color: var(--gray-bb);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 246px;
+}
+
+.frame20 { /* Corresponds to .frame-20 */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e3);
+  border-width: 1px;
+  padding: 12px 111px 12px 111px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 277px;
+  height: 97px;
+  position: relative;
+}
+
+._240 { /* Corresponds to ._240 */
+  color: var(--gray-aa);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  position: relative;
+  width: 53px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+._2002 { /* Corresponds to ._2002 */
+  color: var(--gray-74);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  position: relative;
+  width: 112px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.frame313 { /* Corresponds to .frame-313 */
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 227px;
+  position: relative;
+}
+
+.frame18 { /* Corresponds to .frame-18 */
+  border-radius: 20px;
+  padding: 0px 0px 20px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 277px;
+  height: 333px;
+  position: relative;
+}
+
+.frame195 { /* Corresponds to .frame-195 */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 268px;
+  position: relative;
+}
+
+.frame43 { /* Corresponds to .frame-43 */
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 277px;
+  position: relative;
+}
+
+.frame342 { /* Corresponds to .frame-342 */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 128px;
+  position: relative;
+}
+
+.frame332 { /* Corresponds to .frame-332 */
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame343 { /* Corresponds to .frame-343 */
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.thickProgressBarContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 219px; /* Adjusted width for thick bar */
+  height: 32px; /* Original height for thick bar */
+}
+
+.thickProgressBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2.5px solid #dadee1;
+  background-color: #e9eaeb;
+}
+
+.thickProgressBar .rc-progress-line-wrap {
+  padding: 3px; /* Simulate original padding */
+}
+
+.thickProgressBar .rc-progress-line-path {
+  border-radius: 20px 10px 10px 20px; /* Original border-radius for thick progress */
+  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
+}
+
+.thickProgressLabel {
+  position: absolute;
+  color: #676767;
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Center the label */
+}
+
+.inputField {
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--green-ab);
+  width: 100%;
+  max-width: 60px;
+  height: 37px;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  border-radius: 0;
+  -moz-appearance: textfield;
+}
+.inputField:focus {
+    outline: none;
+    border-bottom-color: var(--green-ab);
+}
+.inputField::-webkit-outer-spin-button,
+.inputField::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.targetInput {
+  color: #747474;
+  font-size: 18px;
+}
+.targetInput:focus {
+    border-bottom-color: #747474;
+}
+
+.amountSeparator, .amountUnit {
+  color: #747474;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  height: 37px;
+  white-space: nowrap;
+}
+.amountSeparator {
+    padding: 0 2px;
+}
+
+.editButton {
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  flex-shrink: 0;
+}

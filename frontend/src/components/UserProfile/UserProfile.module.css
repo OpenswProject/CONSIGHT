@@ -1,0 +1,97 @@
+.card { /* Corresponds to .user-info */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e3);
+  border-width: 2px;
+  padding: 0px 8px 0px 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 71px;
+  position: relative;
+  box-shadow: none; /* Removed existing box-shadow */
+}
+
+.userInfo { /* Corresponds to .frame-225 */
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.avatar { /* Corresponds to .profile */
+  background: var(--gray-db);
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+
+.textInfo { /* Corresponds to .username-info, .frame-224, .frame-223 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 99px;
+  height: 29px;
+  position: relative;
+  flex-grow: 0; /* Override flex-grow: 1 */
+}
+
+.username { /* Corresponds to .username2 */
+  color: var(--gray-59);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 93px;
+  height: 25px;
+}
+
+.userInfoText { /* Corresponds to .userinfo-1 */
+  margin-top: -8px; /* Adjusted margin to match reference */
+  color: var(--gray-99);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+  height: 11px;
+}
+
+.moreIcon { /* Corresponds to .ri-more-line */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+  font-size: unset; /* Reset font-size */
+  color: unset; /* Reset color */
+  font-weight: unset; /* Reset font-weight */
+  letter-spacing: unset; /* Reset letter-spacing */
+}

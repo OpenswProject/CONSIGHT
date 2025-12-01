@@ -1,0 +1,45 @@
+.container {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border: 2px solid #e3e5e7;
+  padding: 13px 48px 12px 48px; /* Reference-based padding */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center; /* Center content horizontally */
+  justify-content: center; /* Center content vertically */
+  width: 945px;
+  height: 161px; /* Restore fixed height from reference */
+  box-sizing: border-box;
+  margin-top: 15px; /* Move box down */
+}
+
+.title {
+  color: #656d81;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  width: 824px; /* Match reference content width */
+  text-align: left;
+}
+
+.graph {
+  display: grid;
+  grid-template-rows: repeat(5, 1fr); /* Changed to 5 rows as requested */
+  grid-auto-flow: column;
+  gap: 3px; /* Match reference */
+  width: 100%; /* Changed to 100% to fill parent content area */
+  /* Removed overflow-x: auto; and padding-bottom: 5px; */
+}
+
+.day {
+  width: 13px;
+  height: 13px;
+  border-radius: 4px;
+  background-color: #9DA9AF; /* New default color */
+}
+

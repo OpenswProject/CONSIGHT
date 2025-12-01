@@ -1,0 +1,87 @@
+.progressBarContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 7px; /* Adjusted gap */
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 148px; /* Original width */
+  height: 22px; /* Original height */
+}
+
+.progressBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2.5px solid var(--gray-da);
+  background-color: var(--gray-e9);
+}
+
+.progressBar .rc-progress-line-wrap {
+  padding: 3px; /* Simulate original padding */
+}
+
+.progressBar .rc-progress-line-path {
+  border-radius: 8px; /* Original border-radius for progress */
+  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
+}
+
+.progressLabel {
+  position: absolute;
+  color: var(--gray-9d);
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Center the label */
+}
+
+.thickProgressBarContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 219px; /* Adjusted width for thick bar */
+  height: 32px; /* Original height for thick bar */
+}
+
+.thickProgressBar {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 2.5px solid #dadee1;
+  background-color: #e9eaeb;
+}
+
+.thickProgressBar .rc-progress-line-wrap {
+  padding: 3px; /* Simulate original padding */
+}
+
+.thickProgressBar .rc-progress-line-path {
+  border-radius: 20px 10px 10px 20px; /* Original border-radius for thick progress */
+  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
+}
+
+.thickProgressLabel {
+  position: absolute;
+  color: #676767;
+  text-align: center;
+  font-family: "Inter-SemiBold", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Center the label */
+}

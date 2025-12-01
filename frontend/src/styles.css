@@ -1,0 +1,38 @@
+
+a,
+button,
+input,
+select,
+h1,
+h2,
+h3,
+h4,
+h5,
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-decoration: none;
+    background: none;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+menu, ol, ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #f3f3f3;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* min-height: 100vh; */ /* Removed as per reference design */
+    /* padding-top: 50px; */ /* Removed as per reference design */
+    height: 2598px; /* Set height based on reference .div */
+    position: relative;
+    overflow-x: hidden; /* Only hide horizontal overflow */
+}

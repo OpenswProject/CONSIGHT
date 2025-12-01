@@ -1,0 +1,1655 @@
+/* Variables from vars.css and style.css */
+:root {
+  --gray-f1: #f1f1f1;
+  --gray-eb: #ebebea;
+  --gray-f3: #f3f3f3;
+  --gray-da: #dadee1;
+  --gray-db: #dbdfe0;
+  --gray-57: #575757;
+  --gray-78: #787878;
+  --gray-79: #797d86;
+  --gray-c5: #c5c5c5;
+  --gray-e1: #e1e4e5;
+  --gray-81: #818181;
+  --gray-ea: #eaedee;
+  --green-d6: #d6e1df;
+  --green-8b: #8bafa9;
+  --gray-59: #595e69;
+  --gray-a3: #a3a3a3;
+  --gray-f5: #f5f5f5;
+}
+
+.reviewContentWrapper{
+ display: flex;
+ flex-direction: row;
+ padding: 0px 0px 0px 0px;
+ width: 100%;
+ align-items: flex-start;
+
+}
+
+.reviewFeedMainContainer {
+  background: var(--gray-f1);
+  min-height: 100vh; /* Adjust as needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 45px; /* To account for the header if it's fixed */
+  position: relative;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.backgroundGradient { /* Replaces rectangle10 */
+  background: linear-gradient(
+    180deg,
+    var(--gray-eb) 2.248714119195938%,
+    var(--gray-f3) 100%
+  );
+  width: 100%;
+  height: 669px; /* Keep original height or adjust */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1; /* Send to background */
+}
+
+.contentWrapper { /* Replaces rectangle11 */
+  background: var(--gray-f3);
+  border-radius: 20px;
+  width: 90%; /* Use percentage for responsiveness */
+  max-width: 1335px; /* Max width from reference */
+  min-height: 688px; /* Keep original height or adjust */
+  margin-top: 20px; /* Space from top */
+  /* Removed position: relative as it's not strictly needed for flex children */
+  padding: 20px; /* Add some padding */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; /* Arrange children vertically */
+  align-items: center; /* Center children horizontally */
+  gap: 20px; /* Space between children */
+}
+
+.filterSortCategoryWrapper {
+  display: flex;
+  flex-direction: row; /* Arrange horizontally */
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  gap: 20px; /* Space between sections */
+  width: 100%;
+  justify-content: flex-start; /* Align items to the start */
+  align-items: flex-start;
+  margin-bottom: 20px; /* Space below this section */
+}
+
+.frame58 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  /* Removed absolute positioning */
+  width: 100%; /* Adjust width to fit container */
+  padding: 0 20px; /* Add some horizontal padding */
+  box-sizing: border-box;
+}
+
+.div2 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  width: 64px;
+}
+
+.frame96 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame95 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.div3 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+}
+
+.frame97 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame59 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  /* Removed absolute positioning */
+  width: 100%; /* Adjust width to fit container */
+  padding: 0 20px; /* Add some horizontal padding */
+  box-sizing: border-box;
+}
+
+.frame112 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.div4 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  width: 43px;
+}
+
+.polygon1 {
+  margin: 0 0 0 -6px;
+  border-radius: 0px;
+  flex-shrink: 0;
+  width: 10px;
+  height: 8px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame113 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame51 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap; /* Allow items to wrap */
+  /* Removed absolute positioning */
+  width: 100%; /* Adjust width to fit container */
+  padding: 0 20px; /* Add some horizontal padding */
+  box-sizing: border-box;
+}
+
+.frame91 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame93 {
+  background: var(--green-d6);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--green-8b);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame88 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame94 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame89 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame962 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame90 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame92 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame972 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+
+.frame182 {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  /* Removed absolute positioning */
+  width: 100%; /* Adjust width to fit container */
+  padding: 0 20px; /* Add some horizontal padding */
+  box-sizing: border-box;
+}
+
+.frame181 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 875px; /* Keep max-width from reference */
+  /* Removed position: relative as it's not strictly needed for flex children */
+}
+
+.frame180 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* Removed position: relative */
+  width: 100%; /* Ensure it takes full width */
+}
+
+.frame245 {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame236 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 256px;
+  position: relative;
+}
+.frame2222 {
+  /* Corresponds to .frame-144 */
+  position: relative;
+  width: 300px;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  flex-direction: row; 
+}
+
+.frame106 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100px;
+  position: relative;
+}
+
+.a {
+  color: var(--gray-59);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+  width: 100px;
+}
+
+._30 {
+  color: var(--gray-79);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 100px;
+}
+
+.frame183 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  /* Removed position: relative */
+}
+
+.frame83 {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 22px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame191 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 11px;
+  position: relative;
+}
+.frame1901 { /* Corresponds to frame-193 */
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  box-sizing: border-box; /* Include padding in width */
+  margin: 0 auto; /* 중앙 정렬 */
+  top: 0px; /* mainpage reference의 top 값 */
+}
+.group2095 {
+  flex-shrink: 0;
+  width: 5px;
+  height: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.group2096 {
+  flex-shrink: 0;
+  width: 5px;
+  height: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame189 {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 22px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.group20952 {
+  flex-shrink: 0;
+  width: 5px;
+  height: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame187 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame184 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 24px;
+  position: relative;
+}
+
+.frame1804 {
+  width: 20px;
+  display: flex;
+  padding: 0px 15px 0px 15px;
+}
+
+.frame1804 { /* Corresponds to .div25 */
+  width: 20px;
+  display: flex;
+  padding: 0px 15px 0px 15px;
+}
+
+.frame84 {
+  border-radius: 5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 22px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+._1 {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 16px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame185 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 24px;
+  position: relative;
+}
+
+.frame842 {
+  background: var(--gray-e1);
+  border-radius: 5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 22px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+._2 {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 16px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame186 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 24px;
+  position: relative;
+}
+
+._3 {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 16px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame1872 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 24px;
+  position: relative;
+}
+
+._4 {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 16px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame188 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 24px;
+  position: relative;
+}
+
+._5 {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 16px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+}
+
+.frame1882 {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 22px;
+  position: relative;
+}
+
+.group20953 {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame190 {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px;
+  padding: 6px 7px 6px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 22px;
+  position: relative;
+}
+
+.group20954 {
+  flex-shrink: 0;
+  width: 5px;
+  height: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.group20962 {
+  flex-shrink: 0;
+  width: 5px;
+  height: 6px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame244 {
+  display: flex;
+  flex-direction: row;
+  gap: 23px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  padding: 0px 0px 0px 20px;
+  /* Removed position: relative */
+  width: 100%; /* Ensure it takes full width */
+}
+
+.frame147 {
+  background: linear-gradient(
+    180deg,
+    var(--gray-f5) 0%,
+    var(--gray-f1) 100%
+  );
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 265px;
+  height: 35px;
+  position: relative;
+}
+
+.frame1407 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: row; /* Changed to row for search bar layout */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 224px;
+  height: 28px;
+  padding: 0px 0px 0px 0px;
+  /* Removed absolute positioning */
+}
+
+.frame105 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: row; /* Changed to row for search bar layout */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 224px;
+  height: 28px;
+  padding: 0px 0px 0px 0px;
+  /* Removed absolute positioning */
+}
+
+.frame1222 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: column; /* Changed to row for search bar layout */
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 400px;
+
+  padding: 0px 0px 0px 0px;
+  /* Removed absolute positioning */
+}
+
+.frame146 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* Changed to flex-start */
+  flex-shrink: 0;
+  width: auto; /* Changed to auto to fit content */
+  position: relative;
+  gap: 5px; /* Gap between icon, line, and text */
+}
+
+
+.group1 {
+  padding: 0px 0px 0px 15px;
+  flex-shrink: 0;
+  width: 25.8px !important; /* 18px의 3/5 */
+  height: 25.8px !important; /* 18px의 3/5 */
+  position: relative;
+  overflow: visible;
+  align-items: center;
+}
+
+.line54 {
+  background-color: var(--gray-da); /* Changed to background-color for a solid line */
+  width: 1.5px; /* Vertical line */
+  height: 20px; /* Height of the line */
+  flex-shrink: 0;
+}
+
+.searchText {
+  color: var(--gray-99); /* Light gray color */
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  flex-grow: 1; /* Allow text to take available space */
+}
+
+.group1 {
+  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  position: relative;
+  overflow: visible;
+}
+
+.line5 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 14px;
+  height: 0px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+
+.frame119 {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  /* Removed height: 839px; to allow content to define height */
+  /* Removed position: relative */
+  width: 100%; /* Ensure it takes full width */
+}
+
+.frame50 {
+  display: flex;
+  flex-direction: row;
+  gap: 39px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 875px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.frame151 {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 527px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.frame1072 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 524px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+
+
+.frame1062 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  /* Removed position: relative */
+}
+
+.frame150 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* Removed position: relative */
+}
+
+.frame243 {
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* Removed position: relative */
+}
+
+.frame109 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 109px;
+  position: relative;
+}
+
+.profile {
+  background: var(--gray-db);
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+
+.username {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 90px;
+}
+
+.riMoreLine {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame149 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  /* Removed position: relative */
+}
+
+.div5 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 187px;
+}
+
+._20251116 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  /* Removed position: relative */
+}
+
+.frame148 {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  /* Removed position: relative */
+}
+
+.frame912 {
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  height: 33px;
+  /* Removed position: relative */
+}
+
+.div6 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+}
+
+.frame111 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: auto; /* Allow content to define width */
+  height: 36px;
+  /* Removed position: relative */
+}
+
+.frame913 {
+  background: var(--gray-e1);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e1);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 86px;
+  height: 33px;
+  position: relative;
+}
+
+.frame153 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 514px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.div7 {
+  color: var(--gray-57);
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  /* Removed position: relative */
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 469px; /* Keep max-width from reference */
+  height: auto; /* Allow content to define height */
+}
+
+.frame129 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-end;
+  justify-content: flex-end;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: auto; /* Allow content to define height */
+  /* Removed position: relative */
+}
+
+.frame246 {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame248 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 43px;
+  position: relative;
+}
+
+.frame131 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame247 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 21px;
+  position: relative;
+}
+
+._10 {
+  color: var(--gray-79);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  width: 33px;
+}
+
+.frame249 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 43px;
+  position: relative;
+}
+
+.frame132 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame250 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 43px;
+  position: relative;
+}
+
+.frame130 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+
+.frame179 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 300px;
+}
+.section01{
+  display: flex;
+  padding: 0px 0px 0px 30px;
+  flex-direction: column;
+  gap: 20px;
+}
+.line52 {
+  margin-top: -2px;
+  border-style: solid;
+  border-color: var(--gray-ea);
+  border-width: 2px 0 0 0;
+  flex-shrink: 0;
+  width: 200px;
+  position: relative; /* Keep relative for rotation */
+  transform-origin: 0 0;
+  transform: rotate(-90deg) scale(1, 1);
+}
+
+.frame176 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 330px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+.frame1706 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 370px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+.frame174 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 232px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.line7 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-ea);
+  border-width: 1.5px 0 0 0;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 0px;
+  /* Removed position: relative */
+}
+
+.frame1063 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 201px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.frame141 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 183px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.frame140 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  /* Removed position: relative */
+}
+
+.profile2 {
+  background: var(--gray-db);
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+
+.username2 {
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+  width: 56px;
+}
+
+.frame139 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%; /* Allow content to define width */
+  /* Removed position: relative */
+}
+
+.div8 {
+  color: var(--gray-a3);
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  position: relative;
+  width: 200px;
+}
+
+.riMoreLine2 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  /* Removed position: relative */
+  overflow: visible;
+}
+
+.line6 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-ea);
+  border-width: 1.5px 0 0 0;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 0px;
+  /* Removed position: relative */
+}
+
+.frame197 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%; /* Adjust width to be responsive */
+  max-width: 200px; /* Keep max-width from reference */
+  /* Removed position: relative */
+}
+
+.line53 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-db);
+  border-width: 1.5px 0 0 0;
+  flex: 1;
+  height: 0px;
+  /* Removed position: relative */
+}
+
+.moreCommentsText {
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  /* Removed position: relative */
+  width: auto; /* Allow content to define width */
+}
+
+.bookmarkOutline {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 264px;
+  top: 392px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+/* Sidebar Styles */
+.sidebarsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 328px; /* Adjust based on reference frame-172 width */
+}
+
+.shoppingListSection,
+.recommendedReviewsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.sidebarTitle {
+  color: var(--gray-57);
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.shoppingListItems,
+.recommendedReviewItems {
+  border-radius: 20px;
+  padding: 20px 40px;
+  background: linear-gradient(
+    180deg,
+    var(--gray-f5) 0%,
+    var(--gray-f1) 100%
+  );
+  border: 2px solid var(--gray-da);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shoppingListItem,
+.recommendedReviewItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-ea); /* Separator */
+}
+
+.shoppingListItem:last-child,
+.recommendedReviewItem:last-child {
+  border-bottom: none;
+}
+
+.itemName {
+  color: var(--gray-78);
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.shoppingListActions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.viewMoreButton,
+.addButton {
+  background: linear-gradient(
+    180deg,
+    var(--gray-f5) 0%,
+    var(--gray-f1) 100%
+  );
+  border-radius: 20px;
+  border: 2px solid var(--gray-da);
+  padding: 10px 20px;
+  color: var(--gray-57);
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.recommendedReviewItem .userInfo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.productNameSmall {
+  color: var(--gray-78);
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reviewMeta {
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+}
+
+.reviewDateSmall {
+  color: var(--gray-78);
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+.categoryTagSmall {
+  color: var(--gray-57);
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}

@@ -1,0 +1,46 @@
+.popup {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 10px;
+  border: 2px solid #e3e5e7;
+  padding: 0px 14px; /* Adjusted padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 213px; /* Adjusted width */
+  height: 113px; /* Adjusted height */
+  position: absolute; /* Position relative to the parent */
+  top: 100%; /* Position below the trigger */
+  left: 50%; /* Center horizontally relative to the parent */
+  transform: translateX(-50%); /* Adjust for exact centering */
+  z-index: 100; /* Ensure it's above other content */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Occupy full width of popup */
+}
+
+.div2, .div3, .username {
+  color: #797d86;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%; /* Occupy full width of userInfo */
+}
+
+.line5, .line4 {
+  border-top: 1.5px solid #eaedee;
+  width: 190px; /* Match original width */
+}

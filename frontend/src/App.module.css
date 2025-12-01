@@ -1,0 +1,1452 @@
+.mainWrapper {
+  background: red; /* 디버깅용 */
+  height: 2598px; /* Matches .div height */
+  position: relative;
+  overflow: hidden;
+  width: 100%; /* Changed from 1440px to 100% */
+  max-width: 1440px; /* Added max-width */
+  margin: 0 auto; /* Center the main wrapper */
+}
+
+.mainContentArea { /* Corresponds to rectangle-11 */
+  background: var(--gray-f3);
+  border-radius: 20px;
+  width: 1335px;
+  max-width: 1335px; /* Keep max-width */
+  height: 688px;
+  position: relative; /* Changed from absolute to relative */
+  left: unset; /* Remove left */
+  top: 78px; /* Keep top for vertical positioning */
+  margin: 0 auto; /* Center the content area */
+}
+.frame291 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame209 {
+  display: flex;
+  flex-direction: row;
+  gap: 17px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 33px;
+  position: relative;
+}
+.profile {
+  background: #dbdfe0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+.frame225 {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.usernameInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 99px;
+  height: 29px;
+  position: relative;
+}
+.frame224 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame223 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 93px;
+  position: relative;
+}
+.username {
+  color: #595e69;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  position: relative;
+  width: 93px;
+  height: 25px;
+}
+.userinfo1 {
+  margin: -8px 0 0 0;
+  color: #9999a0;
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+  height: 11px;
+}
+.riMoreLine {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.userInfo {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e3e5e7;
+  border-width: 2px;
+  padding: 0px 14px 0px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 71px;
+  position: relative;
+}
+
+.backgroundRectangle {
+  background: linear-gradient(180deg, rgba(235, 235, 234, 1) 2.248714119195938%, rgba(235, 235, 234, 1) 15.865384042263031%, rgba(242, 242, 242, 1) 100%); /* 원래 body 그라데이션 */
+  width: 100%; /* 가로를 fill로 변경 */
+  height: 682px;
+  position: absolute;
+  left: 0px;
+  top: 58px;
+  z-index: -1; /* 다른 요소 뒤에 배치 */
+}
+
+.frame193 { /* Corresponds to frame-193 */
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 1335px; /* rectangle-11의 width */
+  height: 688px; /* rectangle-11의 height */
+  box-sizing: border-box; /* Include padding in width */
+  margin: 0 auto; /* 중앙 정렬 */
+  top: 0px; /* mainpage reference의 top 값 */
+}
+
+.frame192 { /* Corresponds to frame-192 */
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 954px;
+  height: 563px; /* mainpage reference의 height */
+  position: relative;
+  margin-top: -50px; /* 위로 이동 */
+}
+.frame191 { /* Corresponds to frame-193 */
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 1335px; /* rectangle-11의 width */
+  height: 688px; /* rectangle-11의 height */
+  box-sizing: border-box; /* Include padding in width */
+  margin: 0 auto; /* 중앙 정렬 */
+  top: 0px; /* mainpage reference의 top 값 */
+}
+
+.headerRow {
+  display: flex;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  align-items: center;
+  width: 100%; /* 부모 요소의 전체 너비를 사용하도록 설정 */
+  padding: 0 0px; /* 좌우 패딩 0px */
+  gap: 20px; /* 요소들 사이의 간격 */
+}
+
+.usernameTitle { /* Corresponds to .username */
+  color: var(--gray-57);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  align-self: stretch;
+}
+
+.div2Wrapper { /* Corresponds to div2 */
+  flex-shrink: 0;
+  width: 100%; /* Adjusted for responsiveness */
+  height: 525px;
+  position: static;
+}
+
+.frame45 { /* Corresponds to .frame-45 */
+  display: flex;
+  flex-direction: column;
+  gap: 0px; /* gap을 0으로 줄여 위로 이동 */
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%; /* Adjusted for responsiveness */
+  height: 525px;
+  position: relative; /* Changed from absolute to relative */
+  left: 0px;
+  top: 0px; /* 위로 이동 */
+}
+
+.frame6 { /* Corresponds to .frame-6 */
+  border-radius: 20px;
+  padding: 12px 111px 0px 111px;
+  display: flex;
+  flex-direction: row;
+  gap: 45px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%; /* Adjusted for responsiveness */
+  height: 347px;
+  position: relative;
+}
+
+.line1 { /* Corresponds to .line-1 */
+  background: rgba(239, 239, 239, 0.7);
+  width: 300.56px;
+  height: 0px;
+  position: absolute;
+  left: 682.8px;
+  top: 362.01px;
+  transform-origin: 0 0;
+  transform: rotate(-90deg) scale(1, 1);
+}
+
+.frame48 { /* Corresponds to .frame-48 */
+  padding: 0px 0px 0px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 33px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 245px;
+  height: 563px; /* mainpage reference의 height */
+  position: relative;
+}
+
+.frame207 { /* Corresponds to .frame-207 */
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 245px;
+  position: relative;
+  margin-top: -20px;
+}
+
+.line5 { /* Corresponds to .line-5 */
+  margin-top: -1.5px;
+  margin-bottom: 15px; /* 여백 추가 */
+  border-style: solid;
+  border-color: var(--gray-db);
+  border-width: 1.5px 0 0 0;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 0px;
+  position: relative;
+}
+
+.frame205 { /* Corresponds to .frame-205 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  margin: auto;
+}
+
+.frame142 { /* Corresponds to .frame-142 */
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(100% - 108px); /* Adjusted for responsiveness (1320px + 54px + 54px = 1428px) */
+  max-width: 1350px;
+  position: absolute;
+  left: 10px;
+  top: 686px;
+}
+
+.line42 { /* Corresponds to .line-42 */
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 100%; /* Adjusted for responsiveness */
+  height: 0px;
+  position: relative;
+}
+
+.frame117 { /* Corresponds to .frame-117 */
+  display: flex;
+  flex-direction: row;
+  gap: 35px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.frame145 { /* Corresponds to .frame-145 */
+  display: flex;
+  flex-direction: column;
+  gap: 45px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: calc(100% - 140px); /* Adjusted for responsiveness (1304px + 70px + 70px = 1444px) */
+  max-width: 1304px;
+  position: absolute;
+  left: 70px;
+  top: 1312px;
+}
+.frame120 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 549px;
+  position: relative;
+}
+.frameshort {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 300px;
+  position: relative;
+}
+.frame107 {
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 549px;
+  position: relative;
+}
+.frame107short {
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 300px;
+  position: relative;
+}
+.frame138 {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame194 {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame134 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame109 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  height: 147px;
+  position: relative;
+}
+.frame113 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 144px;
+  position: relative;
+}
+.frame1072 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 569px;
+  position: relative;
+}
+.frame106 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 109px;
+  position: relative;
+}
+.frame243 {
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame1092 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 109px;
+  position: relative;
+}
+.profile {
+  background: #dbdfe0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+.username {
+  color: #787878;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 90px;
+}
+.riMoreLine {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame251 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 167px;
+  height: 24px;
+  position: relative;
+}
+.div {
+  color: #787878;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 162px;
+}
+.maskGroup {
+  margin: 0 0 0 -18px;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  position: relative;
+  overflow: visible;
+}
+.iconParkSolidCheckOne {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+.frame108 {
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 129px;
+  position: relative;
+}
+._20251116 {
+  color: #787878;
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  position: relative;
+}
+.frame91 {
+  background: #f3f3f3;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #c5c5c5;
+  border-width: 2px;
+  padding: 5px 8px 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
+}
+.div2 {
+  color: #575757;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+}
+.frame110 {
+  display: flex;
+  flex-direction: row;
+  gap: 102px;
+  align-items: flex-start;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  width: 560px;
+  height: 106px;
+  position: relative;
+}
+.div3 {
+  color: #787878;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+  width: 402px;
+  height: 129px;
+}
+.frame111 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 36px;
+  position: relative;
+}
+.frame912 {
+  background: #e5e7e8;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #e5e7e8;
+  border-width: 2px;
+  padding: 5px 8px 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 28px;
+  position: relative;
+}
+.div4 {
+  color: #818181;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+}
+.frame129 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 506px;
+  height: 13px;
+  position: relative;
+}
+.frame156 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  height: 13px;
+  position: relative;
+}
+.line5 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: #eaedee;
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 400px;
+  height: 0px;
+  position: relative;
+}
+.frame246 {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 139px;
+  height: 13px;
+  position: relative;
+}
+.frame248 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 41px;
+  position: relative;
+}
+.frame131 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+.frame247 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 21px;
+  position: relative;
+}
+._10 {
+  color: #797d86;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  width: 33px;
+}
+.frame249 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 41px;
+  position: relative;
+}
+.frame132 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+.frame250 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 41px;
+  position: relative;
+}
+.frame130 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 9px;
+  height: 8px;
+  position: relative;
+  overflow: visible;
+}
+.frame157 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame137 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame1073 {
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 456px;
+  height: 70px;
+  position: relative;
+}
+.frame1062 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame141 {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 410px;
+  position: relative;
+}
+.frame140 {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.profile2 {
+  background: #dbdfe0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+.username2 {
+  color: #787878;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  width: 75px;
+}
+.riMoreLine2 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame139 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 249px;
+  position: relative;
+}
+.div5 {
+  color: #787878;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  position: relative;
+  width: 254px;
+}
+.riMoreLine3 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame1392 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 262px;
+  position: relative;
+}
+.div6 {
+  color: #787878;
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  position: relative;
+  width: 249px;
+}
+.frame1382 {
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #dadee1;
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 456px;
+  height: 70px;
+  position: relative;
+}
+.riMoreLine4 {
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
+  position: relative;
+  overflow: visible;
+}
+.frame1393 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 241px;
+  position: relative;
+}
+.frame197 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 535px;
+  position: relative;
+}
+.line52 {
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: #dbdfe0;
+  border-width: 1.5px 0 0 0;
+  flex: 1;
+  height: 0px;
+  position: relative;
+}
+.div7 {
+  color: #787878;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+  width: 39px;
+}
+.materialsymbolsbookmarkoutlinerounded {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  left: 264px;
+  top: 392px;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+.frame143 { /* Corresponds to .frame-143 */
+  display: flex;
+  flex-direction: row;
+  gap: 66px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.reviewFeedTitle { /* Corresponds to .div8 */
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  width: 162px;
+}
+
+.frame144 { /* Corresponds to .frame-144 */
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame2222 {
+  /* Corresponds to .frame-144 */
+  position: relative;
+  width: 300px;
+  height: 40px;
+  align-items: center;
+  display: flex;
+  flex-direction: row; 
+}
+
+.frame147 { /* Corresponds to .frame-147 */
+  background: linear-gradient(180deg,rgba(245,245,245,1) 0%,rgba(241,241,241,1) 100%);
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 224px;
+  height: 28px;
+  position: absolute;
+  left: 1155px;
+  top: 771px;
+}
+
+.frame146 { /* Corresponds to .frame-146 */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 20px;
+  position: relative;
+}
+
+.group1 { /* Corresponds to .group-1 */
+  flex-shrink: 0;
+  width: 11px;
+  height: 11px;
+  position: relative;
+  overflow: visible;
+}
+
+.line54 { /* Corresponds to .line-54 */
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 14px;
+  height: 0px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+}
+
+.frame208 { /* Corresponds to .frame-208 */
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: 764px;
+  top: 2234px;
+}
+
+.line55 { /* Corresponds to .line-55 */
+  margin-top: -1.5px;
+  border-style: solid;
+  border-color: var(--gray-db);
+  border-width: 1.5px 0 0 0;
+  flex-shrink: 0;
+  width: 490px;
+  height: 0px;
+  position: relative;
+}
+
+.frame913 { /* Corresponds to .frame-913 */
+  background: #F3F3F3; /* 배경색 변경 */
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-e1); /* border-color는 유지 */
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 106px;
+  height: 28px;
+  position: relative;
+}
+
+.div25 { /* Corresponds to .div25 */
+  color: #818181;
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+}
+
+.frame184 { /* Corresponds to .div25 */
+  width: 20px;
+  display: flex;
+  padding: 0px 15px 0px 15px;
+}
+.frame282 { /* Corresponds to .frame-282 */
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+}
+
+.vector { /* Corresponds to .vector */
+  flex-shrink: 0;
+  width: 20px;
+  height: 14.53px;
+  position: relative;
+  overflow: visible;
+  aspect-ratio: 20/14.53;
+}
+
+.frame914 { /* Corresponds to .frame-914 */
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e3);
+  border-width: 1.5px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 47px;
+  height: 28px;
+  position: relative;
+}
+
+._4000 { /* Corresponds to ._4000 */
+  color: var(--blue-4b);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+}
+
+._6000pt { /* Corresponds to ._6000-pt */
+  color: var(--gray-99);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  position: relative;
+}
+
+
+
+
+
+.line7 { /* Corresponds to .line-7 */
+  margin-top: -2px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px 0 0 0;
+  width: 10px;
+  height: 0px;
+  position: absolute;
+  left: 300px;
+  top: 1013px;
+}
+
+.line8 { /* Corresponds to .line-8 */
+  margin-top: -2px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px 0 0 0;
+  width: 10px;
+  height: 0px;
+  position: absolute;
+  left: 300px;
+  top: 1069px;
+}
+
+.line9 { /* Corresponds to .line-9 */
+  margin-top: -2px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px 0 0 0;
+  width: 10px;
+  height: 0px;
+  position: absolute;
+  left: 300px;
+  top: 1123px;
+}
+
+.line56 { /* Corresponds to .line-56 */
+  margin-top: -2px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px 0 0 0;
+  width: 10px;
+  height: 0px;
+  position: absolute;
+  left: 300px;
+  top: 903px;
+}
+
+/* Existing styles that might need adjustment or removal */
+.mainContainer {
+  /* This will be restructured to match the reference's main content areas */
+  /* For now, keeping it as a placeholder or removing if not directly used */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: absolute; /* To allow positioning within mainWrapper */
+  left: 100px;
+  top: 110px;
+  width: calc(100% - 200px); /* Adjust width based on left/right padding */
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fullWidthSection {
+  /* This will be restructured */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.middleSection {
+  /* This will be restructured */
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+
+.actionButton {
+  width: 100%;
+  padding: 12px 20px; /* frame-5의 padding */
+  border-radius: 20px; /* frame-5의 border-radius */
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  border: 2px solid var(--gray-e3); /* frame-5의 border-style, border-color, border-width */
+  transition: background-color 0.2s;
+  height: 43.37px; /* frame-5의 height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.primary {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  color: var(--gray-59);
+}
+.primary:hover {
+  background-color: var(--gray-eb);
+}
+
+.secondary {
+  background-color: var(--gray-f3);
+  color: var(--gray-59);
+}
+.secondary:hover {
+  background-color: var(--gray-f3);
+}
+
+.notificationsCard {
+  background-color: var(--gray-f3);
+  border-radius: 20px; /* Changed from 12px to 20px */
+  padding: 11px 14px 110px 14px; /* Matches frame-199 padding */
+  border: 1.5px solid #dadee1; /* Matches frame-199 border */
+  width: 100%;
+  box-shadow: none; /* Removed box-shadow */
+  height: 318px; /* Matches frame-199 height */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.notificationsHeader {
+  font-size: 14px; /* Changed from 18px to 14px */
+  font-weight: 700;
+  margin-bottom: 14px; /* Matches frame-204 gap */
+  color: var(--gray-59); /* Matches a3 color */
+  text-align: center;
+}
+
+.notificationItem {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Matches frame-106 gap */
+  padding: 0; /* Removed padding */
+  font-size: 12px; /* Changed from 14px to 12px */
+  color: var(--gray-57); /* Matches username3 color */
+  height: 38px; /* Matches frame-174 height */
+  width: 200px; /* Matches frame-174 width */
+  position: relative;
+  flex-direction: column; /* Changed to column to stack elements */
+  align-items: flex-start; /* Align items to start */
+  justify-content: flex-start;
+  margin-bottom: 10px; /* Gap between notification items */
+}
+
+.notificationAvatar {
+  width: 20px; /* Changed from 28px to 20px */
+  height: 20px; /* Changed from 28px to 20px */
+  border-radius: 50%;
+  background-color: var(--gray-db); /* Matches profile2 background */
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* Specific styles for notification text to match the span structure */
+.notificationText {
+  color: var(--gray-57);
+  text-align: left;
+  font-family: "-", sans-serif; /* Use generic sans-serif for now */
+  font-size: 12px;
+  font-weight: 400;
+  position: absolute;
+  left: 25px; /* Adjust based on avatar width and gap */
+  top: 0;
+  width: 164px; /* Matches username3 width */
+}
+
+.notificationText span:first-child {
+  font-family: "Inter-Regular", sans-serif;
+}
+
+.notificationText span:nth-child(2) {
+  font-family: "Inter-Bold", sans-serif;
+  font-weight: 700;
+}
+
+.notificationLine {
+  border-top: 1.5px solid var(--gray-ea); /* Matches line-6 */
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+
+@media (max-width: 992px) {
+  .mainContainer {
+    grid-template-columns: 1fr;
+  }
+  .middleSection {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .mainContainer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+.notificationControls {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 14px;
+  color: var(--gray-57);
+}
+
+.notificationControlIcon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}

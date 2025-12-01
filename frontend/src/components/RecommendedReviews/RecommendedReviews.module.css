@@ -1,0 +1,391 @@
+.card { /* Corresponds to .frame-60 */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start; /* Changed to flex-start to align title and search bar */
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 1010px; /* This width is from the reference, might need adjustment */
+  position: relative;
+  background-color: unset; /* Remove existing background */
+  border: none; /* Remove existing border */
+  box-shadow: none; /* Remove existing shadow */
+  padding: 0; /* Remove existing padding */
+}
+
+.headerAndSearchBar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title { /* Corresponds to .div22 within .frame-124 */
+  color: var(--gray-57);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  position: relative;
+  /* Removed flex: 1 */
+}
+
+.frame147 {
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 10px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 6px 11px;
+  display: flex;
+  flex-direction: row; /* Changed to row for search bar layout */
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 224px;
+  height: 28px;
+  /* Removed absolute positioning */
+}
+
+.frame146 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* Changed to flex-start */
+  flex-shrink: 0;
+  width: auto; /* Changed to auto to fit content */
+  position: relative;
+  gap: 5px; /* Gap between icon, line, and text */
+}
+
+.group1 {
+  flex-shrink: 0;
+  width: 10.8px !important; /* 18px의 3/5 */
+  height: 10.8px !important; /* 18px의 3/5 */
+  position: relative;
+  overflow: visible;
+}
+
+.line54 {
+  background-color: var(--gray-da); /* Changed to background-color for a solid line */
+  width: 1.5px; /* Vertical line */
+  height: 20px; /* Height of the line */
+  flex-shrink: 0;
+}
+
+.searchText {
+  color: var(--gray-99); /* Light gray color */
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 14px;
+  flex-grow: 1; /* Allow text to take available space */
+}
+
+.reviewList { /* Corresponds to .frame-116, .frame-114, .frame-115 */
+  display: flex;
+  flex-direction: row; /* Changed to row for two columns */
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+  width: 100%; /* Ensure it takes full width */
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+}
+
+.reviewColumn { /* New class to group review items into columns */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  flex: 1; /* Take equal space */
+  min-width: 480px; /* Minimum width for a column */
+}
+
+.reviewItem { /* Corresponds to .frame-832, .frame-1053, etc. */
+  background: linear-gradient(
+    180deg,
+    rgba(245, 245, 245, 1) 0%,
+    rgba(241, 241, 241, 1) 100%
+  );
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-da);
+  border-width: 2px;
+  padding: 10px 20px 10px 23px;
+  display: flex;
+  flex-direction: column; /* Changed to column to stack elements */
+  gap: 10px; /* Gap between elements inside review item */
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 497px; /* Specific width from reference */
+  height: 132px; /* Specific height from reference */
+  position: relative;
+}
+
+.reviewContentWrapper { /* Corresponds to .frame-1133 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.reviewHeader { /* Corresponds to .frame-1076 */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 473px;
+  position: relative;
+}
+
+.userInfo { /* Corresponds to .frame-1065 */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.avatar { /* Corresponds to .profile3 */
+  background: var(--gray-db);
+  border-radius: 50%;
+  flex-shrink: 0;
+  width: 25px;
+  height: 25px;
+  position: relative;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, 1);
+}
+
+.username { /* Corresponds to .username6 */
+  color: var(--gray-78);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  width: 70px;
+}
+
+.moreIcon { /* Corresponds to .ri-more-line11, etc. */
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  position: relative;
+  overflow: visible;
+}
+
+.reviewTitle { /* Corresponds to .div23 */
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  width: 200px;
+  word-break: keep-all;
+}
+
+.reviewMeta { /* Corresponds to .frame-108 */
+  display: flex;
+  flex-direction: row;
+  gap: 13px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.date { /* Corresponds to ._2025-11-16 */
+  color: var(--gray-78);
+  text-align: center;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  position: relative;
+}
+
+.categoryTagWrapper { /* Corresponds to .frame-91 */
+  background: var(--gray-f3);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-c5);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 28px;
+  position: relative;
+}
+
+.categoryTag { /* Corresponds to .div10 */
+  color: var(--gray-57);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  position: relative;
+  background-color: unset; /* Remove existing background */
+  padding: 0; /* Remove existing padding */
+  border-radius: 0; /* Remove existing border-radius */
+}
+
+.reviewTextWrapper { /* Corresponds to .frame-1103 */
+  display: flex;
+  flex-direction: row;
+  gap: 102px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 473px;
+  height: 42px;
+  position: relative;
+}
+
+.reviewText { /* Corresponds to .div24 */
+  color: var(--gray-78);
+  text-align: left;
+  font-family: "Inter-Regular", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  position: relative;
+  width: 291px;
+  line-height: unset; /* Remove existing line-height */
+}
+
+.productLinkWrapper { /* Corresponds to .frame-111 */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 36px;
+  position: relative;
+}
+
+.productLinkButton { /* Corresponds to .frame-912 */
+  background: var(--gray-e1);
+  border-radius: 20px;
+  border-style: solid;
+  border-color: var(--gray-e1);
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  flex-shrink: 0;
+  height: 28px;
+  position: relative;
+  color: var(--gray-57); /* Changed to dark gray */
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.reviewActions { /* Corresponds to .frame-155 */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  width: 442px;
+  position: relative;
+  margin-top: 0; /* Remove existing margin-top */
+}
+
+.actionItem { /* Corresponds to .frame-1318, etc. */
+  display: flex;
+  flex-direction: row;
+  gap: 3px; /* Reduced gap */
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: auto; /* Let width be determined by content */
+  position: relative;
+  font-size: unset; /* Remove existing font-size */
+  color: unset; /* Remove existing color */
+  padding: 2px;
+}
+
+.actionIcon { /* Corresponds to .frame-1318, etc. */
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  position: relative;
+  overflow: visible;
+}
+
+.actionCount { /* New class for the count text */
+  color: var(--gray-79);
+  text-align: center;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  position: relative;
+  width: auto;
+}
+
+.usernameAndMore {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1px; /* Small gap between username and more icon */
+}
+
+.moreIcon { /* Specific for more options icon */
+  width: 23px;
+  height: 23px;
+  cursor: pointer;
+}
+
+.actionItemGroup {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.likeIcon {
+  width: 12px;
+  height: 12px;
+}

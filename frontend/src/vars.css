@@ -1,0 +1,39 @@
+:root {
+  --black: rgba(0, 0, 0, 1);
+  --white: rgba(255, 255, 255, 1);
+  --licorice: rgba(26, 26, 26, 1);
+  --brown-dark: #4E342E;
+
+  /* Colors from mainpage reference/style.css */
+  --gray-f1: #f1f1f1;
+  --gray-f3: #f3f3f3;
+  --gray-eb: #ebedea; /* rgba(235, 235, 234, 1) */
+  --gray-f2: #f2f2f2; /* rgba(242, 242, 242, 1) */
+  --gray-57: #575757;
+  --gray-da: #dadee1;
+  --gray-51: #515151;
+  --gray-53: #535353;
+  --green-ab: #abcebe;
+  --gray-c9: #c9d3d0;
+  --gray-e0: #e0e4e6;
+  --gray-9d: #9d9d9d;
+  --gray-e9: #e9eaeb;
+  --gray-bb: #bbbbbb;
+  --gray-aa: #aaaaaa;
+  --gray-74: #747474;
+  --gray-e3: #e3e5e7;
+  --gray-65: #656d81;
+  --gray-db: #dbdfe0;
+  --gray-59: #595e69;
+  --gray-99: #9999a0;
+  --gray-ea: #eaedee;
+  --gray-78: #787878;
+  --gray-c5: #c5c5c5;
+  --gray-e1: #e1e4e5;
+  --blue-4b: #4b858f;
+  --gray-79: #797d86;
+  --green-5c: #5ca196;
+  --gray-39: #393a3b;
+  --gray-64788299: rgba(100, 120, 130, 0.6);
+  --green-82b79ecc: rgba(130, 183, 158, 0.8);
+}
