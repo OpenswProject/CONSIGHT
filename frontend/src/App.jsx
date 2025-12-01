@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styles from "./App.module.css";
 import { Header } from "./components/Header/Header";
@@ -12,9 +12,14 @@ import ConsumePlanPage from "./pages/ConsumePlanPage"; // Import ConsumePlanPage
 import Mypage from "./pages/Mypage"; // Import Mypage
 import ReviewWritePage from "./pages/ReviewWritePage"; // Import ReviewWritePage
 import Userprofile from "./pages/Userprofile"; // Import Userprofile
+import LoginPage from "./pages/LoginPage"; // Import LoginPage
+import SignupPage from "./pages/SignupPage"; // Import SignupPage
 
-const HomePage = ({ user, notifications }) => (
+const HomePage = ({ user, notifications, apiMessage }) => (
   <>
+    <div style={{ textAlign: 'center', padding: '1rem', backgroundColor: '#f0f0f0' }}>
+      <strong>Backend-API-Test:</strong> {apiMessage}
+    </div>
     <div className={styles.backgroundRectangle}></div> {/* 새로 추가 */}
     {/* Corresponds to rectangle-11 */}
     <div className={styles.mainContentArea}>
@@ -403,17 +408,38 @@ export default function App() {
     "팔로우중인 USERNAME 님의 새로운 글 업로드",
   ];
 
+  const [apiMessage, setApiMessage] = useState("Loading from backend...");
+
+  useEffect(() => {
+    fetch('/api/test')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(data => {
+        setApiMessage(data);
+      })
+      .catch(error => {
+        setApiMessage("Failed to connect to backend. Is it running and is there a GET /api/test endpoint?");
+        console.error("Fetch error:", error);
+      });
+  }, []);
+
   return (
     <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage user={user} notifications={notifications} />} />
+          <Route path="/" element={<HomePage user={user} notifications={notifications} apiMessage={apiMessage} />} />
           <Route path="/review-feed" element={<ReviewFeedPage />} />
           <Route path="/consume-plan" element={<ConsumePlanPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/review-write" element={<ReviewWritePage />} /> {/* ReviewWritePage 라우팅 추가 */}
           <Route path="/Userprofile" element={<Userprofile />} /> {/* Userprofile 라우팅 추가 */}
+          <Route path="/login" element={<LoginPage />} /> {/* LoginPage 라우팅 추가 */}
+          <Route path="/signup" element={<SignupPage />} /> {/* SignupPage 라우팅 추가 */}
         </Routes>
     </BrowserRouter>
   );
