@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styles from "./App.module.css";
 import { Header } from "./components/Header/Header";
@@ -15,11 +15,43 @@ import Userprofile from "./pages/Userprofile"; // Import Userprofile
 import LoginPage from "./pages/LoginPage"; // Import LoginPage
 import SignupPage from "./pages/SignupPage"; // Import SignupPage
 
-const HomePage = ({ user, notifications, apiMessage }) => (
-  <>
-    <div style={{ textAlign: 'center', padding: '1rem', backgroundColor: '#f0f0f0' }}>
+import MyProfileMoreInfoPopup from "./components/MyProfileMoreInfoPopup/MyProfileMoreInfoPopup"; // Import MyProfileMoreInfoPopup
+import NameChangePopup from "./components/NameChangePopup/NameChangePopup"; // Import NameChangePopup
+
+const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add currentUser prop
+  const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
+  const [showNameChangePopup, setShowNameChangePopup] = useState(false);
+  const moreOptionsRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (moreOptionsRef.current && !moreOptionsRef.current.contains(event.target)) {
+        setShowMyProfileMoreInfoPopup(false);
+      }
+    };
+
+    if (showMyProfileMoreInfoPopup) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMyProfileMoreInfoPopup]);
+
+  const handleNameChangeConfirm = (newUsername) => {
+    console.log("New username from HomePage:", newUsername);
+    // Here you would typically dispatch an action to update the username in the backend
+    // and then update the currentUser state in App.jsx
+    setShowNameChangePopup(false);
+  };
+
+  return (
+    <>
       <strong>Backend-API-Test:</strong> {apiMessage}
-    </div>
+    
     <div className={styles.backgroundRectangle}></div> {/* 새로 추가 */}
     {/* Corresponds to rectangle-11 */}
     <div className={styles.mainContentArea}>
@@ -31,7 +63,7 @@ const HomePage = ({ user, notifications, apiMessage }) => (
               {user.username} 님의 소비현황
             </div>
             <div className={styles.frame282}>
-              <img className={styles.vector} src="/public2/leaf_point_icon.svg" alt="Leaf Point Icon" />
+              <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
               <div className={styles.frame914}>
                 <div className={styles._4000}>4000</div>
               </div>
@@ -41,7 +73,7 @@ const HomePage = ({ user, notifications, apiMessage }) => (
           <div className={styles.div2Wrapper}> {/* Corresponds to div2 */}
             <div className={styles.frame45}> {/* Corresponds to frame-45 */}
               <div className={styles.frame6}> {/* Corresponds to frame-6 */}
-                <ConsumptionStatus username={user.username} />
+                <ConsumptionStatus username={user.username} currentUser={user} />
               </div>
               <VisitHistory /> {/* Render VisitHistory here */}
               {/* Other elements from frame-45 if any */}
@@ -59,12 +91,15 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                                 <div className={styles.usernameInfo}>
                                   <div className={styles.frame224}>
                                     <div className={styles.frame223}>
-                                      <div className={styles.username}>USERNAME</div>
+                                      <div className={styles.username}>{user.username}</div>
                                     </div>
                                   </div>
-                                  <div className={styles.userinfo1}>USERINFO_1</div>
+                                  <div className={styles.userinfo1}>{user.userInfo}</div>
                                 </div>
-                                <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" />
+                                <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
+                                    <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowMyProfileMoreInfoPopup(!showMyProfileMoreInfoPopup)} />
+                                    {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} currentUser={currentUser} />}
+                                  </div>
                               </div>
                             </div>
                             
@@ -93,8 +128,8 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                 ))}
               </div>
               <div className={styles.notificationControls}>
-                <img src="/public2/left_icon.svg" alt="Previous" className={styles.notificationControlIcon} />
-                <img src="/public2/right_icon.svg" alt="Next" className={styles.notificationControlIcon} />
+                <img src="/left_icon.svg" alt="Previous" className={styles.notificationControlIcon} />
+                <img src="/right_icon.svg" alt="Next" className={styles.notificationControlIcon} />
               </div>
             </div>
           </div>
@@ -117,8 +152,8 @@ const HomePage = ({ user, notifications, apiMessage }) => (
           <div className={styles.frame2222}> {/* Corresponds to frame-183 */}
           
               <div className={styles.frame191}> {/* Corresponds to frame-191 */}
-                <img className={styles.group20953} src="/public2/leftleft_icon.svg" alt="<<" />
-                <img className={styles.group2096} src="/public2/left_icon.svg" alt="<" />
+                <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" />
+                <img className={styles.group2096} src="/left_icon.svg" alt="<" />
               </div>
     
                 <div className={styles.frame184}> 
@@ -148,8 +183,8 @@ const HomePage = ({ user, notifications, apiMessage }) => (
             
 
                 <div className={styles.frame191}> {/* Corresponds to frame-191 */}
-                  <img className={styles.group20953} src="/public2/right_icon.svg" alt=">" />
-                  <img className={styles.group2096} src="/public2/rightright_icon.svg" alt=">>" />
+                  <img className={styles.group20953} src="/right_icon.svg" alt=">" />
+                  <img className={styles.group2096} src="/rightright_icon.svg" alt=">>" />
                 </div>
           </div>
         </div>
@@ -169,11 +204,11 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                                 <div className={styles.profile}></div>
                                 <div className={styles.username}>USERNAME</div>
                               </div>
-                              <img className={styles.riMoreLine} src="/public2/More_info.svg" alt="More Options" />
+                              <img className={styles.riMoreLine} src="/More_info.svg" alt="More Options" />
                             </div>
                             <div className={styles.frame251}>
                               <div className={styles.div}>스노우쉴드 롱패딩</div>
-                              <img className={styles.maskGroup} src="/public2/check.svg" alt="Product Image" />
+                              <img className={styles.maskGroup} src="/check.svg" alt="Product Image" />
                             </div>
                             <div className={styles.iconParkSolidCheckOne}></div>
                           </div>
@@ -210,19 +245,19 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                     <div className={styles.line5}></div>
                     <div className={styles.frame246}>
                       <div className={styles.frame248}>
-                        <img className={styles.frame131} src="/public2/bookmark_icon.svg" alt="Like" />
+                        <img className={styles.frame131} src="/bookmark_icon.svg" alt="Like" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
                       </div>
                       <div className={styles.frame249}>
-                        <img className={styles.frame132} src="/public2/comment_icon.svg" alt="Comment" />
+                        <img className={styles.frame132} src="/comment_icon.svg" alt="Comment" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
                       </div>
                       <div className={styles.frame250}>
-                        <img className={styles.frame130} src="/public2/like.svg" alt="Share" />
+                        <img className={styles.frame130} src="/like.svg" alt="Share" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
@@ -238,7 +273,7 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                           <div className={styles.frame140}>
                             <div className={styles.profile2}></div>
                             <div className={styles.username2}>USERNAME</div>
-                            <img className={styles.riMoreLine2} src="/public2/More_info.svg"alt="More Options" />
+                            <img className={styles.riMoreLine2} src="/More_info.svg"alt="More Options" />
                           </div>
                           <div className={styles.frame139}>
                             <div className={styles.div5}>
@@ -256,7 +291,7 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                         <div className={styles.frame140}>
                           <div className={styles.profile2}></div>
                           <div className={styles.username2}>USERNAME</div>
-                          <img className={styles.riMoreLine3} src="/public2/More_info.svg" alt="More Options" />
+                          <img className={styles.riMoreLine3} src="/More_info.svg" alt="More Options" />
                         </div>
                         <div className={styles.frame1392}>
                           <div className={styles.div6}>
@@ -273,7 +308,7 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                         <div className={styles.frame140}>
                           <div className={styles.profile2}></div>
                           <div className={styles.username2}>USERNAME</div>
-                          <img className={styles.riMoreLine4} src="/public2/More_info.svg" alt="More Options" />
+                          <img className={styles.riMoreLine4} src="/More_info.svg" alt="More Options" />
                         </div>
                         <div className={styles.frame1393}>
                           <div className={styles.div6}>
@@ -308,11 +343,11 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                                 <div className={styles.profile}></div>
                                 <div className={styles.username}>USERNAME</div>
                               </div>
-                              <img className={styles.riMoreLine} src="/public2/More_info.svg" alt="More Options" />
+                              <img className={styles.riMoreLine} src="/More_info.svg" alt="More Options" />
                             </div>
                             <div className={styles.frame251}>
                               <div className={styles.div}>스노우쉴드 롱패딩</div>
-                              <img className={styles.maskGroup} src="/public2/check.svg" alt="Product Image" />
+                              <img className={styles.maskGroup} src="/check.svg" alt="Product Image" />
                             </div>
                             <div className={styles.iconParkSolidCheckOne}></div>
                           </div>
@@ -349,19 +384,19 @@ const HomePage = ({ user, notifications, apiMessage }) => (
                     <div className={styles.line5}></div>
                     <div className={styles.frame246}>
                       <div className={styles.frame248}>
-                        <img className={styles.frame131} src="/public2/bookmark_icon.svg" alt="Like" />
+                        <img className={styles.frame131} src="/bookmark_icon.svg" alt="Like" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
                       </div>
                       <div className={styles.frame249}>
-                        <img className={styles.frame132} src="/public2/comment_icon.svg" alt="Comment" />
+                        <img className={styles.frame132} src="/comment_icon.svg" alt="Comment" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
                       </div>
                       <div className={styles.frame250}>
-                        <img className={styles.frame130} src="/public2/like.svg" alt="Share" />
+                        <img className={styles.frame130} src="/like.svg" alt="Share" />
                         <div className={styles.frame247}>
                           <div className={styles._10}>10</div>
                         </div>
@@ -394,11 +429,15 @@ const HomePage = ({ user, notifications, apiMessage }) => (
     </div>
   </>
 );
+}
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState(null); // Add state for current user
+
+  // Placeholder user object, will be replaced by currentUser if logged in
   const user = {
-    username: "USERNAME",
-    userInfo: "USERINFO_1",
+    username: currentUser ? currentUser.username : "USERNAME",
+    userInfo: currentUser ? currentUser.email : "USERINFO_1", // Assuming userInfo will be email
   };
 
   const notifications = [
@@ -411,6 +450,7 @@ export default function App() {
   const [apiMessage, setApiMessage] = useState("Loading from backend...");
 
   useEffect(() => {
+    // Existing /api/test call
     fetch('/api/test')
       .then(response => {
         if (!response.ok) {
@@ -429,17 +469,17 @@ export default function App() {
 
   return (
     <BrowserRouter>
-        <Header />
+        <Header currentUser={currentUser} setCurrentUser={setCurrentUser} /> {/* Pass currentUser and setCurrentUser to Header */}
         <Routes>
           <Route path="/" element={<HomePage user={user} notifications={notifications} apiMessage={apiMessage} />} />
           <Route path="/review-feed" element={<ReviewFeedPage />} />
-          <Route path="/consume-plan" element={<ConsumePlanPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/review-write" element={<ReviewWritePage />} /> {/* ReviewWritePage 라우팅 추가 */}
-          <Route path="/Userprofile" element={<Userprofile />} /> {/* Userprofile 라우팅 추가 */}
-          <Route path="/login" element={<LoginPage />} /> {/* LoginPage 라우팅 추가 */}
-          <Route path="/signup" element={<SignupPage />} /> {/* SignupPage 라우팅 추가 */}
+          <Route path="/consume-plan" element={<ConsumePlanPage currentUser={currentUser} />} />
+          <Route path="/profile/:username" element={<ProfilePage currentUser={currentUser} />} />
+          <Route path="/mypage" element={<Mypage currentUser={currentUser} />} />
+          <Route path="/review-write" element={<ReviewWritePage />} />
+          {/* <Route path="/Userprofile" element={<Userprofile currentUser={currentUser} />} /> Userprofile 라우팅은 ProfilePage로 통일 */}
+          <Route path="/login" element={<LoginPage setCurrentUser={setCurrentUser} />} /> {/* Pass setCurrentUser to LoginPage */}
+          <Route path="/signup" element={<SignupPage />} />
         </Routes>
     </BrowserRouter>
   );

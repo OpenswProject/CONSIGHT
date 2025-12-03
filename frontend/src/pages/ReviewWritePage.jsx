@@ -16,10 +16,57 @@ const ReviewWritePage = () => {
     }
   };
 
-  const handleSubmit = () => {
-    // 리뷰 업로드 로직
-    console.log({ title, category, receiptImage, productLink, reviewContent });
-    alert('리뷰가 업로드되었습니다!');
+  const handleSubmit = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      // Optionally redirect to login page
+      // navigate('/login');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('category', category);
+    formData.append('productLink', productLink);
+    formData.append('reviewContent', reviewContent);
+    if (receiptImage) {
+      // Convert base64 image to Blob if receiptImage is a data URL
+      // Or if it's a File object, append directly
+      // For simplicity, assuming receiptImage is a File object from input
+      // If receiptImage is a data URL, you'd need to convert it to a Blob
+      const response = await fetch(receiptImage);
+      const blob = await response.blob();
+      formData.append('receiptImage', blob, 'receipt.png');
+    }
+
+    try {
+      const response = await fetch('/api/reviews', { // Assuming /api/reviews is the endpoint
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // 'Content-Type': 'multipart/form-data' is automatically set by fetch when using FormData
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || '리뷰 업로드 실패');
+      }
+
+      alert('리뷰가 성공적으로 업로드되었습니다!');
+      // Optionally navigate to the review feed page
+      // navigate('/review-feed');
+      setTitle('');
+      setCategory('의류');
+      setReceiptImage(null);
+      setProductLink('');
+      setReviewContent('');
+    } catch (error) {
+      console.error('리뷰 업로드 중 오류 발생:', error);
+      alert(`리뷰 업로드 실패: ${error.message}`);
+    }
   };
 
   return (

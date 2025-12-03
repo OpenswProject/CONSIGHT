@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '../styles/Userprofile.module.css'; // Mypage.module.css 대신 Userprofile.module.css를 import
+import styles from '../styles/UserProfile.module.css'; // Mypage.module.css 대신 Userprofile.module.css를 import
 import ReviewPopup from '../components/ReviewPopup';
 import FollowListPopup from '../components/FollowListPopup';
 import UserMoreInfoPopup from '../components/UserMoreInfoPopup/UserMoreInfoPopup';
 
-const Userprofile = () => { // Mypage 대신 Userprofile
+const Userprofile = ({ currentUser }) => { // Mypage 대신 Userprofile
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [showFollowerPopup, setShowFollowerPopup] = useState(false);
   const [showFollowingPopup, setShowFollowingPopup] = useState(false);
   const [showUserMoreInfoPopup, setShowUserMoreInfoPopup] = useState(false);
 
   const moreOptionsRef = useRef(null); // Ref for the more options container
+
+  const usernameToDisplay = currentUser ? currentUser.username : "USERNAME";
+  const userInfoToDisplay = currentUser ? currentUser.email : "USERINFO_1";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -54,12 +57,8 @@ const Userprofile = () => { // Mypage 대신 Userprofile
                     <div className={styles.profile}></div>
                     <div className={styles.frame225}>
                       <div className={styles.usernameInfo}>
-                        <div className={styles.frame224}>
-                          <div className={styles.frame223}>
-                            <div className={styles.username}>USERNAME</div>
-                          </div>
-                        </div>
-                        <div className={styles.userinfo1}>USERINFO_1</div>
+                        <div className={styles.username}>{usernameToDisplay}</div>
+                        <div className={styles.userinfo1}>{userInfoToDisplay}</div>
                       </div>
                       <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
                         <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowUserMoreInfoPopup(!showUserMoreInfoPopup)} />

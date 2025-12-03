@@ -1,187 +1,232 @@
 package com.mysite.sbb.review;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.user.SiteUser;
+import com.mysite.sbb.user.UserService; // 추가
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional; // 추가
+import org.springframework.web.multipart.MultipartFile;
 
-import com.mysite.sbb.DataNotFoundException;
-import com.mysite.sbb.user.SiteUser;
-import com.mysite.sbb.user.UserService;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-
-@Service
 @RequiredArgsConstructor
+@Service
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final ReviewCommentRepository commentRepository;
-    private final ReviewLikeRepository likeRepository;
-    private final ReviewBookmarkRepository bookmarkRepository;
-    private final UserService userService;
+    private final ReviewLikeRepository reviewLikeRepository;
+    private final ReviewBookmarkRepository reviewBookmarkRepository;
+    private final ReviewCommentRepository reviewCommentRepository;
+    private final UserService userService; // 추가
 
-    // ==========================
-    // 1. 리뷰 피드 조회
-    // ==========================
-    public Page<Review> getFeed(int page, String sort, String searchType, String keyword) {
-        Sort sortObj;
+    // Placeholder for image storage directory
+    // User should configure this in application.properties or similar
+    private final String imageStorageDir = "uploads/receipts"; // Example path
 
-        if ("likes".equals(sort)) {
-            sortObj = Sort.by(Sort.Order.desc("likeCount"), Sort.Order.desc("id"));
-        } else if ("views".equals(sort)) {
-            sortObj = Sort.by(Sort.Order.desc("viewCount"), Sort.Order.desc("id"));
-        } else {
-            sortObj = Sort.by(Sort.Order.desc("createDate")); // 최신순
-        }
-
-        Pageable pageable = PageRequest.of(page, 10, sortObj);
-
-        if (keyword == null || keyword.isBlank()) {
-            return reviewRepository.findAll(pageable);
-        }
-
-        return switch (searchType) {
-            case "title" -> reviewRepository.findByTitleContaining(keyword, pageable);
-            case "content" -> reviewRepository.findByContentContaining(keyword, pageable);
-            case "user" -> reviewRepository.findByAuthor_Username(keyword, pageable);
-            case "category" -> {
-                Category cat = Category.valueOf(keyword.toUpperCase());
-                yield reviewRepository.findByCategory(cat, pageable);
-            }
-
-            default -> reviewRepository.findAll(pageable);
-        };
-    }
-
-    // ==========================
-    // 2. 리뷰 상세 조회
-    // ==========================
-    public Review getReview(Long id) {
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> new DataNotFoundException("review not found"));
-    }
-
-    // ==========================
-    // 3. 리뷰 작성
-    // ==========================
-    @Transactional
-    public Review create(String title, String content, Category category, SiteUser author) {
-        Review r = new Review();
-        r.setTitle(title);
-        r.setContent(content);
-        r.setCategory(category);
-        r.setAuthor(author);
-        r.setViewCount(0);
-        r.setLikeCount(0);
-        r.setCreateDate(LocalDateTime.now());
-        return reviewRepository.save(r);
-    }
-
-    // ==========================
-    // 4. 리뷰 수정
-    // ==========================
-    @Transactional
-    public void modify(Review review, String title, String content, Category category) {
+    public void create(String title, String category, String productLink, String content, MultipartFile receiptImage, SiteUser author) throws IOException {
+        Review review = new Review();
         review.setTitle(title);
+        review.setCategory(category); // category is String
+        review.setProductLink(productLink);
         review.setContent(content);
+        review.setCreateDate(LocalDateTime.now());
+        review.setAuthor(author);
+        review.setViewCount(0);
+        review.setLikeCount(0);
+        review.setBookmarkCount(0);
+        review.setCommentCount(0); // 추가 // 추가
+
+        if (receiptImage != null && !receiptImage.isEmpty()) {
+            String fileName = UUID.randomUUID().toString() + "_" + receiptImage.getOriginalFilename();
+            File dest = new File(imageStorageDir, fileName);
+            // Ensure the directory exists
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            receiptImage.transferTo(dest);
+            review.setReceiptImagePath(dest.getAbsolutePath()); // Store absolute path
+        }
+
+        this.reviewRepository.save(review);
+    }
+
+    public Page<Review> getList(int page, String kw, String searchType, String username, String sort) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        // Parse the sort parameter
+        String[] sortParams = sort.split(",");
+        String sortBy = sortParams[0];
+        Sort.Direction direction = sortParams.length > 1 && sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        sorts.add(Sort.Order.by(sortBy).with(direction));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts)); // 페이지 크기를 10으로 변경
+
+        Page<Review> reviewPage;
+
+        if (kw == null || kw.trim().isEmpty()) {
+            reviewPage = this.reviewRepository.findAll(pageable);
+        } else {
+            // Implement search logic based on searchType
+            reviewPage = switch (searchType) {
+                case "title" -> reviewRepository.findByTitleContaining(kw, pageable);
+                case "content" -> reviewRepository.findByContentContaining(kw, pageable);
+                case "user" -> reviewRepository.findByAuthor_UsernameContaining(kw, pageable);
+                case "category" -> reviewRepository.findByCategory(kw, pageable);
+                default -> reviewRepository.findAll(pageable);
+            };
+        }
+
+        // 현재 로그인한 사용자의 좋아요/북마크 상태 설정
+        if (username != null && !username.isEmpty()) {
+            SiteUser currentUser = userService.getUser(username);
+            reviewPage.getContent().forEach(review -> {
+                review.setIsLikedByCurrentUser(reviewLikeRepository.findByReviewAndUser(review, currentUser).isPresent());
+                review.setIsBookmarkedByCurrentUser(reviewBookmarkRepository.findByReviewAndUser(review, currentUser).isPresent());
+            });
+        }
+
+        return reviewPage;
+    }
+
+    public Review getReview(Integer id) {
+        Optional<Review> review = this.reviewRepository.findById(id);
+        if (review.isPresent()) {
+            return review.get();
+        } else {
+            throw new DataNotFoundException("review not found");
+        }
+    }
+
+    public void modify(Review review, String title, String category, String productLink, String content, MultipartFile receiptImage) throws IOException {
+        review.setTitle(title);
         review.setCategory(category);
+        review.setProductLink(productLink);
+        review.setContent(content);
         review.setModifyDate(LocalDateTime.now());
-        reviewRepository.save(review);
+
+        if (receiptImage != null && !receiptImage.isEmpty()) {
+            // Delete old image if exists
+            if (review.getReceiptImagePath() != null) {
+                new File(review.getReceiptImagePath()).delete();
+            }
+            String fileName = UUID.randomUUID().toString() + "_" + receiptImage.getOriginalFilename();
+            File dest = new File(imageStorageDir, fileName);
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            receiptImage.transferTo(dest);
+            review.setReceiptImagePath(dest.getAbsolutePath());
+        } else if (receiptImage == null && review.getReceiptImagePath() != null) {
+            // If image is removed
+            new File(review.getReceiptImagePath()).delete();
+            review.setReceiptImagePath(null);
+        }
+
+        this.reviewRepository.save(review);
     }
 
-    // ==========================
-    // 5. 리뷰 삭제
-    // ==========================
-    @Transactional
     public void delete(Review review) {
-        reviewRepository.delete(review);
+        // Delete associated image file
+        if (review.getReceiptImagePath() != null) {
+            new File(review.getReceiptImagePath()).delete();
+        }
+        this.reviewRepository.delete(review);
     }
 
-    // ==========================
-    // 6. 조회수 증가
-    // ==========================
+    public void updateViewCount(Review review) {
+        review.setViewCount((review.getViewCount() != null ? review.getViewCount() : 0) + 1);
+        this.reviewRepository.save(review);
+    }
+
+    public void save(Review review) {
+        this.reviewRepository.save(review);
+    }
+
+    public void updateLikeCount(Review review, boolean increment) {
+        if (increment) {
+            review.setLikeCount(review.getLikeCount() + 1);
+        } else {
+            review.setLikeCount(review.getLikeCount() - 1);
+        }
+        this.reviewRepository.save(review);
+    }
+
     @Transactional
-    public void increaseViewCount(Review review) {
-        review.setViewCount(review.getViewCount() + 1);
+    public void likeReview(Integer reviewId, String username) {
+        Review review = getReview(reviewId);
+        SiteUser user = userService.getUser(username);
+
+        Optional<ReviewLike> existingLike = reviewLikeRepository.findByReviewAndUser(review, user);
+
+        if (existingLike.isPresent()) {
+            reviewLikeRepository.delete(existingLike.get());
+            review.setLikeCount(review.getLikeCount() - 1);
+        } else {
+            ReviewLike reviewLike = new ReviewLike();
+            reviewLike.setReview(review);
+            reviewLike.setUser(user);
+            reviewLikeRepository.save(reviewLike);
+            review.setLikeCount(review.getLikeCount() + 1);
+        }
         reviewRepository.save(review);
     }
 
-    // ==========================
-    // 7. 좋아요 토글
-    // ==========================
     @Transactional
-    public boolean toggleLike(Review review, SiteUser user) {
-        var opt = likeRepository.findByReviewAndUser(review, user);
-        if (opt.isPresent()) {
-            likeRepository.delete(opt.get());
-            review.setLikeCount(review.getLikeCount() - 1);
-            reviewRepository.save(review);
-            return false;
+    public void bookmarkReview(Integer reviewId, String username) {
+        Review review = getReview(reviewId);
+        SiteUser user = userService.getUser(username);
+
+        Optional<ReviewBookmark> existingBookmark = reviewBookmarkRepository.findByReviewAndUser(review, user);
+
+        if (existingBookmark.isPresent()) {
+            reviewBookmarkRepository.delete(existingBookmark.get());
+            review.setBookmarkCount(review.getBookmarkCount() - 1);
         } else {
-            ReviewLike like = new ReviewLike(null, review, user);
-            likeRepository.save(like);
-            review.setLikeCount(review.getLikeCount() + 1);
-            reviewRepository.save(review);
-            return true;
+            ReviewBookmark reviewBookmark = new ReviewBookmark();
+            reviewBookmark.setReview(review);
+            reviewBookmark.setUser(user);
+            reviewBookmarkRepository.save(reviewBookmark);
+            review.setBookmarkCount(review.getBookmarkCount() + 1);
         }
+        reviewRepository.save(review);
     }
 
-    // ==========================
-    // 8. 북마크 토글
-    // ==========================
-    @Transactional
-    public boolean toggleBookmark(Review review, SiteUser user) {
-        var opt = bookmarkRepository.findByReviewAndUser(review, user);
-        if (opt.isPresent()) {
-            bookmarkRepository.delete(opt.get());
-            return false;
-        } else {
-            ReviewBookmark bm = new ReviewBookmark(null, review, user);
-            bookmarkRepository.save(bm);
-            return true;
-        }
+    public Page<Review> getReviewsByAuthor(SiteUser author, int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 2, Sort.by(sorts));
+        return reviewRepository.findByAuthor(author, pageable);
     }
 
-    // ==========================
-    // 9. 댓글 작성
-    // ==========================
-    @Transactional
-    public ReviewComment addComment(Review review, SiteUser user, String content) {
-        ReviewComment c = new ReviewComment();
-        c.setReview(review);
-        c.setAuthor(user);
-        c.setContent(content);
-        c.setCreateDate(LocalDateTime.now());
-        return commentRepository.save(c);
-    }
+    public MyReviewResponse getMyReviews(SiteUser siteUser) {
+        // Written reviews
+        List<Review> writtenReviews = reviewRepository.findByAuthor(siteUser);
 
-    // ==========================
-    // 10. 마이페이지
-    // ==========================
-    public List<ReviewComment> getCommentsByUser(SiteUser user) {
-        return commentRepository.findByAuthor(user);
-    }
-
-    public List<Review> getReviewsByAuthor(SiteUser user, int page) {
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("createDate")));
-        return reviewRepository.findByAuthor(user, pageable).getContent();
-    }
-
-    public List<Review> getReviewsLikedByUser(SiteUser user) {
-        return likeRepository.findByUser(user).stream()
+        // Liked reviews
+        List<ReviewLike> likedReviewLikes = reviewLikeRepository.findByUser(siteUser);
+        List<Review> likedReviews = likedReviewLikes.stream()
                 .map(ReviewLike::getReview)
-                .toList();
-    }
+                .collect(java.util.stream.Collectors.toList());
 
-    public List<Review> getReviewsBookmarkedByUser(SiteUser user) {
-        return bookmarkRepository.findByUser(user).stream()
+        // Bookmarked reviews
+        List<ReviewBookmark> bookmarkedReviewBookmarks = reviewBookmarkRepository.findByUser(siteUser);
+        List<Review> bookmarkedReviews = bookmarkedReviewBookmarks.stream()
                 .map(ReviewBookmark::getReview)
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
+
+        // Comments
+        List<ReviewComment> comments = reviewCommentRepository.findByAuthor(siteUser);
+
+        return new MyReviewResponse(writtenReviews, likedReviews, bookmarkedReviews, comments);
     }
 }

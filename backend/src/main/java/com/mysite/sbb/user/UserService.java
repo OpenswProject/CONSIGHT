@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.follow.UserDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,5 +33,10 @@ public class UserService {
 		} else {
 			throw new DataNotFoundException("siteuser not found");
 		}
+	}
+
+	public UserDto getUserDto(String username) {
+		SiteUser siteUser = getUser(username);
+		return new UserDto(siteUser);
 	}
 }

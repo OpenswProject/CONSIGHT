@@ -1,141 +1,172 @@
 package com.mysite.sbb.review;
 
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
-
+import com.mysite.sbb.util.APIResponse;
+import com.mysite.sbb.comment.CommentService; // 추가
+import com.mysite.sbb.comment.CommentRequest; // 추가
+import com.mysite.sbb.comment.Comment; // 추가
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+import com.mysite.sbb.DataNotFoundException; // 추가
+import java.util.List; // 추가
+
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/reviews")
-@RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "https://devtest-theta-six.vercel.app"})
+@Slf4j
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final UserService userService;
+    private final UserService userService; // To get SiteUser from username
+    private final CommentService commentService; // 추가
 
-    // 1. 리뷰 피드 (정렬 + 검색)
-    @GetMapping
-    public ResponseEntity<Page<Review>> list(
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @RequestParam(name = "sort", defaultValue = "latest") String sort,
-            @RequestParam(name = "type", defaultValue = "all") String type,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        Page<Review> result = reviewService.getFeed(page, sort, type, keyword);
-        return ResponseEntity.ok(result);
-    }
-
-    // 2. 리뷰 상세보기 + 조회수 증가
-    @GetMapping("/{id}")
-    public ResponseEntity<Review> detail(@PathVariable("id") Long id) {
-        Review review = reviewService.getReview(id);
-        reviewService.increaseViewCount(review);
-        return ResponseEntity.ok(review);
-    }
-
-    // 3. 리뷰 작성
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Review> create(
-            @RequestBody ReviewCreateRequest req,
-            Principal principal
+    public ResponseEntity<APIResponse<?>> createReview(
+            @RequestParam("title") String title,
+            @RequestParam("category") String category,
+            @RequestParam("productLink") String productLink,
+            @RequestParam("reviewContent") String reviewContent,
+            @RequestParam(value = "receiptImage", required = false) MultipartFile receiptImage,
+            Principal principal // Spring Security Principal to get authenticated user's username
     ) {
-        SiteUser user = userService.getUser(principal.getName());
-        Review review = reviewService.create(req.getTitle(), req.getContent(), req.getCategory(), user);
-        return ResponseEntity.ok(review);
-    }
+        try {
+            // Get the authenticated user
+            SiteUser siteUser = userService.getUser(principal.getName());
 
-    // 4. 리뷰 수정
-    @PreAuthorize("isAuthenticated()")
-    @PutMapping("/{id}")
-    public ResponseEntity<Review> modify(
-            @PathVariable("id") Long id,
-            @RequestBody ReviewCreateRequest req,
-            Principal principal
-    ) {
-        Review review = reviewService.getReview(id);
-        if (!review.getAuthor().getUsername().equals(principal.getName())) {
-            return ResponseEntity.status(403).build();
+            // Create the review
+            reviewService.create(title, category, productLink, reviewContent, receiptImage, siteUser);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.success("리뷰가 성공적으로 작성되었습니다."));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("리뷰 작성 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
-        reviewService.modify(review, req.getTitle(), req.getContent(), req.getCategory());
-        return ResponseEntity.ok(review);
     }
 
-    // 5. 리뷰 삭제
-    @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable("id") Long id,
-            Principal principal
+    @GetMapping
+    public ResponseEntity<APIResponse<Page<Review>>> getReviewList(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "kw", defaultValue = "") String kw,
+            @RequestParam(value = "searchType", defaultValue = "") String searchType,
+            @RequestParam(value = "sort", defaultValue = "createDate,desc") String sort, // sort 파라미터 추가
+            Principal principal // Principal 추가
     ) {
-        Review review = reviewService.getReview(id);
-        if (!review.getAuthor().getUsername().equals(principal.getName())) {
-            return ResponseEntity.status(403).build();
+        try {
+            String username = (principal != null) ? principal.getName() : null; // 사용자명 추출
+            Page<Review> reviewList = reviewService.getList(page, kw, searchType, username, sort); // sort 파라미터 전달
+            return ResponseEntity.ok(APIResponse.success("리뷰 목록을 성공적으로 불러왔습니다.", reviewList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("리뷰 목록을 불러오는 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
-        reviewService.delete(review);
-        return ResponseEntity.ok().build();
     }
 
-    // 6. 좋아요 토글
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{id}/like")
-    public ResponseEntity<LikeResponse> toggleLike(
-            @PathVariable("id") Long id,
-            Principal principal
+    @GetMapping("/by-author/{username}")
+    public ResponseEntity<APIResponse<Page<Review>>> getReviewsByAuthor(
+            @PathVariable("username") String username,
+            @RequestParam(value = "page", defaultValue = "0") int page
     ) {
-        Review review = reviewService.getReview(id);
-        SiteUser user = userService.getUser(principal.getName());
-        boolean liked = reviewService.toggleLike(review, user);
-        return ResponseEntity.ok(new LikeResponse(liked, review.getLikeCount()));
+        try {
+            SiteUser author = userService.getUser(username);
+            Page<Review> reviewList = reviewService.getReviewsByAuthor(author, page);
+            return ResponseEntity.ok(APIResponse.success("Author's reviews fetched successfully.", reviewList));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("Failed to fetch author's reviews: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
     }
 
-    // 7. 북마크 토글
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{id}/bookmark")
-    public ResponseEntity<BookmarkResponse> toggleBookmark(
-            @PathVariable("id") Long id,
-            Principal principal
-    ) {
-        Review review = reviewService.getReview(id);
-        SiteUser user = userService.getUser(principal.getName());
-        boolean bookmarked = reviewService.toggleBookmark(review, user);
-        return ResponseEntity.ok(new BookmarkResponse(bookmarked));
-    }
-
-    // 8. 댓글 작성
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<ReviewComment> addComment(
-            @PathVariable("id") Long id,
-            @RequestBody CommentCreateRequest req,
-            Principal principal
-    ) {
-        Review review = reviewService.getReview(id);
-        SiteUser user = userService.getUser(principal.getName());
-        ReviewComment c = reviewService.addComment(review, user, req.getContent());
-        return ResponseEntity.ok(c);
-    }
-
-    // 9. 마이페이지용: 내가 작성한 / 댓글 단 / 좋아요 / 북마크한 리뷰
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/me")
-    public ResponseEntity<MyReviewResponse> myReviews(Principal principal) {
-        SiteUser user = userService.getUser(principal.getName());
-        List<Review> written = reviewService.getReviewsByAuthor(user, 0);
-        List<Review> liked = reviewService.getReviewsLikedByUser(user);
-        List<Review> bookmarked = reviewService.getReviewsBookmarkedByUser(user);
-        List<ReviewComment> comments = reviewService.getCommentsByUser(user);
+    public ResponseEntity<APIResponse<MyReviewResponse>> getMyReviews(Principal principal) {
+        try {
+            SiteUser siteUser = userService.getUser(principal.getName());
+            MyReviewResponse myReviews = reviewService.getMyReviews(siteUser);
+            return ResponseEntity.ok(APIResponse.success("내 리뷰 정보를 성공적으로 불러왔습니다.", myReviews));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("내 리뷰 정보를 불러오는 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 
-        MyReviewResponse res = new MyReviewResponse(written, liked, bookmarked, comments);
-        return ResponseEntity.ok(res);
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/like")
+    public ResponseEntity<APIResponse<?>> likeReview(@PathVariable("id") Integer id, Principal principal) {
+        try {
+            reviewService.likeReview(id, principal.getName());
+            return ResponseEntity.ok(APIResponse.success("좋아요 상태가 변경되었습니다."));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("좋아요 처리 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/bookmark")
+    public ResponseEntity<APIResponse<?>> bookmarkReview(@PathVariable("id") Integer id, Principal principal) {
+        try {
+            reviewService.bookmarkReview(id, principal.getName());
+            return ResponseEntity.ok(APIResponse.success("북마크 상태가 변경되었습니다."));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("북마크 처리 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<APIResponse<?>> addComment(@PathVariable("id") Integer id, @RequestBody CommentRequest commentRequest, Principal principal) {
+        try {
+            commentService.addComment(id, principal.getName(), commentRequest.getContent());
+            return ResponseEntity.status(HttpStatus.CREATED).body(APIResponse.success("댓글이 성공적으로 추가되었습니다."));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("댓글 추가 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<APIResponse<List<Comment>>> getComments(@PathVariable("id") Integer id) {
+        log.info("댓글 목록 조회 요청: reviewId={}", id);
+        try {
+            Review review = reviewService.getReview(id);
+            List<Comment> comments = commentService.getCommentsByReview(review);
+            log.info("댓글 목록 조회 성공: reviewId={}, commentsCount={}", id, comments.size());
+            return ResponseEntity.ok(APIResponse.success("댓글 목록을 성공적으로 불러왔습니다.", comments));
+        } catch (DataNotFoundException e) {
+            log.warn("댓글 목록 조회 실패: Review not found for reviewId={}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            log.error("댓글 목록 조회 중 오류 발생: reviewId={}, error={}", id, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("댓글 목록 조회 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PostMapping("/{id}/view")
+    public ResponseEntity<APIResponse<?>> updateReviewViewCount(@PathVariable("id") Integer id) {
+        try {
+            Review review = reviewService.getReview(id);
+            reviewService.updateViewCount(review);
+            return ResponseEntity.ok(APIResponse.success("조회수가 성공적으로 업데이트되었습니다."));
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error(e.getMessage(), HttpStatus.NOT_FOUND.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("조회수 업데이트 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
     }
 }

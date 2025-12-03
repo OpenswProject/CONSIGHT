@@ -1,131 +1,73 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./ReviewFeed.module.css";
-import { ShoppingList } from "../ShoppingList/ShoppingList"; // ShoppingList 컴포넌트 import
+import { ShoppingList } from "../ShoppingList/ShoppingList";
+import MoreOptionsPopup from "../MoreOptionsPopup/MoreOptionsPopup";
 
 export const ReviewFeed = () => {
-  const reviews = [
-    {
-      id: 1,
-      username: "USERNAME",
-      title: "스노우쉴드 롱패딩",
-      productImage: "/mask-group0.svg",
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "패딩이 정말 가볍고 따뜻해서 깜짝 놀랐어요. 안에 얇은 기모티만 입어도 충분히 한겨울 기온을 버틸 정도라서 요즘 거의 매일 입고 다닙니다. 지퍼도 부드럽게 잘 올라가고 주머니 털 안감도 포근해서 만족스러워요. 전체적으로 착용감이 편안해서 오래 입고 있어도 부담이 없고, 바람 부는 날에도 체온을 잘 유지해줘서 외출할 때마다 든든합니다. 디자인도 깔끔해서 어떤 옷과 매치해도 잘 어울려 데일리 아우터로 손색이 없어요. 개인적으로 이번 시즌에 산 옷 중 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다",
-      productLink: "제품 링크",
-      likes: 2,
-      comments: 5,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line0.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [
-        { id: 1, username: "USERNAME", text: "요즘 패딩 찾고 있었는데 상세 후기 덕분에 선택에 도움이 됐어요, 감사합니다", moreIcon: "/ri-more-line1.svg" },
-        { id: 2, username: "USERNAME", text: "바람 많이 부는 지역 살아서 걱정했는데 이 정도면 충분히 따뜻하겠다 싶네요", moreIcon: "/ri-more-line2.svg" },
-        { id: 3, username: "USERNAME", text: "착용감 편하다는 말에 바로 장바구니 넣었습니다. 실제로도 가볍나요?", moreIcon: "/ri-more-line3.svg" },
-      ],
-    },
-    {
-      id: 2,
-      username: "USERNAME",
-      title: "테라플렉스 워킹화",
-      productImage: null, // No image for this one in reference
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "착용하자마자 발을 부드럽게 감싸는 느낌이 정말 좋았습니다. 장시간 걸어도 발바닥이 쉽게 피로해지지 않고, 충격 흡수력이 좋아 하루 종일 신어도 편안하더라고요. 발등을 압박하지 않으면서도 안정감 있게 잡아주는 착화감 덕분에 운동할 때도 잘 벗겨지지 않아 믿음이 갑니다. 신발 바닥 패턴이 미끄럼을 잘 잡아줘 비 오는 날에도 걱정 없이 걸을 수 있었어요. 디자인도 과하지 않고 깔끔해서 데일리로 신기 좋아, 최근 산 신발 중 가장 만족도가 높은 제품입니다.",
-      productLink: "제품 링크",
-      likes: 10,
-      comments: 10,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line4.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [],
-    },
-    {
-      id: 3,
-      username: "USERNAME",
-      title: "플러피라운지 후드집업",
-      productImage: null,
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "입는 순간 편안함이 느껴질 정도로 소재가 굉장히 부드럽습니다. 안감이 따뜻해 가벼운 티셔츠 위에 걸쳐도 보온성이 좋고, 지퍼가 부드럽게 올라가서 사용감이 만족스러워요. 품이 여유로워 활동할 때 불편함이 없고, 소매와 밑단 시보리가 탄탄해서 오래 입어도 형태가 잘 유지됩니다. 캐주얼한 디자인이라 청바지나 조거팬츠와 매치해도 자연스럽고, 집에서 입기에도 딱이라 요즘 손이 자주 가는 옷이에요. 전체적으로 활용도 높은 아이템이라 추천하고 싶은 후드입니다.",
-      productLink: "제품 링크",
-      likes: 10,
-      comments: 10,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line5.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [],
-    },
-    {
-      id: 4,
-      username: "USERNAME",
-      title: "윈터가드 웜테크 롱패딩",
-      productImage: null,
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "패딩을 처음 입어보자마자 가벼움에 한 번, 보온성에 두 번 놀랐습니다. 두께감이 크게 느껴지지 않는데도 확실하게 체온을 잡아줘서, 요즘처럼 아침저녁 기온 차가 큰 날에도 안에 얇은 맨투맨 하나만 입어도 전혀 춥지 않아요. 지퍼와 스냅 단추가 견고해 쉽게 풀리지 않고, 주머니 안감이 부드러워 손을 넣을 때마다 따뜻한 느낌이 들어 작은 부분까지 신경 쓴 게 느껴집니다. 활동할 때도 크게 불편함이 없을 정도로 핏이 여유롭고, 바람이 강한 날에도 외풍을 잘 막아줘서 외출할 때마다 든든한 아우터가 되어주고 있어요. 디자인 역시 군더더기 없이 깔끔해서 캐주얼·포멀 어떤 코디에도 조화가 좋습니다.",
-      productLink: "제품 링크",
-      likes: 10,
-      comments: 10,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line6.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [],
-    },
-    {
-      id: 5,
-      username: "USERNAME",
-      title: "아이스버스터 프라임 롱패딩",
-      productImage: null,
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "입는 순간 가볍고 포근해서 만족스러웠어요. 두껍지 않은 옷을 받쳐 입어도 한겨울 바람을 잘 막아줘서 요즘 외출할 때 무조건 이 패딩만 찾게 됩니다. 지퍼가 잘 걸리지 않고 부드럽게 올라가며, 주머니 안쪽 소재도 따뜻해서 작은 부분까지 신경 쓴 느낌이에요. 착용감이 편안하고 어깨가 눌리는 느낌이 없어 오래 입어도 피로가 덜합니다. 무엇보다 디자인이 깔끔해 어떤 코디에도 자연스럽게 어울려 데일리 아우터로 딱이에요. 전체적으로 가격 대비 만족도가 높아서 지인들에게도 추천하고 싶은 패딩입니다.",
-      productLink: "제품 링크",
-      likes: 10,
-      comments: 10,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line7.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [],
-    },
-    {
-      id: 6,
-      username: "USERNAME",
-      title: "코어히트 울트라롱 패딩",
-      productImage: null,
-      date: "2025.11.16",
-      category: "의류",
-      content:
-        "착용했을 때 생각보다 훨씬 따뜻해서 놀랐습니다. 가벼운데도 보온력이 좋아서 안에 얇게 입고도 충분히 한겨울을 버틸 수 있더라고요. 바람막이 기능이 확실해 강풍이 부는 날에도 체온을 잘 잡아줍니다. 지퍼와 버튼 마감도 튼튼하고, 주머니 안감이 부드러워 손을 넣을 때마다 포근함이 느껴져요. 활동할 때 불편함이 없도록 핏이 적당히 여유로워서 일상용뿐 아니라 장시간 외출 때도 편합니다. 디자인도 심플하고 깔끔해 매일 손이 가는 옷이에요. 이번 시즌 구매 제품 중 가장 만족스러운 아이템입니다.",
-      productLink: "제품 링크",
-      likes: 10,
-      comments: 10,
-      bookmarks: 10,
-      moreIcon: "/ri-more-line8.svg",
-      likeIcon: "/public2/like.svg",
-      commentIcon: "/public2/comment_icon.svg",
-      bookmarkIcon: "/public2/bookmark_icon.svg",
-      commentsList: [],
-    },
-  ];
+  // State for review data and pagination
+  const [reviewList, setReviewList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
+  const [popupConfig, setPopupConfig] = useState({ show: false, username: '' });
+  const commentInputRefs = useRef({});
+  const [sortBy, setSortBy] = useState('createDate');
+  const [sortDirection, setSortDirection] = useState('desc'); // 'desc' or 'asc'
+  const [selectedCategory, setSelectedCategory] = useState('전체'); // New state for selected category, default to '전체'
+  const [selectedFilter, setSelectedFilter] = useState(''); // New state for selected filter ('추천', '비추천', or '')
 
-  
+  const categories = ['전체', '뷰티', '식품', '의류', '주방', '생활·가전', '청소·욕실', '가구', '문구', '인테리어', '취미·레저', '기타'];
 
+  // Fetch reviews from the API
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const token = localStorage.getItem('token'); // 토큰 가져오기
+        let url = `/api/reviews?page=${currentPage}&sort=${sortBy},${sortDirection}`;
+        if (selectedCategory && selectedCategory !== '전체') { // '전체'가 아닐 때만 필터 적용
+          url += `&searchType=category&kw=${selectedCategory}`;
+        }
+        if (selectedFilter) { // 필터가 선택되었을 때만 필터 적용
+          url += `&searchType=filter&kw=${selectedFilter}`; // 백엔드에서 searchType=filter를 처리한다고 가정
+        }
+        const response = await fetch(url, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {} // 토큰이 있으면 헤더에 추가
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success && data.data) {
+          setReviewList(await Promise.all(data.data.content.map(async review => {
+            const token = localStorage.getItem('token'); // 토큰 가져오기
+            const commentsResponse = await fetch(`/api/reviews/${review.id}/comments`, {
+              headers: token ? { 'Authorization': `Bearer ${token}` } : {} // 토큰이 있으면 헤더에 추가
+            });
+            const commentsData = await commentsResponse.json();
+            console.log(`Fetched comments for review ${review.id}:`, commentsData); // 로그 추가
+            return {
+              ...review,
+              isLiked: review.isLikedByCurrentUser,
+              isBookmarked: review.isBookmarkedByCurrentUser,
+              comments: commentsData.success ? commentsData.data : [], // 답글 불러오기
+              newCommentContent: '' // 새로운 댓글 작성 내용
+            };
+          })));
+          console.log("Final reviewList after fetching comments:", reviewList); // 로그 추가
+          setTotalPages(data.data.totalPages);
+          setTotalElements(data.data.totalElements);
+        } else {
+          throw new Error(data.error ? data.error.message : "Invalid data structure");
+        }
+      } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+      }
+    };
+
+    fetchReviews();
+  }, [currentPage, sortBy, sortDirection, selectedCategory, selectedFilter]); // selectedFilter를 의존성 배열에 추가
+
+  // Static data for recommended reviews (as per original file)
   const recommendedReviews = [
     { id: 1, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
     { id: 2, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
@@ -134,288 +76,553 @@ export const ReviewFeed = () => {
     { id: 5, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
   ];
 
+  // Pagination logic
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const startPage = Math.floor(currentPage / 4) * 4;
+    const endPage = Math.min(startPage + 4, totalPages);
+
+    for (let i = startPage; i < endPage; i++) {
+      pageNumbers.push(
+        <div key={i} className={styles.frame1804} onClick={() => handlePageChange(i)}>
+          <div className={i === currentPage ? styles.currentPage : styles._10}>{i + 1}</div>
+        </div>
+      );
+    }
+    return pageNumbers;
+  };
+
+  // Popup handlers
+  const openPopup = (username) => {
+    setPopupConfig({ show: true, username: username });
+  };
+
+  const closePopup = () => {
+    setPopupConfig({ show: false, username: '' });
+  };
+
+  const handleFollow = async (username) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const res = await fetch(`/api/follow/${username}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`${username}님을 팔로우했습니다.`);
+        closePopup();
+      } else {
+        throw new Error(data.error?.message || 'Follow failed');
+      }
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleBlock = (username) => {
+    alert(`Blocked ${username}`);
+    closePopup();
+  };
+
+  const handleReport = (username) => {
+    alert(`Reported ${username}`);
+    closePopup();
+  };
+
+  const handleReviewClick = async (reviewId) => {
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/view`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      // 조회수 업데이트 성공 시, 프론트엔드 상태도 업데이트
+      setReviewList(prevReviewList => prevReviewList.map(review =>
+        review.id === reviewId ? { ...review, viewCount: review.viewCount + 1 } : review
+      ));
+    } catch (error) {
+      console.error("조회수 업데이트 실패:", error);
+    }
+  };
+
+  const handleLikeToggle = async (reviewId) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/like`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setReviewList(prevReviewList => prevReviewList.map(review =>
+          review.id === reviewId ? { ...review, isLiked: !review.isLiked, likeCount: review.isLiked ? review.likeCount - 1 : review.likeCount + 1 } : review
+        ));
+      } else {
+        throw new Error(data.error?.message || '좋아요 처리 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleBookmarkToggle = async (reviewId) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/bookmark`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setReviewList(prevReviewList => prevReviewList.map(review =>
+          review.id === reviewId ? { ...review, isBookmarked: !review.isBookmarked, bookmarkCount: review.isBookmarked ? review.bookmarkCount - 1 : review.bookmarkCount + 1 } : review
+        ));
+      } else {
+        throw new Error(data.error?.message || '북마크 처리 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const fetchCommentsForReview = async (reviewId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const commentsResponse = await fetch(`/api/reviews/${reviewId}/comments`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
+      const commentsData = await commentsResponse.json();
+      if (commentsData.success) {
+        setReviewList(prevReviewList => prevReviewList.map(review =>
+          review.id === reviewId ? { ...review, comments: commentsData.data } : review
+        ));
+      } else {
+        console.error(`Failed to fetch comments for review ${reviewId}:`, commentsData.error);
+      }
+    } catch (error) {
+      console.error(`Error fetching comments for review ${reviewId}:`, error);
+    }
+  };
+
+  const handleAddComment = async (reviewId, content) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    if (!content.trim()) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content })
+      });
+      const data = await response.json();
+      if (data.success) {
+        // 댓글 추가 후 댓글 목록 새로고침
+        await fetchCommentsForReview(reviewId); // 정의된 함수 호출
+        // 댓글 수 업데이트
+        setReviewList(prevReviewList => prevReviewList.map(review =>
+          review.id === reviewId ? { ...review, commentCount: review.commentCount + 1, newCommentContent: '' } : review
+        ));
+      } else {
+        throw new Error(data.error?.message || '댓글 추가 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleSortChange = (newSortBy) => {
+    setSortBy(newSortBy);
+    setSortDirection('desc'); // 새로운 정렬 기준 선택 시 기본적으로 내림차순
+    setCurrentPage(0); // 정렬 기준 변경 시 첫 페이지로 이동
+  };
+
+  const handleSortDirectionToggle = () => {
+    setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    setCurrentPage(0); // 정렬 방향 변경 시 첫 페이지로 이동
+  };
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(0); // 카테고리 변경 시 첫 페이지로 이동
+  };
+
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+    setCurrentPage(0); // 필터 변경 시 첫 페이지로 이동
+  };
+
   return (
-    <div className={styles.reviewFeedMainContainer}>
-      <div className={styles.backgroundGradient}></div>
-      <div className={styles.contentWrapper}>
+    <>
+      <div className={styles.reviewFeedMainContainer}>
+        <div className={styles.backgroundGradient}></div>
+        <div className={styles.contentWrapper}>
 
-      <div className={styles.filterSortCategoryWrapper}>
+        <div className={styles.filterSortCategoryWrapper}>
 
-        {/* Category Section */}
-        <div className={styles.frame51}>
-          <div className={styles.div2}>카테고리</div>
-          <div className={styles.frame96}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>뷰티</div>
-            </div>
-            <div className={styles.frame91}>
-              <div className={styles.div3}>식품</div>
-            </div>
-            <div className={styles.frame93}>
-              <div className={styles.div3}>의류</div>
-            </div>
-            <div className={styles.frame88}>
-              <div className={styles.div3}>주방</div>
-            </div>
-            <div className={styles.frame94}>
-              <div className={styles.div3}>생활·가전</div>
-            </div>
-            <div className={styles.frame89}>
-              <div className={styles.div3}>청소·욕실</div>
-            </div>
-            <div className={styles.frame962}>
-              <div className={styles.div3}>가구</div>
-            </div>
-            <div className={styles.frame90}>
-              <div className={styles.div3}>문구</div>
-            </div>
-            <div className={styles.frame92}>
-              <div className={styles.div3}>인테리어</div>
-            </div>
-            <div className={styles.frame972}>
-              <div className={styles.div3}>취미·레저</div>
-            </div>
-            <div className={styles.frame972}>
-              <div className={styles.div3}>기타</div>
+          {/* Category Section */}
+          <div className={styles.frame51}>
+            <div className={styles.div2}>카테고리</div>
+            <div className={styles.frame96}>
+              {categories.map((category, index) => {
+                const isSelected = selectedCategory === category;
+                const categoryValue = category === '전체' ? '' : category; // '전체' 버튼 클릭 시 빈 문자열 전달
+
+                return (
+                  <div
+                    key={index}
+                    className={styles.frame95} // 기존 frame95 클래스를 기본 스타일로 사용
+                    onClick={() => handleCategoryChange(categoryValue)}
+                    style={{
+                      backgroundColor: isSelected ? 'var(--green-d6)' : 'var(--gray-f3)',
+                      borderColor: isSelected ? 'var(--green-8b)' : 'var(--gray-c5)',
+                      color: isSelected ? 'var(--green-8b)' : 'var(--gray-57)', // 텍스트 색상도 변경
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <div className={styles.div3} style={{ color: isSelected ? 'var(--green-8b)' : 'var(--gray-57)' }}>{category}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
+
+                  {/* Filtering Section */}
+          <div className={styles.frame58}>
+            <div className={styles.div2}>필터링</div>
+            <div className={styles.frame96}>
+              <div
+                className={styles.frame95}
+                onClick={() => handleFilterChange('추천')}
+                style={{
+                  backgroundColor: selectedFilter === '추천' ? 'var(--green-d6)' : 'var(--gray-f3)',
+                  borderColor: selectedFilter === '추천' ? 'var(--green-8b)' : 'var(--gray-c5)',
+                  cursor: 'pointer'
+                }}
+              >
+                <div className={styles.div3} style={{ color: selectedFilter === '추천' ? 'var(--green-8b)' : 'var(--gray-57)' }}>추천</div>
+              </div>
+            </div>
+            <div className={styles.frame97}>
+              <div
+                className={styles.frame95}
+                onClick={() => handleFilterChange('비추천')}
+                style={{
+                  backgroundColor: selectedFilter === '비추천' ? 'var(--green-d6)' : 'var(--gray-f3)',
+                  borderColor: selectedFilter === '비추천' ? 'var(--green-8b)' : 'var(--gray-c5)',
+                  cursor: 'pointer'
+                }}
+              >
+                <div className={styles.div3} style={{ color: selectedFilter === '비추천' ? 'var(--green-8b)' : 'var(--gray-57)' }}>비추천</div>
+              </div>
+            </div>
+
+                  {/* Sorting Section */}
+          <div className={styles.frame59}>
+            <div className={styles.frame112}>
+              <div className={styles.div4}>정렬</div>
+              <img
+                className={styles.polygon1}
+                src="/listup_icon.svg"
+                alt="sort icon"
+                onClick={handleSortDirectionToggle}
+                style={{
+                  cursor: 'pointer',
+                  transform: sortDirection === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.3s ease-in-out' // 부드러운 전환 효과
+                }}
+              />
+            </div>
+            <div className={styles.frame113}>
+              <div
+                className={styles.frame95}
+                onClick={() => handleSortChange('createDate')}
+                style={{
+                  backgroundColor: sortBy === 'createDate' ? 'var(--green-d6)' : 'var(--gray-f3)',
+                  borderColor: sortBy === 'createDate' ? 'var(--green-8b)' : 'var(--gray-c5)',
+                  cursor: 'pointer'
+                }}
+              >
+                <div className={styles.div3} style={{ color: sortBy === 'createDate' ? 'var(--green-8b)' : 'var(--gray-57)' }}>최신순</div>
+              </div>
+            </div>
+            <div className={styles.frame96}>
+              <div
+                className={styles.frame95}
+                onClick={() => handleSortChange('viewCount')}
+                style={{
+                  backgroundColor: sortBy === 'viewCount' ? 'var(--green-d6)' : 'var(--gray-f3)',
+                  borderColor: sortBy === 'viewCount' ? 'var(--green-8b)' : 'var(--gray-c5)',
+                  cursor: 'pointer'
+                }}
+              >
+                <div className={styles.div3} style={{ color: sortBy === 'viewCount' ? 'var(--green-8b)' : 'var(--gray-57)' }}>조회수순</div>
+              </div>
+            </div>
+            <div className={styles.frame97}>
+              <div
+                className={styles.frame95}
+                onClick={() => handleSortChange('likeCount')}
+                style={{
+                  backgroundColor: sortBy === 'likeCount' ? 'var(--green-d6)' : 'var(--gray-f3)',
+                  borderColor: sortBy === 'likeCount' ? 'var(--green-8b)' : 'var(--gray-c5)',
+                  cursor: 'pointer'
+                }}
+              >
+                <div className={styles.div3} style={{ color: sortBy === 'likeCount' ? 'var(--green-8b)' : 'var(--gray-57)' }}>좋아요순</div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-                {/* Filtering Section */}
-        <div className={styles.frame58}>
-          <div className={styles.div2}>필터링</div>
-          <div className={styles.frame96}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>추천</div>
-            </div>
-          </div>
-          <div className={styles.frame97}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>비추천</div>
-            </div>
-          </div>
-
-                 {/* Sorting Section */}
-        <div className={styles.frame59}>
-          <div className={styles.frame112}>
-            <div className={styles.div4}>정렬</div>
-            <img className={styles.polygon1} src="/public2/listup_icon.svg" alt="sort icon" />
-          </div>
-          <div className={styles.frame113}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>최신순</div>
-            </div>
-          </div>
-          <div className={styles.frame96}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>조회수순</div>
-            </div>
-          </div>
-          <div className={styles.frame97}>
-            <div className={styles.frame95}>
-              <div className={styles.div3}>좋아요순</div>
-            </div>
-          </div>
-        </div>
-
-        </div>
-
-      </div>
-
-      {/* Main Content Area */}
-      <div className={styles.frame182}>
-        <div className={styles.frame181}>
-          <div className={styles.frame180}>
-            <div className={styles.frame245}>
-              <div className={styles.frame236}>
-                <div className={styles.frame106}>
-                  <div className={styles.a}>검색된 리뷰</div>
+        {/* Main Content Area */}
+        <div className={styles.frame182}>
+          <div className={styles.frame181}>
+            <div className={styles.frame180}>
+              <div className={styles.frame245}>
+                <div className={styles.frame236}>
+                  <div className={styles.frame106}>
+                    <div className={styles.a}>검색된 리뷰</div>
+                  </div>
+                  <div className={styles._30}>총 {totalElements}건</div>
                 </div>
-                <div className={styles._30}>총 30건</div>
+                {/* Pagination (Top) */}
+                <div className={styles.frame2222}>
+                  <div className={styles.frame1901}>
+                    <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={() => handlePageChange(0)} />
+                    <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={() => handlePageChange(currentPage - 1)} />
+                  </div>
+                  {renderPageNumbers()}
+                  <div className={styles.frame1901}>
+                    <img className={styles.group20953} src="/right_icon.svg" alt=">" onClick={() => handlePageChange(currentPage + 1)} />
+                    <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" onClick={() => handlePageChange(totalPages - 1)} />
+                  </div>
+                </div>
               </div>
-              {/* Pagination (Top) */}
-              <div className={styles.frame2222}> {/* Corresponds to frame-183 */}
-                         
-                          
-                    <div className={styles.frame1901}>
-                      <img className={styles.group20953} src="/public2/leftleft_icon.svg" alt="<<" />
-                      <img className={styles.group20953} src="/public2/left_icon.svg" alt="<" />
-                    </div>
-          
-                
-                    
-                      <div className={styles.frame1804}> 
-                        <div className={styles._10}>1</div>
-                      </div>
-                    
-                      <div className={styles.frame1804}> {/* Corresponds to frame-185 */}
-          
-                          <div className={styles._10}>2</div>
-                      
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-186 */}
-                    
-                          <div className={styles._10}>3</div>
-                      
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-1872 */}
-            
-                          <div className={styles._10}>4</div>
-              
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-1882 */}
-                      
-                          <div className={styles._10}>5</div>
-                    
-                      </div>
-                  
-      
-                      <div className={styles.frame1901}> {/* Corresponds to frame-191 */}
-                        <img className={styles.group20953} src="/public2/right_icon.svg" alt=">" />
-                        <img className={styles.group20953} src="/public2/rightright_icon.svg" alt=">>" />
-                      </div>
-                    
-                    </div>
-            </div>
-            <div className={styles.frame244}>
-               <div className={styles.frame1407}>
-                <img className={styles.group1} src="/public2/search_icon.svg" alt="Search icon" />
-                <div className={styles.line54}></div>
-                <input type="text" placeholder="검색..." className={styles.searchInput} />
+              <div className={styles.frame244}>
+                <div className={styles.frame1407}>
+                  <img className={styles.group1} src="/search_icon.svg" alt="Search icon" />
+                  <div className={styles.line54}></div>
+                  <input type="text" placeholder="검색..." className={styles.searchInput} />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Review Cards Container */}
-          <div className={styles.frame119}>
-            {reviews.map((review) => (
-              <div key={review.id} className={styles.frame50}>
-                <div className={styles.frame1222}>
-                  <div className={styles.reviewContentWrapper}>
-                    <div className={styles.section01}>
-                  <div className={styles.frame1072}>
-                    <div className={styles.frame1062}>
-                      <div className={styles.frame150}>
-                        <div className={styles.frame243}>
-                          <div className={styles.frame109}>
-                            <div className={styles.profile}></div>
-                            <div className={styles.username}>{review.username}</div>
-                          </div>
-                          <img className={styles.riMoreLine} src="/public2/More_info.svg" alt="moreoptions" />
-                        </div>
-                        <div className={styles.frame149}>
-                          <div className={styles.div5}>{review.title}</div>
-                        </div>
-                        <div className={styles._20251116}>{review.date}</div>
-                      </div>
-                    </div>
-                    <div className={styles.frame148}>
-                      <div className={styles.frame912}>
-                        <div className={styles.div6}>{review.category}</div>
-                      </div>
-                      <div className={styles.frame111}>
-                        <div className={styles.frame913}>
-                          <div className={styles.div6}>{review.productLink}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame153}>
-                    <div className={styles.div7}>{review.content}</div>
-                    <div className={styles.frame129}>
-                      <div className={styles.frame246}>
-                        <div className={styles.frame248}>
-                          <img className={styles.frame131} src={review.likeIcon} alt="like" />
-                          <div className={styles.frame247}>
-                            <div className={styles._10}>{review.likes}</div>
-                          </div>
-                        </div>
-                        <div className={styles.frame249}>
-                          <img className={styles.frame132} src={review.commentIcon} alt="comment" />
-                          <div className={styles.frame247}>
-                            <div className={styles._10}>{review.comments}</div>
-                          </div>
-                        </div>
-                        <div className={styles.frame250}>
-                          <img className={styles.frame130} src={review.bookmarkIcon} alt="bookmark" />
-                          <div className={styles.frame247}>
-                            <div className={styles._10}>{review.bookmarks}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div> {/* section01 닫는 태그 */}
-                  <div className={styles.frame179}>
-             
-                  {/* <div className={styles.line52}></div> */}
-                  {/*e */}
-                  <div className={styles.frame176}>
-                         
-                    {review.commentsList.map((comment) => (
-                      <div key={comment.id} className={styles.frame174}>
-                        <div className={styles.line7}></div>
-                        <div className={styles.frame1063}>
-                          <div className={styles.frame141}>
-                            <div className={styles.frame140}>
-                              <div className={styles.profile2}></div>
-                              <div className={styles.username2}>{comment.username}</div>
+            {/* Review Cards Container */}
+            <div className={styles.frame119}>
+              {reviewList.map((review) => (
+                <React.Fragment key={review.id}>
+                  <div key={review.id} className={styles.frame50} onClick={() => handleReviewClick(review.id)}>
+                    <div className={styles.frame1222}>
+                      <div className={styles.reviewContentWrapper}>
+                        <div className={styles.section01}>
+                          <div className={styles.frame1072}>
+                            <div className={styles.frame1062}>
+                              <div className={styles.frame150}>
+                                <div className={styles.frame243}>
+                                  <div className={styles.frame109}>
+                                    <div className={styles.profile}></div>
+                                    <div className={styles.username}>{review.author?.username || '사용자'}</div>
+                                  </div>
+                                  <img 
+                                    className={styles.riMoreLine} 
+                                    src="/More_info.svg" 
+                                    alt="moreoptions" 
+                                    onClick={() => openPopup(review.author?.username)}
+                                    style={{cursor: 'pointer'}}
+                                  />
+                                </div>
+                                <div className={styles.frame149}>
+                                  <div className={styles.div5}>{review.title}</div>
+                                </div>
+                                {/* 조회수와 날짜를 함께 표시하는 div */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <img className={styles.viewIcon} src="/public2/More_info.svg" alt="View" style={{ width: '16px', height: '16px' }} /> {/* 임시 아이콘 */}
+                                  <div className={styles.viewCount}>{review.viewCount || 0}</div>
+                                  <div className={styles._20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
+                                </div>
+                              </div>
                             </div>
-                            <div className={styles.frame139}>
-                              <div className={styles.div8}>{comment.text}</div>
+                            <div className={styles.frame148}>
+                              <div className={styles.frame912}>
+                                <div className={styles.div6}>{review.category}</div>
+                              </div>
+                              <div className={styles.frame111}>
+                                <div className={styles.div6}>{review.productLink}</div>
+                              </div>
                             </div>
                           </div>
-                          <img className={styles.group1} src="/public2/More_info.svg" alt="more options" />
+                          <div className={styles.frame153}>
+                            <div className={styles.div7}>{review.content}</div>
+                            {review.receiptImagePath && <img src={review.receiptImagePath} alt="Receipt" className={styles.receiptImage} />}
+                            <div className={styles.frame129}>
+                              <div className={styles.frame246}>
+                                <div className={styles.frame248}>
+                                  <img
+                                    className={styles.frame131}
+                                    src={review.isLiked ? "/like_fill.svg" : "/like.svg"}
+                                    alt="like"
+                                    onClick={() => handleLikeToggle(review.id)}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                  <div className={styles.frame247}>
+                                    <div className={styles._10}>{review.likeCount}</div>
+                                  </div>
+                                </div>
+                                <div className={styles.frame249}>
+                                  <img
+                                    className={styles.frame132}
+                                    src="/comment_icon.svg" // 클릭 시 토글되므로 fill 아이콘은 나중에 고려
+                                    alt="comment"
+                                    onClick={() => commentInputRefs.current[review.id]?.focus()} // 댓글 입력 필드에 포커스
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                  <div className={styles.frame247}>
+                                    <div className={styles._10}>{review.commentCount}</div>
+                                  </div>
+                                </div>
+                                <div className={styles.frame250}>
+                                  <img
+                                    className={styles.frame130}
+                                    src={review.isBookmarked ? "/bookmark_fill.svg" : "/bookmark_icon.svg"}
+                                    alt="bookmark"
+                                    onClick={() => handleBookmarkToggle(review.id)}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                  <div className={styles.frame247}>
+                                    <div className={styles._10}>{review.bookmarkCount}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div className={styles.line6}></div>
+                        <div className={styles.frame179}>
+                          <div className={styles.frame176}>
+                            {/* Comments are not fetched from this endpoint, so this section will be empty */}
+                            <div className={styles.frame197}>
+                              <div className={styles.line53}></div>
+                              <div className={styles.div9}>더보기</div>
+                              <div className={styles.commentSection}> {/* 조건부 렌더링 제거 */}
+                                <div className={styles.commentList}>
+                                  {review.comments.map(comment => (
+                                    <div key={comment.id} className={styles.frame174}>
+                                      <div className={styles.line7}></div>
+                                      <div className={styles.frame1063}>
+                                        <div className={styles.frame141}>
+                                          <div className={styles.frame140}>
+                                            <div className={styles.profile2}></div>
+                                            <div className={styles.username2}>{comment.author.username}</div>
+                                          </div>
+                                          <div className={styles.frame139}>
+                                            <div className={styles.div8}>{comment.content}</div>
+                                          </div>
+                                        </div>
+                                        <img className={styles.group1} src="/More_info.svg" alt="more options" />
+                                      </div>
+                                      <div className={styles.line6}></div>
+                                    </div>
+                                  ))}
+                                </div>
+                                <div className={styles.commentInputContainer}>
+                                  <input
+                                    type="text"
+                                    placeholder="댓글을 입력하세요..."
+                                    value={review.newCommentContent}
+                                    onChange={(e) => setReviewList(prevReviewList => prevReviewList.map(r =>
+                                      r.id === review.id ? { ...r, newCommentContent: e.target.value } : r
+                                    ))}
+                                    className={styles.commentInputField}
+                                    ref={el => commentInputRefs.current[review.id] = el} // ref 추가
+                                  />
+                                  <button onClick={() => handleAddComment(review.id, review.newCommentContent)} className={styles.commentSubmitButton}>등록</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                    <div className={styles.frame197}>
-                      <div className={styles.line53}></div>
-                      <div className={styles.div9}>더보기</div>
                     </div>
                   </div>
-                </div>
-                </div> {/* section01 닫는 태그 */}
-                </div> {/* reviewContentWrapper 닫는 태그 */}
-                
-              </div>
+                </React.Fragment>
+              ))}
             
-            ))}
+            </div>
           </div>
-        </div>
 
-        {/* Sidebars */}
-        <div className={styles.frame172}>
-          {/* Shopping List Section */}
-          <ShoppingList />
+          {/* Sidebars */}
+          <div className={styles.frame172}>
+            {/* Shopping List Section */}
+            <ShoppingList />
 
-          {/* Recommended Reviews Section */}
-          <div className={styles.frame168}>
-            <div className={styles.div14}>추천 리뷰</div>
-            {recommendedReviews.map((review) => (
-              <div key={review.id} className={styles.frame167}>
-                <div className={styles.frame162}>
-                  <div className={styles.frame161}>
-                    <div className={styles.frame160}>
-                      <div className={styles.profile}></div>
-                      <div className={styles.username3}>{review.username}</div>
+            {/* Recommended Reviews Section */}
+            <div className={styles.frame168}>
+              <div className={styles.div14}>추천 리뷰</div>
+              {recommendedReviews.map((review) => (
+                <div key={review.id} className={styles.frame167}>
+                  <div className={styles.frame162}>
+                    <div className={styles.frame161}>
+                      <div className={styles.frame160}>
+                        <div className={styles.profile}></div>
+                        <div className={styles.username3}>{review.username}</div>
+                      </div>
+                      <div className={styles.div15}>{review.title}</div>
                     </div>
-                    <div className={styles.div15}>{review.title}</div>
-                  </div>
-                  <div className={styles.frame108}>
-                    <div className={styles._202511162}>{review.date}</div>
-                    <div className={styles.frame91}>
-                      <div className={styles.div3}>{review.category}</div>
+                    <div className={styles.frame108}>
+                      <div className={styles._202511162}>{review.date}</div>
+                      <div className={styles.frame91}>
+                        <div className={styles.div3}>{review.category}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>
+
+      {popupConfig.show && (
+        <MoreOptionsPopup 
+          username={popupConfig.username}
+          onFollow={handleFollow}
+          onBlock={handleBlock}
+          onReport={handleReport}
+          onClose={closePopup}
+        />
+      )}
       </div>
-    </div>
+      </div>
+    </>
   );
 };

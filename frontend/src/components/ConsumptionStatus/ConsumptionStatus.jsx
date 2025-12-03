@@ -58,7 +58,7 @@ export const ProgressBar = ({ value, max, label, percentageColor, isThick }) => 
   );
 };
 
-export const ConsumptionStatus = ({ username }) => {
+export const ConsumptionStatus = ({ username, currentUser }) => {
   const [currentConsumption, setCurrentConsumption] = useState(140);
   const [targetConsumption, setTargetConsumption] = useState(200);
   const [isEditing, setIsEditing] = useState(false);
@@ -122,7 +122,7 @@ export const ConsumptionStatus = ({ username }) => {
             <div className={styles.frame33}> {/* Corresponds to frame-33 */}
               <div className={styles.frame24}> {/* Corresponds to frame-24 */}
                 <div className={styles.frame196}> {/* Corresponds to frame-196 */}
-                  <div className={styles.div3}>분야별 소비현황</div>
+                  <div className={styles.div3}>{currentUser ? currentUser.username : "USERNAME"} 님의 소비현황</div>
                   <div className={styles.line4}></div>
                 </div>
                 <div className={styles._11}>11월 소비현황</div>

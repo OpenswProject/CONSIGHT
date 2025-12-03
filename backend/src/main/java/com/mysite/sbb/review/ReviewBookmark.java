@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn; // 추가
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,10 @@ public class ReviewBookmark {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "review_id")
     private Review review;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private SiteUser user;
 }

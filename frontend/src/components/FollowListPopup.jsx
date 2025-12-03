@@ -1,18 +1,74 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // useNavigate import
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './FollowListPopup.module.css';
 
-const FollowListPopup = ({ onClose, title }) => {
-  const navigate = useNavigate(); // useNavigate 훅 사용
+const FollowListPopup = ({ onClose, title, username, listType }) => {
+  const navigate = useNavigate();
+  const [userList, setUserList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleUserClick = () => {
-    onClose(); // 팝업 닫기
-    navigate('/Userprofile'); // Userprofile 페이지로 이동
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (!username || !listType) return;
+
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        setError("로그인이 필요합니다.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/follow/${username}/${listType}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          setUserList(data.data);
+        } else {
+          setError(data.error?.message || `Failed to fetch ${listType}`);
+        }
+      } catch (err) {
+        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+        console.error("Error fetching follow list:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [username, listType]);
+
+  const handleUserClick = (targetUsername) => {
+    onClose();
+    console.log(`Navigating to user profile: ${targetUsername}`);
+    navigate(`/profile/${targetUsername}`);
   };
 
+  if (loading) return (
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.div} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.loading}>로딩 중...</div>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.div} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.error}>오류: {error}</div>
+        <button onClick={onClose}>닫기</button>
+      </div>
+    </div>
+  );
+
   return (
-    <div className={styles.overlay} onClick={onClose}> {/* overlay 클릭 시 닫기 */}
-      <div className={styles.div} onClick={(e) => e.stopPropagation()}> {/* 팝업 내부 클릭 시 이벤트 전파 중단 */}
+    <div className={styles.overlay} onClick={onClose}>
+      <div className={styles.div} onClick={(e) => e.stopPropagation()}>
         <img className={styles.vector} src="/public/vector0.svg" alt="Close" onClick={onClose} />
         <div className={styles.frame154}>
           <div className={styles.frame151}>
@@ -29,79 +85,24 @@ const FollowListPopup = ({ onClose, title }) => {
               </div>
             </div>
           </div>
-          {/* 각 팔로우/팔로워 항목에 onClick 이벤트 추가 */}
-          <div className={styles.frame1072} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
+          {userList.length > 0 ? (
+            userList.map((user, index) => (
+              <div className={styles.frame1072} key={index} onClick={() => handleUserClick(user.username)}>
+                <div className={styles.frame1062}>
+                  <div className={styles.frame141}>
+                    <div className={styles.frame140}>
+                      <div className={styles.profile}></div>
+                      <div className={styles.username2}>{user.username}</div>
+                    </div>
+                    <div className={styles.userinfo1}>{user.email}</div>
+                  </div>
                 </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
+                <img className={styles.riMoreLine} src="/public/ri-more-line0.svg" alt="More" />
               </div>
-            </div>
-            <img className={styles.riMoreLine} src="/public/ri-more-line0.svg" alt="More" />
-          </div>
-          <div className={styles.frame198} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
-                </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
-              </div>
-            </div>
-            <img className={styles.riMoreLine2} src="/public/ri-more-line1.svg" alt="More" />
-          </div>
-          <div className={styles.frame199} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
-                </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
-              </div>
-            </div>
-            <img className={styles.riMoreLine3} src="/public/ri-more-line2.svg" alt="More" />
-          </div>
-          <div className={styles.frame203} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
-                </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
-              </div>
-            </div>
-            <img className={styles.riMoreLine4} src="/public/ri-more-line3.svg" alt="More" />
-          </div>
-          <div className={styles.frame204} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
-                </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
-              </div>
-            </div>
-            <img className={styles.riMoreLine5} src="/public/ri-more-line4.svg" alt="More" />
-          </div>
-          <div className={styles.frame205} onClick={handleUserClick}>
-            <div className={styles.frame1062}>
-              <div className={styles.frame141}>
-                <div className={styles.frame140}>
-                  <div className={styles.profile}></div>
-                  <div className={styles.username2}>USERNAME</div>
-                </div>
-                <div className={styles.userinfo1}>USERINFO_1</div>
-              </div>
-            </div>
-            <img className={styles.riMoreLine6} src="/public/ri-more-line5.svg" alt="More" />
-          </div>
+            ))
+          ) : (
+            <div className={styles.noUsers}>목록이 비어 있습니다.</div>
+          )}
           <div className={styles.frame197}></div>
         </div>
       </div>

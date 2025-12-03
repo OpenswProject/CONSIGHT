@@ -22,7 +22,7 @@ const SignupPage = () => {
     console.log('전송 데이터:', { username, email, password1, password2 }); // 전송 데이터 로깅
 
     try {
-      const response = await fetch('http://localhost:8080/user/signup', {
+      const response = await fetch('/user/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

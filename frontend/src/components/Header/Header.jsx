@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "./Header.module.css";
 
-export const Header = () => {
+export const Header = ({ currentUser, setCurrentUser }) => {
   const navigate = useNavigate();
   const [isReviewHovered, setIsReviewHovered] = useState(false);
 
@@ -18,13 +18,20 @@ export const Header = () => {
     setIsReviewHovered(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // JWT 토큰 삭제
+    localStorage.removeItem('username'); // 사용자 이름도 삭제
+    setCurrentUser(null); // 전역 사용자 상태 초기화
+    navigate('/login'); // 로그인 페이지로 리다이렉트
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.logoContainer}>
           <div className={styles.logoWrapper}>
             <Link to="/">
-              <img className={styles.logo} src="/public2/CONSIGHT_Logo.svg" alt="CONSIGHT Logo" />
+              <img className={styles.logo} src="/CONSIGHT_Logo.svg" alt="CONSIGHT Logo" />
             </Link>
           </div>
           <nav className={styles.nav}>
@@ -49,13 +56,28 @@ export const Header = () => {
           </nav>
         </div>
         <div className={styles.userActions}>
-          <img
-            className={styles.accountCogIcon}
-            src="/public2/account_setting_icon.svg"
-            alt="Account Settings"
-            onClick={handleAccountCogClick}
-          />
-          <img className={styles.logoutLineIcon} src="/public2/logout_icon.svg" alt="Logout" />
+          {currentUser ? (
+            <>
+              <span className={styles.usernameDisplay}>{currentUser.username}님</span>
+              <img
+                className={styles.accountCogIcon}
+                src="/account_setting_icon.svg"
+                alt="Account Settings"
+                onClick={handleAccountCogClick}
+              />
+              <img
+                className={styles.logoutLineIcon}
+                src="/logout_icon.svg"
+                alt="Logout"
+                onClick={handleLogout}
+              />
+            </>
+          ) : (
+            <>
+              <Link to="/login" className={styles.navItem}>로그인</Link>
+              <Link to="/signup" className={styles.navItem}>회원가입</Link>
+            </>
+          )}
         </div>
       </div>
     </header>

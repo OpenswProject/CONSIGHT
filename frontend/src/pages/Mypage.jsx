@@ -7,14 +7,83 @@ import MyProfileMoreInfoPopup from '../components/MyProfileMoreInfoPopup/MyProfi
 import NameChangePopup from '../components/NameChangePopup/NameChangePopup';
 import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 
-const Mypage = () => {
+const Mypage = ({ currentUser }) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [showFollowerPopup, setShowFollowerPopup] = useState(false);
   const [showFollowingPopup, setShowFollowingPopup] = useState(false);
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
   const [showNameChangePopup, setShowNameChangePopup] = useState(false);
+  const [myReviewData, setMyReviewData] = useState(null); // State to store fetched review data
+
+  const [followersCount, setFollowersCount] = useState(0); // 초기 팔로워 수 0
+  const [followingCount, setFollowingCount] = useState(0); // 초기 팔로잉 수 0
+  const [followersList, setFollowersList] = useState([]); // 초기 팔로워 목록 비어있음
+  const [followingList, setFollowingList] = useState([]); // 초기 팔로잉 목록 비어있음
 
   const moreOptionsRef = useRef(null); // Ref for the more options container
+
+  const usernameToDisplay = currentUser ? currentUser.username : "USERNAME";
+  const userInfoToDisplay = currentUser ? currentUser.email : "USERINFO_1";
+
+  // 팔로우/팔로워 수 및 목록을 가져오는 useEffect
+  useEffect(() => {
+    if (!currentUser) {
+      setFollowersCount(0);
+      setFollowingCount(0);
+      setFollowersList([]);
+      setFollowingList([]);
+      return;
+    }
+
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      console.warn("No JWT token found, cannot fetch follow data.");
+      return;
+    }
+
+    const fetchFollowData = async () => {
+      try {
+        // 팔로우/팔로워 수 가져오기
+        const countsResponse = await fetch(`/api/follow/${currentUser.username}/counts`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (countsResponse.ok) {
+          const countsData = await countsResponse.json();
+          setFollowersCount(countsData.data.followersCount);
+          setFollowingCount(countsData.data.followingCount);
+        } else {
+          console.error("Failed to fetch follow counts:", countsResponse.statusText);
+        }
+
+        // 팔로워 목록 가져오기
+        const followersResponse = await fetch(`/api/follow/${currentUser.username}/followers`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (followersResponse.ok) {
+          const followersData = await followersResponse.json();
+          setFollowersList(followersData.data);
+        } else {
+          console.error("Failed to fetch followers list:", followersResponse.statusText);
+        }
+
+        // 팔로잉 목록 가져오기
+        const followingResponse = await fetch(`/api/follow/${currentUser.username}/following`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (followingResponse.ok) {
+          const followingData = await followingResponse.json();
+          setFollowingList(followingData.data);
+        } else {
+          console.error("Failed to fetch following list:", followingResponse.statusText);
+        }
+
+      } catch (error) {
+        console.error("Error fetching follow data:", error);
+      }
+    };
+
+    fetchFollowData();
+  }, [currentUser]); // currentUser가 변경될 때마다 다시 가져옴
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -33,6 +102,42 @@ const Mypage = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showMyProfileMoreInfoPopup]);
+
+  useEffect(() => {
+    const fetchMyReviewData = async () => {
+      if (!currentUser) {
+        setMyReviewData(null);
+        return;
+      }
+
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        console.warn("No JWT token found, cannot fetch my review data.");
+        setMyReviewData(null);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/reviews/me', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setMyReviewData(data.data); // Assuming APIResponse wraps the actual data in a 'data' field
+      } catch (error) {
+        console.error("Failed to fetch my review data:", error);
+        setMyReviewData(null);
+      }
+    };
+
+    fetchMyReviewData();
+  }, [currentUser]); // Refetch when currentUser changes
 
   const openPopup = () => setPopupOpen(true);
   const closePopup = () => setPopupOpen(false);
@@ -87,14 +192,14 @@ const Mypage = () => {
                       <div className={styles.usernameInfo}>
                         <div className={styles.frame224}>
                           <div className={styles.frame223}>
-                            <div className={styles.username}>USERNAME</div>
+                            <div className={styles.username}>{usernameToDisplay}</div>
                           </div>
                         </div>
-                        <div className={styles.userinfo1}>USERINFO_1</div>
+                        <div className={styles.userinfo1}>{userInfoToDisplay}</div>
                       </div>
                       <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
                         <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowMyProfileMoreInfoPopup(!showMyProfileMoreInfoPopup)} />
-                        {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} />}
+                        {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} currentUser={currentUser} />}
                       </div>
                     </div>
                   </div>
@@ -118,11 +223,11 @@ const Mypage = () => {
                     </div>
                     <div className={styles.frame2112}>
                       <div className={styles.frame212}>
-                        <div className={styles._100}>100</div>
+                        <div className={styles._100}>{followingCount}</div>
                       </div>
                       <div className={styles.line43}></div>
                       <div className={styles.frame211}>
-                        <div className={styles._200}>200</div>
+                        <div className={styles._200}>{followersCount}</div>
                       </div>
                     </div>
                   </div>
@@ -677,237 +782,61 @@ const Mypage = () => {
         
 
         <div className={styles.reviewsWrapper}>
-            <div className={styles.reviewBlocksWrapper}>
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
+            {myReviewData && myReviewData.written ? (
+              <>
+                {myReviewData.written.map((review) => (
+                  <div className={styles.frame83} key={review.id} onClick={openPopup}>
+                    <div className={styles.frame105}>
+                      <div className={styles.frame109}>
+                        <div className={styles.frame113}>
+                          <div className={styles.frame107}>
+                            <div className={styles.frame1063}>
+                              <div className={styles.profile3}></div>
+                              <div className={styles.username3}>{review.author.username}</div>
+                              <div className={styles.div13}>{review.title}</div>
+                              <div className={styles.frame108}>
+                                <div className={styles.date20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
+                                <div className={styles.frame912}>
+                                  <div className={styles.div12}>{review.category}</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={styles.frame110}>
+                            <div className={styles.div14}>
+                              {review.content.substring(0, 100)}... {/* Truncate content */}
+                            </div>
+                            <div className={styles.frame111}>
+                              <div className={styles.div15}>제품 링크</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={styles.frame155}>
+                        <img className={styles.iconframe} src="like.svg" alt="Like" />
+                        <img className={styles.frame1325} src="bookmark_icon.svg" alt="Bookmark" />
+                        <img className={styles.frame1304} src="comment_icon.svg" alt="Comment" />
                       </div>
                     </div>
-                    </div>
                   </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
+                ))}
+                {Array.from({ length: Math.max(0, 6 - myReviewData.written.length) }).map((_, index) => (
+                  <div key={`placeholder-${index}`} className={`${styles.frame83} ${styles.placeholderReviewBlock}`}>
+                    {/* Placeholder content, e.g., empty div or transparent content */}
                   </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <p>작성한 리뷰가 없습니다.</p>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={`placeholder-${index}`} className={`${styles.frame83} ${styles.placeholderReviewBlock}`}>
+                    {/* Placeholder content */}
+                  </div>
+                ))}
+              </>
+            )}
           </div>
-
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
-        </div>
-        
-        
-
-        
-
-      </div>
-
-
-
-    <div className={styles.reviewBlocksWrapper}>
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.frame83} onClick={openPopup}>
-            <div className={styles.frame105}>
-              <div className={styles.frame109}>
-                <div className={styles.frame113}>
-                  <div className={styles.frame107}>
-                    <div className={styles.frame1063}>
-                      <div className={styles.profile3}></div>
-                      <div className={styles.username3}>USERNAME</div>
-                      <div className={styles.div13}>코지웜 듀얼히팅 전기장판</div>
-                      <div className={styles.frame108}>
-                      <div className={styles.date20251116}>2025.11.16</div>
-                      <div className={styles.frame912}>
-                        <div className={styles.div12}>생활·가전</div>
-                      </div>
-                    </div>
-                    </div>
-                  </div>
-                  <div className={styles.frame110}>
-                    <div className={styles.div14}>
-                      생각보다 훨씬 빠르게 따뜻해져서 밤에 잠들 때 정말
-                      편해요. 온도 단계가 세밀하게 조절돼..
-                    </div>
-                    <div className={styles.frame111}>
-                      <div className={styles.div15}>제품 링크</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.frame155}>
-                <img className={styles.iconframe} src="like.svg" />
-                <img className={styles.frame1325} src="bookmark_icon.svg" />
-                <img className={styles.frame1304} src="comment_icon.svg" />
-              </div>
-            </div>
-        </div>
-        
-        </div>
-
-        
-
-      </div>
 
 
 
@@ -919,10 +848,20 @@ const Mypage = () => {
       </div>
       <ReviewPopup show={isPopupOpen} onClose={closePopup} />
       {showFollowerPopup && (
-        <FollowListPopup onClose={closeFollowerPopup} title="USERNAME님의 팔로워 목록" />
+        <FollowListPopup 
+          onClose={closeFollowerPopup} 
+          title={`${usernameToDisplay}님의 팔로워 목록`} 
+          username={usernameToDisplay} 
+          listType="followers" 
+        />
       )}
       {showFollowingPopup && (
-        <FollowListPopup onClose={closeFollowingPopup} title="USERNAME님의 팔로우 목록" />
+        <FollowListPopup 
+          onClose={closeFollowingPopup} 
+          title={`${usernameToDisplay}님의 팔로우 목록`} 
+          username={usernameToDisplay} 
+          listType="following" 
+        />
       )}
       {showNameChangePopup && (
         <NameChangePopup
@@ -931,7 +870,7 @@ const Mypage = () => {
             console.log("New username:", newUsername);
             setShowNameChangePopup(false);
           }}
-          currentUsername="USERNAME" // Replace with actual username state
+          currentUsername={usernameToDisplay} // Replace with actual username state
         />
       )}
     </>

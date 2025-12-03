@@ -1,0 +1,46 @@
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupContent {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.optionButton {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-top: 1px solid #dbdbdb;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.optionButton:first-child {
+    border-top: none;
+}
+
+.optionButton:hover {
+    background-color: #f0f0f0;
+}
+
+.destructive {
+    color: #ed4956;
+    font-weight: 700;
+}

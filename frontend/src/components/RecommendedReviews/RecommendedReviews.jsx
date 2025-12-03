@@ -110,7 +110,7 @@ export const RecommendedReviews = () => {
           {/* Search bar from mainpage reference */}
           <div className={styles.frame147}>
           <div className={styles.frame146}>
-            <img className={styles.group1} src="/public2/search_icon.svg" alt="Search icon" />
+            <img className={styles.group1} src="/search_icon.svg" alt="Search icon" />
             <div className={styles.line54}></div>
             <input type="text" placeholder="검색..." className={styles.searchInput} />
           </div>
@@ -126,7 +126,7 @@ export const RecommendedReviews = () => {
                       <div className={styles.avatar}></div> {/* Corresponds to .profile3 */}
                       <div className={styles.usernameAndMore}> {/* New wrapper */}
                         <span className={styles.username}>{review.username}</span>
-                        <img className={styles.moreIcon} src="/public2/More_info.svg" alt="More options" />
+                        <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
                       </div>
                       <span className={styles.reviewTitle}>{review.title}</span>
                     </div>
@@ -147,15 +147,15 @@ export const RecommendedReviews = () => {
                 <div className={styles.reviewActions}> {/* Corresponds to .frame-155 */}
                   <div className={styles.actionItemGroup}>
                     <div className={styles.actionItem}>
-                      <img src="/public2/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
+                      <img src="/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
                       <span className={styles.actionCount}>{review.bookmarks}</span>
                     </div>
                     <div className={styles.actionItem}>
-                      <img src="/public2/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
+                      <img src="/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
                       <span className={styles.actionCount}>{review.comments}</span>
                     </div>
                     <div className={styles.actionItem}>
-                      <img src="/public2/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
+                      <img src="/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
                       <span className={styles.actionCount}>{review.likes}</span>
                     </div>
                   </div>
@@ -172,7 +172,7 @@ export const RecommendedReviews = () => {
                       <div className={styles.avatar}></div> {/* Corresponds to .profile3 */}
                       <div className={styles.usernameAndMore}> {/* New wrapper */}
                         <span className={styles.username}>{review.username}</span>
-                        <img className={styles.moreIcon} src="/public2/More_info.svg" alt="More options" />
+                        <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
                       </div>
                       <span className={styles.reviewTitle}>{review.title}</span>
                     </div>
@@ -193,15 +193,15 @@ export const RecommendedReviews = () => {
                 <div className={styles.reviewActions}> {/* Corresponds to .frame-155 */}
                   <div className={styles.actionItemGroup}>
                     <div className={styles.actionItem}>
-                      <img src="/public2/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
+                      <img src="/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
                       <span className={styles.actionCount}>{review.bookmarks}</span>
                     </div>
                     <div className={styles.actionItem}>
-                      <img src="/public2/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
+                      <img src="/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
                       <span className={styles.actionCount}>{review.comments}</span>
                     </div>
                     <div className={styles.actionItem}>
-                      <img src="/public2/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
+                      <img src="/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
                       <span className={styles.actionCount}>{review.likes}</span>
                     </div>
                   </div>

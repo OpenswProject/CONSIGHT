@@ -1,5 +1,16 @@
 package com.mysite.sbb.user;
 
-// 로그인 성공 시 응답으로 보낼 데이터 전송 객체 (DTO)
-public record LoginResponse(String token) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class LoginResponse {
+    private String token;
+    private String username;
+    private String email;
+    private boolean success;
+    private String message;
 }

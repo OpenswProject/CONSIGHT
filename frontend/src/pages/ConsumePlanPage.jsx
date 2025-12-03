@@ -7,7 +7,7 @@ import MyProfileMoreInfoPopup from '../components/MyProfileMoreInfoPopup/MyProfi
 import NameChangePopup from '../components/NameChangePopup/NameChangePopup'; // NameChangePopup import
 import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 
-const ConsumePlanPage = () => {
+const ConsumePlanPage = ({ currentUser }) => {
   const [targetAmount, setTargetAmount] = useState(20); // 초기 목표 금액
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false); // 피드백 팝업 상태
@@ -17,7 +17,22 @@ const ConsumePlanPage = () => {
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false); // 내 프로필 더보기 팝업 상태
   const [showNameChangePopup, setShowNameChangePopup] = useState(false); // 닉네임 변경 팝업 상태
 
+  const [followersCount, setFollowersCount] = useState(123); // 임시 팔로워 수
+  const [followingCount, setFollowingCount] = useState(456); // 임시 팔로잉 수
+  const [followersList, setFollowersList] = useState([ // 임시 팔로워 목록
+    { username: "followerA", email: "followerA@example.com" },
+    { username: "followerB", email: "followerB@example.com" },
+  ]);
+  const [followingList, setFollowingList] = useState([ // 임시 팔로잉 목록
+    { username: "followingX", email: "followingX@example.com" },
+    { username: "followingY", email: "followingY@example.com" },
+    { username: "followingZ", email: "followingZ@example.com" },
+  ]);
+
   const moreOptionsRef = useRef(null); // Ref for the more options container
+
+  const usernameToDisplay = currentUser ? currentUser.username : "USERNAME";
+  const userInfoToDisplay = currentUser ? currentUser.email : "USERINFO_1";
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -86,14 +101,14 @@ const ConsumePlanPage = () => {
                   <div className={styles.usernameInfo}>
                     <div className={styles.frame224}>
                       <div className={styles.frame223}>
-                        <div className={styles.username}>USERNAME</div>
+                        <div className={styles.username}>{usernameToDisplay}</div>
                       </div>
                     </div>
-                    <div className={styles.userinfo1}>USERINFO_1</div>
+                    <div className={styles.userinfo1}>{userInfoToDisplay}</div>
                   </div>
                   <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
                     <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowMyProfileMoreInfoPopup(!showMyProfileMoreInfoPopup)} />
-                    {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} />}
+                    {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} currentUser={currentUser} />}
                   </div>
                 </div>
               </div>
@@ -118,11 +133,11 @@ const ConsumePlanPage = () => {
                 </div>
                 <div className={styles.followRow}>
                     <div className={styles.followItem} onClick={() => setShowFollowerPopup(true)}>
-                        <div className={styles.followCount}>100</div>
+                        <div className={styles.followCount}>{followersCount}</div>
                     </div>
                     <div className={styles.followDivider}></div>
                     <div className={styles.followItem} onClick={() => setShowFollowingPopup(true)}>
-                        <div className={styles.followCount}>50</div>
+                        <div className={styles.followCount}>{followingCount}</div>
                     </div>
                 </div>
             </div>
@@ -830,8 +845,8 @@ const ConsumePlanPage = () => {
                   
                   <div className={styles.frame2222}> {/* Corresponds to frame-183 */}
                                 <div className={styles.frame191_}> {/* Corresponds to frame-191 */}
-                                  <img className={styles.group20953} src="/public2/leftleft_icon.svg" alt="<<" />
-                                  <img className={styles.group20953} src="/public2/left_icon.svg" alt="<" />
+                                  <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" />
+                                  <img className={styles.group20953} src="/left_icon.svg" alt="<" />
                                 </div>
                       
                                   <div className={styles.frame184}> 
@@ -861,8 +876,8 @@ const ConsumePlanPage = () => {
                               
                   
                                   <div className={styles.frame191_}> {/* Corresponds to frame-191 */}
-                                    <img className={styles.group20953} src="/public2/right_icon.svg" alt=">" />
-                                    <img className={styles.group20953} src="/public2/rightright_icon.svg" alt=">>" />
+                                    <img className={styles.group20953} src="/right_icon.svg" alt=">" />
+                                    <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" />
                                   </div>
                             </div>
                 </div>
@@ -880,8 +895,22 @@ const ConsumePlanPage = () => {
       <img className={styles.rectangle10} src="/rectangle-100.svg" alt="Rectangle" />
 
       {showFeedbackPopup && <FeedbackPopup onClose={() => setShowFeedbackPopup(false)} />} {/* 팝업 조건부 렌더링 */}
-      {showFollowerPopup && <FollowListPopup onClose={() => setShowFollowerPopup(false)} title="팔로워" />}
-      {showFollowingPopup && <FollowListPopup onClose={() => setShowFollowingPopup(false)} title="팔로잉" />}
+      {showFollowerPopup && (
+        <FollowListPopup 
+          onClose={() => setShowFollowerPopup(false)} 
+          title={`${usernameToDisplay}님의 팔로워 목록`} 
+          username={usernameToDisplay} 
+          listType="followers" 
+        />
+      )}
+      {showFollowingPopup && (
+        <FollowListPopup 
+          onClose={() => setShowFollowingPopup(false)} 
+          title={`${usernameToDisplay}님의 팔로우 목록`} 
+          username={usernameToDisplay} 
+          listType="following" 
+        />
+      )}
       {showInitializePopup && (
         <InitializePopup
           onClose={() => setShowInitializePopup(false)}
@@ -895,7 +924,7 @@ const ConsumePlanPage = () => {
             console.log("New username:", newUsername);
             setShowNameChangePopup(false);
           }}
-          currentUsername="USERNAME" // Replace with actual username state
+          currentUsername={usernameToDisplay} // Replace with actual username state
         />
       )}
     </div>

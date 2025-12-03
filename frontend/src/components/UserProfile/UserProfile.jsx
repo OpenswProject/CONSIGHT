@@ -10,7 +10,7 @@ export const UserProfile = ({ username, userInfo }) => {
           <div className={styles.username}>{username}</div>
           <div className={styles.userInfoText}>{userInfo}</div>
         </div>
-        <img className={styles.moreIcon} src="/public2/More_info.svg" alt="More options" />
+        <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 package com.mysite.sbb;
 
+import org.springframework.http.HttpMethod;
 import com.mysite.sbb.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -55,7 +56,14 @@ public class SecurityConfig {
             // HTTP 요청에 대한 인가 설정
             .authorizeHttpRequests(auth -> auth
                 // 아래 경로들은 인증 없이 접근 허용
-                .requestMatchers("/api/user/login", "/api/test", "/hello", "/", "/h2-console/**", "/user/signup").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/view").permitAll() // 조회수 업데이트
+                .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() // 모든 리뷰 관련 GET 요청
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/like").permitAll() // 좋아요 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/bookmark").permitAll() // 북마크 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/comments").permitAll() // 댓글 작성 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers("/api/follow/**").permitAll() // 팔로우 관련 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers("/api/test", "/hello", "/", "/h2-console/**", "/user/signup").permitAll()
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
             )
@@ -67,22 +75,21 @@ public class SecurityConfig {
                     .invalidateHttpSession(true))
             
             // 우리가 만든 JWT 필터를 Spring Security 필터 체인에 추가
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-            // 예외 처리 설정 제거
-            // .exceptionHandling(exceptionHandling -> exceptionHandling
-            //     .authenticationEntryPoint((request, response, authException) -> {
-            //         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            //         response.setContentType("application/json;charset=UTF-8");
-            //         String jsonResponse = new ObjectMapper().writeValueAsString(APIResponse.error("인증되지 않았습니다.", HttpServletResponse.SC_UNAUTHORIZED));
-            //         response.getWriter().write(jsonResponse);
-            //     })
-            //     .accessDeniedHandler((request, response, accessDeniedException) -> {
-            //         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            //         response.setContentType("application/json;charset=UTF-8");
-            //         String jsonResponse = new ObjectMapper().writeValueAsString(APIResponse.error("접근 권한이 없습니다.", HttpServletResponse.SC_FORBIDDEN));
-            //         response.getWriter().write(jsonResponse);
-            //     })
-            // );
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            // 예외 처리 설정 활성화
+            .exceptionHandling(exceptionHandling -> exceptionHandling
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json;charset=UTF-8");
+                    String jsonResponse = new ObjectMapper().writeValueAsString(APIResponse.error("인증되지 않았습니다.", HttpServletResponse.SC_UNAUTHORIZED));
+                    response.getWriter().write(jsonResponse);
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.setContentType("application/json;charset=UTF-8");
+                    String jsonResponse = new ObjectMapper().writeValueAsString(APIResponse.error("접근 권한이 없습니다.", HttpServletResponse.SC_FORBIDDEN));
+                    response.getWriter().write(jsonResponse);
+                }));
             
         return http.build();
     }
@@ -103,7 +110,7 @@ public class SecurityConfig {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/**") // 모든 경로에 대해
-                    .allowedOrigins("http://localhost:5173") // 이 출처에서의 요청만 허용
+                    .allowedOrigins("http://localhost:3000") // 이 출처에서의 요청만 허용
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                     .allowedHeaders("*") // 모든 헤더 허용
                     .allowCredentials(true); // 자격 증명 허용

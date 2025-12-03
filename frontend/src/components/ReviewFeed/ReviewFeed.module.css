@@ -113,10 +113,8 @@
 }
 
 .frame95 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -214,10 +212,8 @@
 }
 
 .frame91 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -232,10 +228,8 @@
 }
 
 .frame93 {
-  background: var(--green-d6);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--green-8b);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -250,10 +244,8 @@
 }
 
 .frame88 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -268,10 +260,8 @@
 }
 
 .frame94 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -286,10 +276,8 @@
 }
 
 .frame89 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -304,10 +292,8 @@
 }
 
 .frame962 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -322,10 +308,8 @@
 }
 
 .frame90 {
-  background: var(--gray-f3);
   border-radius: 20px;
   border-style: solid;
-  border-color: var(--gray-c5);
   border-width: 2px;
   padding: 5px 8px;
   display: flex;
@@ -1652,4 +1636,20 @@
   font-family: "Inter-Bold", sans-serif;
   font-size: 10px;
   font-weight: 700;
+}
+
+.categoryButton {
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 2px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 63px;
+  height: 28px;
+  position: relative;
 }
