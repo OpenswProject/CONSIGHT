@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import styles from "./ReviewFeed.module.css";
 import { ShoppingList } from "../ShoppingList/ShoppingList"; // ShoppingList 컴포넌트 import
 
 export const ReviewFeed = () => {
-  const reviews = [
+  const initialReviews = [
     {
       id: 1,
       username: "USERNAME",
@@ -17,6 +17,7 @@ export const ReviewFeed = () => {
       likes: 2,
       comments: 5,
       bookmarks: 10,
+      views: 150,
       moreIcon: "/ri-more-line0.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
@@ -40,6 +41,7 @@ export const ReviewFeed = () => {
       likes: 10,
       comments: 10,
       bookmarks: 10,
+      views: 200,
       moreIcon: "/ri-more-line4.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
@@ -59,6 +61,7 @@ export const ReviewFeed = () => {
       likes: 10,
       comments: 10,
       bookmarks: 10,
+      views: 180,
       moreIcon: "/ri-more-line5.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
@@ -78,6 +81,7 @@ export const ReviewFeed = () => {
       likes: 10,
       comments: 10,
       bookmarks: 10,
+      views: 220,
       moreIcon: "/ri-more-line6.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
@@ -97,6 +101,7 @@ export const ReviewFeed = () => {
       likes: 10,
       comments: 10,
       bookmarks: 10,
+      views: 190,
       moreIcon: "/ri-more-line7.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
@@ -116,7 +121,65 @@ export const ReviewFeed = () => {
       likes: 10,
       comments: 10,
       bookmarks: 10,
+      views: 210,
       moreIcon: "/ri-more-line8.svg",
+      likeIcon: "/public2/like.svg",
+      commentIcon: "/public2/comment_icon.svg",
+      bookmarkIcon: "/public2/bookmark_icon.svg",
+      commentsList: [],
+    },
+    {
+      id: 7,
+      username: "USERNAME",
+      title: "뉴발란스 530",
+      productImage: null,
+      date: "2025.11.15",
+      category: "신발",
+      content: "편안하고 디자인도 예뻐서 만족합니다.",
+      productLink: "제품 링크",
+      likes: 5,
+      comments: 2,
+      bookmarks: 3,
+      views: 100,
+      moreIcon: "/ri-more-line9.svg",
+      likeIcon: "/public2/like.svg",
+      commentIcon: "/public2/comment_icon.svg",
+      bookmarkIcon: "/public2/bookmark_icon.svg",
+      commentsList: [],
+    },
+    {
+      id: 8,
+      username: "USERNAME",
+      title: "나이키 에어포스 1",
+      productImage: null,
+      date: "2025.11.14",
+      category: "신발",
+      content: "클래식은 영원하다. 어떤 옷에도 잘 어울려요.",
+      productLink: "제품 링크",
+      likes: 8,
+      comments: 3,
+      bookmarks: 5,
+      views: 120,
+      moreIcon: "/ri-more-line10.svg",
+      likeIcon: "/public2/like.svg",
+      commentIcon: "/public2/comment_icon.svg",
+      bookmarkIcon: "/public2/bookmark_icon.svg",
+      commentsList: [],
+    },
+    {
+      id: 9,
+      username: "USERNAME",
+      title: "아디다스 가젤",
+      productImage: null,
+      date: "2025.11.13",
+      category: "신발",
+      content: "가볍고 착화감이 좋습니다. 데일리 슈즈로 최고!",
+      productLink: "제품 링크",
+      likes: 12,
+      comments: 6,
+      bookmarks: 7,
+      views: 130,
+      moreIcon: "/ri-more-line11.svg",
       likeIcon: "/public2/like.svg",
       commentIcon: "/public2/comment_icon.svg",
       bookmarkIcon: "/public2/bookmark_icon.svg",
@@ -124,7 +187,38 @@ export const ReviewFeed = () => {
     },
   ];
 
-  
+  const [reviews, setReviews] = useState(initialReviews);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [reviewsPerPage] = useState(4); // 페이지당 4개의 리뷰
+  const [sortOrder, setSortOrder] = useState("latest"); // 기본 정렬: 최신순
+
+  // 정렬된 리뷰 목록 계산
+  const sortedReviews = useMemo(() => {
+    let sortableReviews = [...reviews];
+    if (sortOrder === "latest") {
+      sortableReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortOrder === "views") {
+      sortableReviews.sort((a, b) => b.views - a.views);
+    } else if (sortOrder === "likes") {
+      sortableReviews.sort((a, b) => b.likes - a.likes);
+    }
+    return sortableReviews;
+  }, [reviews, sortOrder]);
+
+  // 현재 페이지의 리뷰 가져오기
+  const indexOfLastReview = currentPage * reviewsPerPage;
+  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+  const currentReviews = sortedReviews.slice(indexOfFirstReview, indexOfLastReview);
+
+  // 페이지 변경
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   const recommendedReviews = [
     { id: 1, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
@@ -202,17 +296,17 @@ export const ReviewFeed = () => {
             <img className={styles.polygon1} src="/public2/listup_icon.svg" alt="sort icon" />
           </div>
           <div className={styles.frame113}>
-            <div className={styles.frame95}>
+            <div className={`${styles.frame95} ${sortOrder === "latest" ? styles.activeSort : ""}`} onClick={() => setSortOrder("latest")}>
               <div className={styles.div3}>최신순</div>
             </div>
           </div>
           <div className={styles.frame96}>
-            <div className={styles.frame95}>
+            <div className={`${styles.frame95} ${sortOrder === "views" ? styles.activeSort : ""}`} onClick={() => setSortOrder("views")}>
               <div className={styles.div3}>조회수순</div>
             </div>
           </div>
           <div className={styles.frame97}>
-            <div className={styles.frame95}>
+            <div className={`${styles.frame95} ${sortOrder === "likes" ? styles.activeSort : ""}`} onClick={() => setSortOrder("likes")}>
               <div className={styles.div3}>좋아요순</div>
             </div>
           </div>
@@ -231,48 +325,29 @@ export const ReviewFeed = () => {
                 <div className={styles.frame106}>
                   <div className={styles.a}>검색된 리뷰</div>
                 </div>
-                <div className={styles._30}>총 30건</div>
+                <div className={styles._30}>총 {reviews.length}건</div>
               </div>
               {/* Pagination (Top) */}
               <div className={styles.frame2222}> {/* Corresponds to frame-183 */}
                          
                           
                     <div className={styles.frame1901}>
-                      <img className={styles.group20953} src="/public2/leftleft_icon.svg" alt="<<" />
-                      <img className={styles.group20953} src="/public2/left_icon.svg" alt="<" />
+                      <img className={styles.group20953} src="/public2/leftleft_icon.svg" alt="<<" onClick={() => paginate(1)} />
+                      <img className={styles.group20953} src="/public2/left_icon.svg" alt="<" onClick={() => paginate(currentPage > 1 ? currentPage - 1 : 1)} />
                     </div>
           
                 
                     
-                      <div className={styles.frame1804}> 
-                        <div className={styles._10}>1</div>
-                      </div>
-                    
-                      <div className={styles.frame1804}> {/* Corresponds to frame-185 */}
-          
-                          <div className={styles._10}>2</div>
-                      
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-186 */}
-                    
-                          <div className={styles._10}>3</div>
-                      
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-1872 */}
-            
-                          <div className={styles._10}>4</div>
-              
-                      </div>
-                      <div className={styles.frame1804}> {/* Corresponds to frame-1882 */}
-                      
-                          <div className={styles._10}>5</div>
-                    
-                      </div>
+                      {pageNumbers.map(number => (
+                        <div key={number} className={`${styles.frame1804} ${currentPage === number ? styles.activePage : ''}`} onClick={() => paginate(number)}> 
+                          <div className={styles._10}>{number}</div>
+                        </div>
+                      ))}
                   
       
                       <div className={styles.frame1901}> {/* Corresponds to frame-191 */}
-                        <img className={styles.group20953} src="/public2/right_icon.svg" alt=">" />
-                        <img className={styles.group20953} src="/public2/rightright_icon.svg" alt=">>" />
+                        <img className={styles.group20953} src="/public2/right_icon.svg" alt=">" onClick={() => paginate(currentPage < totalPages ? currentPage + 1 : totalPages)} />
+                        <img className={styles.group20953} src="/public2/rightright_icon.svg" alt=">>" onClick={() => paginate(totalPages)} />
                       </div>
                     
                     </div>
@@ -288,7 +363,7 @@ export const ReviewFeed = () => {
 
           {/* Review Cards Container */}
           <div className={styles.frame119}>
-            {reviews.map((review) => (
+            {currentReviews.map((review) => (
               <div key={review.id} className={styles.frame50}>
                 <div className={styles.frame1222}>
                   <div className={styles.reviewContentWrapper}>
@@ -340,6 +415,12 @@ export const ReviewFeed = () => {
                           <img className={styles.frame130} src={review.bookmarkIcon} alt="bookmark" />
                           <div className={styles.frame247}>
                             <div className={styles._10}>{review.bookmarks}</div>
+                          </div>
+                        </div>
+                        <div className={styles.frame250}> {/* View count display */}
+                          <img className={styles.frame130} src="/public2/search_icon.svg" alt="views" /> {/* Using search icon as placeholder for views */}
+                          <div className={styles.frame247}>
+                            <div className={styles._10}>{review.views}</div>
                           </div>
                         </div>
                       </div>

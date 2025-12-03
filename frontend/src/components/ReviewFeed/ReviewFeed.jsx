@@ -61,6 +61,8 @@ export const ReviewFeed = () => {
             };
           })));
           console.log("Final reviewList after fetching comments:", reviewList); // 로그 추가
+          console.log("Backend data.data.content:", data.data.content); // Add this log
+          console.log("Backend data.data.totalPages:", data.data.totalPages); // Add this log
           setTotalPages(data.data.totalPages);
           setTotalElements(data.data.totalElements);
         } else {
@@ -90,10 +92,20 @@ export const ReviewFeed = () => {
     }
   };
 
+  const handleFirstPage = () => setCurrentPage(0);
+  const handlePreviousPage = () => setCurrentPage(prev => Math.max(0, prev - 1));
+  const handleNextPage = () => setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
+  const handleLastPage = () => setCurrentPage(totalPages - 1);
+
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const startPage = Math.floor(currentPage / 4) * 4;
-    const endPage = Math.min(startPage + 4, totalPages);
+    // 최대 5개의 페이지 번호를 보여주기 위한 로직
+    let startPage = Math.max(0, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 5);
+
+    if (endPage - startPage < 5) {
+      startPage = Math.max(0, endPage - 5);
+    }
 
     for (let i = startPage; i < endPage; i++) {
       pageNumbers.push(
@@ -461,30 +473,15 @@ export const ReviewFeed = () => {
                   <div className={styles._30}>총 {totalElements}건</div>
                 </div>
                 {/* Pagination (Top) */}
-                {/* Pagination (Top) */}
                 <div className={styles.frame2222}>
                   <div className={styles.frame1901}>
-                    <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={() => handlePageChange(0)} />
-                    <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={() => handlePageChange(currentPage - 1)} />
+                    <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={handleFirstPage} style={{ cursor: 'pointer' }} />
+                    <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={handlePreviousPage} style={{ cursor: 'pointer' }} />
                   </div>
-                  <div className={styles.frame1804}> 
-                    <div className={styles._10}>1</div>
-                  </div>
-                  <div className={styles.frame1804}> 
-                    <div className={styles._10}>2</div>
-                  </div>
-                  <div className={styles.frame1804}> 
-                    <div className={styles._10}>3</div>
-                  </div>
-                  <div className={styles.frame1804}> 
-                    <div className={styles._10}>4</div>
-                  </div>
-                  <div className={styles.frame1804}> 
-                    <div className={styles._10}>5</div>
-                  </div>
+                  {renderPageNumbers()}
                   <div className={styles.frame1901}>
-                    <img className={styles.group20953} src="/right_icon.svg" alt=">" onClick={() => handlePageChange(currentPage + 1)} />
-                    <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" onClick={() => handlePageChange(totalPages - 1)} />
+                    <img className={styles.group20953} src="/right_icon.svg" alt=">" onClick={handleNextPage} style={{ cursor: 'pointer' }} />
+                    <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" onClick={handleLastPage} style={{ cursor: 'pointer' }} />
                   </div>
                 </div>
               </div>
@@ -642,29 +639,7 @@ export const ReviewFeed = () => {
             {/* Shopping List Section */}
             <ShoppingList />
 
-            {/* Recommended Reviews Section */}
-            <div className={styles.frame168}>
-              <div className={styles.div14}>추천 리뷰</div>
-              {recommendedReviews.map((review) => (
-                <div key={review.id} className={styles.frame167} onClick={() => openReviewPopup(review)}>
-                  <div className={styles.frame162}>
-                    <div className={styles.frame161}>
-                      <div className={styles.frame160}>
-                        <div className={styles.profile}></div>
-                        <div className={styles.username3}>{review.username}</div>
-                      </div>
-                      <div className={styles.div15}>{review.title}</div>
-                    </div>
-                    <div className={styles.frame108}>
-                      <div className={styles._202511162}>{review.date}</div>
-                      <div className={styles.frame91}>
-                        <div className={styles.div3}>{review.category}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+
           </div>
         </div>
       </div>
