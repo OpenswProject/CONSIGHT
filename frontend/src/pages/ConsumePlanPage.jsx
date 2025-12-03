@@ -151,14 +151,16 @@ const handleAttend = () => {
     }
   };
 
-  const handleFeedbackSubmit = (feedbackText, satisfactionRating) => {
+  const handleFeedbackSubmit = (feedbackText, satisfactionRating, nextMonthGoal) => {
     // Here you would typically send the feedback to a backend API
-    console.log("Feedback submitted:", feedbackText, "Satisfaction:", satisfactionRating);
-    setSubmittedFeedback(prev => [...prev, { date: new Date().toLocaleDateString(), text: feedbackText, rating: satisfactionRating }]);
+    console.log("Feedback submitted:", feedbackText, "Satisfaction:", satisfactionRating, "Next Month Goal:", nextMonthGoal);
+    setSubmittedFeedback(prev => [...prev, { date: new Date().toLocaleDateString(), text: feedbackText, rating: satisfactionRating, nextMonthGoal: nextMonthGoal }]);
     setShowFeedbackPopup(false);
   };
 
   const [submittedFeedback, setSubmittedFeedback] = useState([]); // To store submitted feedback
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [feedbacksPerPage] = useState(4); // 페이지당 피드백 수
 
   const handleAddCategory = () => {
     if (newCategoryName && newCategoryTarget > 0) {
@@ -217,6 +219,29 @@ const handleAttend = () => {
 
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
   const monthlyPercentage = monthlyTargetConsumption > 0 ? Math.round((monthlyCurrentConsumption / monthlyTargetConsumption) * 100) : 0;
+
+  // 피드백 페이지네이션 로직
+  const indexOfLastFeedback = currentPage * feedbacksPerPage;
+  const indexOfFirstFeedback = indexOfLastFeedback - feedbacksPerPage;
+  const currentFeedbacks = submittedFeedback.slice(indexOfFirstFeedback, indexOfLastFeedback);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(submittedFeedback.length / feedbacksPerPage); i++) {
+      pageNumbers.push(i);
+    }
+    return (
+      <div className={styles.pagination}>
+        {pageNumbers.map(number => (
+          <div key={number} className={`${styles.frame184} ${currentPage === number ? styles.activePage : ''}`} onClick={() => paginate(number)}>
+            <div className={styles._1_}>{number}</div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className={styles.div}> {/* 전체 Grid 컨테이너 */}
@@ -586,304 +611,98 @@ const handleAttend = () => {
                   <div className={styles.frame106}>
                     <div className={styles.a2}>피드백</div>
                   </div>
-                  <div className={styles._202}>총 20건</div>
+                  <div className={styles._202}>총 {submittedFeedback.length}건</div>
                 </div>
               </div>
               <div className={styles.frame201}>
                 <div className={styles.feedbackContentWrapperInner}> {/* 새로운 div 추가 */}
                   <div className={styles.frame237}>
-                    <div className={styles.frame286}>
-                      <div className={styles.frame240}>
-                        <div className={styles.frame287}>
-                          <div className={styles.frame239}>
-                            <div className={styles.frame232}>
-                              <div className={styles.frame106}>
-                                <div className={styles.a3}>2025년 11월</div>
+                    {currentFeedbacks.length > 0 ? (
+                      currentFeedbacks.map((feedback, index) => (
+                        <div key={index} className={styles.div12}>
+                          <div className={styles.frame271}>
+                            <div className={styles.frame270}>
+                              <div className={styles.frame373}>
+                                <div className={styles.frame363}>
+                                  <div className={styles._240}>240</div> {/* TODO: 실제 목표 금액으로 변경 */}
+                                  <div className={styles._2002}>/200 만원</div> {/* TODO: 실제 목표 금액으로 변경 */}
+                                </div>
+                                <div className={styles.frame312}>
+                                  <div className={styles.labelValue3}>120% 초과</div> {/* TODO: 실제 초과율로 변경 */}
+                                </div>
+                              </div>
+                              <div className={styles.frame313}>
+                                <ProgressBar
+                                  value={240} // TODO: 실제 값으로 변경
+                                  max={200} // TODO: 실제 값으로 변경
+                                  isThick={true}
+                                  percentageColor="#dadee1"
+                                  label="120% 초과" // TODO: 실제 값으로 변경
+                                />
+                              </div>
+                            </div>
+                            <div className={styles.frame2652}>
+                              <div className={styles.frame267}>
+                                <div className={styles.div10}>만족도</div>
+                                <div className={styles.frame269}>
+                                  <div className={styles.frame266}>
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                      <div
+                                        key={star}
+                                        className={star <= feedback.rating ? styles.ellipseFill2 : styles.ellipseFill3}
+                                      ></div>
+                                    ))}
+                                  </div>
+                                  <div className={styles._35}>
+                                    <span>
+                                      <span className={styles._35Span}>{feedback.rating}</span>
+                                      <span className={styles._35Span}>/5</span>
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <div className={styles.div12}>
-                            <div className={styles.frame271}>
-                              <div className={styles.frame270}>
-                                <div className={styles.frame373}>
-                                  <div className={styles.frame363}>
-                                    <div className={styles._240}>240</div>
-                                    <div className={styles._2002}>/200 만원</div>
-                                  </div>
-                                  <div className={styles.frame312}>
-                                    <div className={styles.labelValue3}>120% 초과</div>
-                                  </div>
-                                </div>
-                                <div className={styles.frame313}>
-                                  <ProgressBar
-                                    value={240}
-                                    max={200}
-                                    isThick={true}
-                                    percentageColor="#dadee1"
-                                    label="120% 초과"
-                                  />
-                                </div>
-                              </div>
-                              <div className={styles.frame2652}>
-                                <div className={styles.frame267}>
-                                  <div className={styles.div10}>만족도</div>
-                                  <div className={styles.frame269}>
-                                    <div className={styles.frame266}>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                    </div>
-                                    <div className={styles._35}>
-                                      <span>
-                                        <span className={styles._35Span}>3</span>
-                                        <span className={styles._35Span}>/5</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={styles.div11}>
-                              <span>
-                                <span className={styles.div11Span}>
-                                  사용자 피드백
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span2}>
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span3}></span>
-                                <span className={styles.div11Span4}>
-                                  이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                  특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                  횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                  큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                  번만&#039;이라는 생각으로 자제를 못 했습니다.
-                                </span>
+                          <div className={styles.div11}>
+                            <span>
+                              <span className={styles.div11Span}>
+                                {feedback.date} 피드백
+                                <br />
                               </span>
-                            </div>
+                              <span className={styles.div11Span2}>
+                                <br />
+                              </span>
+                              <span className={styles.div11Span3}></span>
+                              <span className={styles.div11Span4}>
+                                {feedback.text}
+                              </span>
+                            </span>
+                            {feedback.nextMonthGoal && (
+                              <div className={styles.nextMonthGoalDisplay}>
+                                <span>
+                                  <span className={styles.div11Span}>
+                                    <br />
+                                    다음 달 목표:
+                                    <br />
+                                  </span>
+                                  <span className={styles.div11Span4}>
+                                    {feedback.nextMonthGoal}
+                                  </span>
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className={styles.frame288}>
-                          <div className={styles.frame239}>
-                            <div className={styles.frame232}>
-                              <div className={styles.frame106}>
-                                <div className={styles.a3}>2025년 10월</div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.div12}>
-                            <div className={styles.frame271}>
-                              <div className={styles.frame270}>
-                                <div className={styles.frame373}>
-                                  <div className={styles.frame363}>
-                                    <div className={styles._240}>240</div>
-                                    <div className={styles._2002}>/200 만원</div>
-                                  </div>
-                                  <div className={styles.frame312}>
-                                    <div className={styles.labelValue3}>120% 초과</div>
-                                  </div>
-                                </div>
-                                <div className={styles.frame313}>
-                                  <ProgressBar
-                                    value={240}
-                                    max={200}
-                                    isThick={true}
-                                    percentageColor="#dadee1"
-                                    label="120% 초과"
-                                  />
-                                </div>
-                              </div>
-                              <div className={styles.frame2652}>
-                                <div className={styles.frame267}>
-                                  <div className={styles.div10}>만족도</div>
-                                  <div className={styles.frame269}>
-                                    <div className={styles.frame266}>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                    </div>
-                                    <div className={styles._35}>
-                                      <span>
-                                        <span className={styles._35Span}>3</span>
-                                        <span className={styles._35Span}>/5</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={styles.div11}>
-                              <span>
-                                <span className={styles.div11Span}>
-                                  사용자 피드백
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span2}>
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span3}></span>
-                                <span className={styles.div11Span4}>
-                                  이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                  특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                  횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                  큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                  번만&#039;이라는 생각으로 자제를 못 했습니다.
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.frame289}>
-                          <div className={styles.frame239}>
-                            <div className={styles.frame232}>
-                              <div className={styles.frame106}>
-                                <div className={styles.a3}>2025년 09월</div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.div12}>
-                            <div className={styles.frame271}>
-                              <div className={styles.frame270}>
-                                <div className={styles.frame373}>
-                                  <div className={styles.frame363}>
-                                    <div className={styles._240}>240</div>
-                                    <div className={styles._2002}>/200 만원</div>
-                                  </div>
-                                  <div className={styles.frame312}>
-                                    <div className={styles.labelValue3}>120% 초과</div>
-                                  </div>
-                                </div>
-                                <div className={styles.frame313}>
-                                  <ProgressBar
-                                    value={240}
-                                    max={200}
-                                    isThick={true}
-                                    percentageColor="#dadee1"
-                                    label="120% 초과"
-                                  />
-                                </div>
-                              </div>
-                              <div className={styles.frame2652}>
-                                <div className={styles.frame267}>
-                                  <div className={styles.div10}>만족도</div>
-                                  <div className={styles.frame269}>
-                                    <div className={styles.frame266}>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                    </div>
-                                    <div className={styles._35}>
-                                      <span>
-                                        <span className={styles._35Span}>3</span>
-                                        <span className={styles._35Span}>/5</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={styles.div11}>
-                              <span>
-                                <span className={styles.div11Span}>
-                                  사용자 피드백
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span2}>
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span3}></span>
-                                <span className={styles.div11Span4}>
-                                  이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                  특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                  횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                  큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                  번만&#039;이라는 생각으로 자제를 못 했습니다.
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className={styles.frame290}>
-                          <div className={styles.frame239}>
-                            <div className={styles.frame232}>
-                              <div className={styles.frame106}>
-                                <div className={styles.a3}>2025년 08월</div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.div12}>
-                            <div className={styles.frame271}>
-                              <div className={styles.frame270}>
-                                <div className={styles.frame373}>
-                                  <div className={styles.frame363}>
-                                    <div className={styles._240}>240</div>
-                                    <div className={styles._2002}>/200 만원</div>
-                                  </div>
-                                  <div className={styles.frame312}>
-                                    <div className={styles.labelValue3}>120% 초과</div>
-                                  </div>
-                                </div>
-                                <div className={styles.frame313}>
-                                  <ProgressBar
-                                    value={240}
-                                    max={200}
-                                    isThick={true}
-                                    percentageColor="#dadee1"
-                                    label="120% 초과"
-                                  />
-                                </div>
-                              </div>
-                              <div className={styles.frame2652}>
-                                <div className={styles.frame267}>
-                                  <div className={styles.div10}>만족도</div>
-                                  <div className={styles.frame269}>
-                                    <div className={styles.frame266}>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill2}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                      <div className={styles.ellipseFill3}></div>
-                                    </div>
-                                    <div className={styles._35}>
-                                      <span>
-                                        <span className={styles._35Span}>3</span>
-                                        <span className={styles._35Span}>/5</span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className={styles.div11}>
-                              <span>
-                                <span className={styles.div11Span}>
-                                  사용자 피드백
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span2}>
-                                  <br />
-                                </span>
-                                <span className={styles.div11Span3}></span>
-                                <span className={styles.div11Span4}>
-                                  이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                  특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                  횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                  큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                  번만&#039;이라는 생각으로 자제를 못 했습니다.
-                                </span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                      ))
+                    ) : (
+                      <div className={styles.div11}>
+                        <span>
+                          <span className={styles.div11Span}>
+                            아직 작성된 피드백이 없습니다.
+                          </span>
+                        </span>
                       </div>
-                    </div>
+                    )}
                   </div>
                   
                   <div className={styles.frame2222}> {/* Corresponds to frame-183 */}
@@ -892,32 +711,8 @@ const handleAttend = () => {
                                   <img className={styles.group20953} src="/left_icon.svg" alt="<" />
                                 </div>
                       
-                                  <div className={styles.frame184}> 
-                                    <div className={styles._1_}>1</div>
-                                  </div>
+                                  {renderPageNumbers()}
                                 
-                                  <div className={styles.frame184}> {/* Corresponds to frame-185 */}
-                      
-                                      <div className={styles._1_}>2</div>
-                                  
-                                  </div>
-                                  <div className={styles.frame184}> {/* Corresponds to frame-186 */}
-                                
-                                      <div className={styles._1_}>3</div>
-                                  
-                                  </div>
-                                  <div className={styles.frame184}> {/* Corresponds to frame-1872 */}
-                        
-                                      <div className={styles._1_}>4</div>
-                          
-                                  </div>
-                                  <div className={styles.frame184}> {/* Corresponds to frame-1882 */}
-                                  
-                                      <div className={styles._1_}>5</div>
-                                
-                                  </div>
-                              
-                  
                                   <div className={styles.frame191_}> {/* Corresponds to frame-191 */}
                                     <img className={styles.group20953} src="/right_icon.svg" alt=">" />
                                     <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" />
@@ -937,7 +732,15 @@ const handleAttend = () => {
       <div className={styles.rectangle8}></div>
       <img className={styles.rectangle10} src="/rectangle-100.svg" alt="Rectangle" />
 
-      {showFeedbackPopup && <FeedbackPopup onClose={() => setShowFeedbackPopup(false)} onSubmit={handleFeedbackSubmit} monthEndDate={monthEndDate} />} {/* 팝업 조건부 렌더링 */}
+      {showFeedbackPopup && <FeedbackPopup
+        onClose={() => setShowFeedbackPopup(false)}
+        onSubmit={handleFeedbackSubmit}
+        monthEndDate={monthEndDate}
+        monthlyCategories={monthlyCategories}
+        monthlyCurrentConsumption={monthlyCurrentConsumption}
+        monthlyTargetConsumption={monthlyTargetConsumption}
+        monthlyPercentage={monthlyPercentage}
+      />} {/* 팝업 조건부 렌더링 */}
       {showFollowerPopup && (
         <FollowListPopup 
           onClose={() => setShowFollowerPopup(false)} 

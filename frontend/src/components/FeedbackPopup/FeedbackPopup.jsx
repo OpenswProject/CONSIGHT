@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
 import styles from './FeedbackPopup.module.css';
+import { ProgressBar } from '../ProgressBar/ProgressBar'; // ProgressBar 임포트
 
-const FeedbackPopup = ({ onClose, onSubmit, monthEndDate }) => {
+const FeedbackPopup = ({ onClose, onSubmit, monthEndDate, monthlyCategories, monthlyCurrentConsumption, monthlyTargetConsumption, monthlyPercentage }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [satisfactionRating, setSatisfactionRating] = useState(3); // Default to 3/5
+  const [nextMonthGoal, setNextMonthGoal] = useState(''); // 다음 달 목표 상태 추가
 
   const handleSubmit = () => {
-    onSubmit(feedbackText, satisfactionRating); // Pass satisfactionRating
+    onSubmit(feedbackText, satisfactionRating, nextMonthGoal); // nextMonthGoal 전달
     setFeedbackText('');
     setSatisfactionRating(3); // Reset to default
+    setNextMonthGoal(''); // 다음 달 목표 초기화
+  };
+
+  const getMonthlyStatusText = (percentage) => {
+    if (percentage <= 70) return "양호";
+    if (percentage <= 100) return "보통";
+    return "초과";
   };
 
   return (
@@ -25,19 +34,22 @@ const FeedbackPopup = ({ onClose, onSubmit, monthEndDate }) => {
                     <div className={styles.frame20}>
                       <div className={styles.frame37}>
                         <div className={styles.frame36}>
-                          <div className={styles._140}>140</div>
-                          <div className={styles._200}>/200 만원</div>
+                          <div className={styles._140}>{monthlyCurrentConsumption}</div>
+                          <div className={styles._200}>/{monthlyTargetConsumption} 만원</div>
                           <div className={styles.mdiPencil}></div>
                         </div>
                         <div className={styles.frame301}>
                           <div className={styles.frame31}>
-                            <div className={styles.frame32}>
-                              <div className={styles.frame27}></div>
-                            </div>
-                            <div className={styles.labelValue}>70%</div>
+                            <ProgressBar
+                              value={monthlyCurrentConsumption}
+                              max={monthlyTargetConsumption}
+                              label={`${monthlyPercentage}%`}
+                              percentageColor="#9BC4B0"
+                              isThick={true}
+                            />
                           </div>
                           <div className={styles.frame268}>
-                            <div className={styles.div4}>양호</div>
+                            <div className={styles.div4}>{getMonthlyStatusText(monthlyPercentage)}</div>
                           </div>
                         </div>
                       </div>
@@ -46,91 +58,21 @@ const FeedbackPopup = ({ onClose, onSubmit, monthEndDate }) => {
                   <div className={styles.frame277}>
                     <div className={styles.frame273}>
                       <img className={styles.polygon1} src="/polygon-10.svg" alt="Polygon" />
-                      <div className={styles._102}>10월 소비금액</div>
+                      <div className={styles._102}>{monthEndDate.substring(0, monthEndDate.lastIndexOf('.'))}월 소비금액</div>
                     </div>
                     <div className={styles.frame34}>
                       <div className={styles.frame252}>
                         <div className={styles.frame258}>
-                          <div className={styles.frame40}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>식비</div>
+                          {monthlyCategories.map(category => (
+                            <div className={styles.categoryItem} key={category.id}>
+                              <div className={styles.frame26}>
+                                <div className={styles.ellipseFill} style={{ backgroundColor: category.color }}></div>
+                                <div className={styles.div5}>{category.name}</div>
+                              </div>
+                              <ProgressBar value={category.current} max={category.target} isThick={false} percentageColor={category.color} />
+                              <div className={styles.labelValue2}>{category.current}/{category.target}</div>
                             </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame272}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame44}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>식비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame272}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame45}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>식비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame272}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame46}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>식비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame272}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame47}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>식비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame272}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame42}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>교통비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame274}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame48}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>교통비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame274}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
-                          <div className={styles.frame49}>
-                            <div className={styles.frame26}>
-                              <div className={styles.ellipseFill}></div>
-                              <div className={styles.div5}>교통비</div>
-                            </div>
-                            <div className={styles.frame322}>
-                              <div className={styles.frame274}></div>
-                            </div>
-                            <div className={styles.labelValue2}>30/100</div>
-                          </div>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -183,25 +125,12 @@ const FeedbackPopup = ({ onClose, onSubmit, monthEndDate }) => {
                       <div className={styles.div9}>다음 달의 목표</div>
                     </div>
                     <div className={styles.frame212}>
-                      <div className={styles.div10}>
-                        <span>
-                          <span className={styles.div10Span}>
-                            제목
-                            <br />
-                          </span>
-                          <span className={styles.div10Span2}>
-                            <br />
-                          </span>
-                          <span className={styles.div10Span3}></span>
-                          <span className={styles.div10Span4}>
-                            이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                            특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문 횟수가
-                            늘었고, 가을 신상 의류를 충동적으로 구매한 것이 큰
-                            원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                            번만&#039;이라는 생각으로 자제를 못 했습니다.
-                          </span>
-                        </span>
-                      </div>
+                      <textarea
+                        className={styles.feedbackTextarea} // 기존 피드백 textarea 스타일 재활용
+                        placeholder="다음 달의 목표를 작성해주세요..."
+                        value={nextMonthGoal}
+                        onChange={(e) => setNextMonthGoal(e.target.value)}
+                      ></textarea>
                     </div>
                   </div>
                 </div>

@@ -26,6 +26,9 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     depends_on:
       - db
+    restart: always
+    stdin_open: true
+    tty: true
 
   frontend:
     build: ./frontend
