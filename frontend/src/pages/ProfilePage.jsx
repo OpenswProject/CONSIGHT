@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import styles from './ProfilePage.module.css';
 import FollowListPopup from '../components/FollowListPopup/FollowListPopup';
 
-const ProfilePage = () => {
+const ProfilePage = ({ currentUser }) => {
   const { username } = useParams();
   const [profile, setProfile] = useState(null);
   const [counts, setCounts] = useState({ followerCount: 0, followingCount: 0 });
@@ -14,7 +14,7 @@ const ProfilePage = () => {
   const [popupConfig, setPopupConfig] = useState({ show: false, type: '', username: '' });
 
   // A simple check to see if the logged-in user is viewing their own profile
-  const loggedInUser = localStorage.getItem('username'); // Assuming username is stored in localStorage
+  const loggedInUser = currentUser ? currentUser.username : null; // Assuming username is stored in localStorage
   const isOwnProfile = loggedInUser === username;
 
   useEffect(() => {

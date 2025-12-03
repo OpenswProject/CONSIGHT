@@ -8,10 +8,12 @@
   ],
   "main": "src/index.jsx",
   "dependencies": {
+    "date-fns": "^4.1.0",
     "rc-progress": "^4.0.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
-    "react-router-dom": "^7.9.6"
+    "react-router-dom": "^7.9.6",
+    "recharts": "^3.5.1"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
@@ -25,7 +27,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prebuild": "chmod +x ./node_modules/.bin/vite"
   },
   "browserslist": [
     ">0.2%",

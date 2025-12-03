@@ -1,28 +1,51 @@
 package com.mysite.sbb.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException; // import 추가
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException; // import 추가
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException; // import 추가
+import io.jsonwebtoken.UnsupportedJwtException; // import 추가
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import org.slf4j.Logger; // Logger import 추가
+import org.slf4j.LoggerFactory; // LoggerFactory import 추가
 
 @Component
 public class JwtUtil {
 
-    // 주의: 실제 프로덕션에서는 비밀 키를 하드코딩하면 안 되고, 안전한 곳에 보관해야 합니다.
-    private final Key secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class); // Logger 인스턴스 생성
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    private Key secretKey;
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        logger.info("JWT Secret Key initialized."); // 로그 추가
+    }
 
     private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60; // 5시간
 
     public String getUsernameFromToken(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
+        try {
+            return getClaimFromToken(token, Claims::getSubject);
+        } catch (Exception e) {
+            logger.error("Error getting username from token: {}", e.getMessage()); // 로그 추가
+            return null;
+        }
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -35,12 +58,31 @@ public class JwtUtil {
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+        } catch (SignatureException e) {
+            logger.error("Invalid JWT signature: {}", e.getMessage());
+            throw e;
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+            throw e;
+        } catch (ExpiredJwtException e) {
+            logger.error("JWT token is expired: {}", e.getMessage());
+            throw e;
+        } catch (UnsupportedJwtException e) {
+            logger.error("JWT token is unsupported: {}", e.getMessage());
+            throw e;
+        } catch (IllegalArgumentException e) {
+            logger.error("JWT claims string is empty: {}", e.getMessage());
+            throw e;
+        }
     }
 
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        boolean expired = expiration.before(new Date());
+        logger.debug("Token expiration status: {}", expired); // 로그 추가
+        return expired;
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -49,13 +91,17 @@ public class JwtUtil {
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+        String generatedToken = Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(secretKey, SignatureAlgorithm.HS256).compact();
+        logger.info("Generated JWT for user {}: {}", subject, generatedToken); // 로그 추가
+        return generatedToken;
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        boolean isValid = (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        logger.debug("Token validation result for user {}: {}", username, isValid); // 로그 추가
+        return isValid;
     }
 }

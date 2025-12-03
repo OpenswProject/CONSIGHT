@@ -11,17 +11,32 @@ import { ReviewFeedPage } from "./pages/ReviewFeedPage"; // Import the new page
 import ConsumePlanPage from "./pages/ConsumePlanPage"; // Import ConsumePlanPage
 import Mypage from "./pages/Mypage"; // Import Mypage
 import ReviewWritePage from "./pages/ReviewWritePage"; // Import ReviewWritePage
-import Userprofile from "./pages/Userprofile"; // Import Userprofile
+import ProfileRedirector from "./components/ProfileRedirector/ProfileRedirector"; // Import ProfileRedirector
 import LoginPage from "./pages/LoginPage"; // Import LoginPage
 import SignupPage from "./pages/SignupPage"; // Import SignupPage
 
 import MyProfileMoreInfoPopup from "./components/MyProfileMoreInfoPopup/MyProfileMoreInfoPopup"; // Import MyProfileMoreInfoPopup
 import NameChangePopup from "./components/NameChangePopup/NameChangePopup"; // Import NameChangePopup
+import ReviewPopup from "./components/ReviewPopup"; // Import ReviewPopup
 
 const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add currentUser prop
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
   const [showNameChangePopup, setShowNameChangePopup] = useState(false);
   const moreOptionsRef = useRef(null);
+
+  const [points, setPoints] = useState(4000); // 포인트 상태 추가
+
+  const handleAttend = () => {
+    setPoints(prevPoints => {
+      const newPoints = prevPoints + 10;
+      alert(`출석이 기록되었습니다! ${newPoints} 포인트 획득!`);
+      return newPoints;
+    });
+  };
+
+  // State for ReviewPopup
+  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -48,6 +63,68 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
     setShowNameChangePopup(false);
   };
 
+  const openReviewPopup = (review) => {
+    setSelectedReview(review);
+    setIsReviewPopupOpen(true);
+  };
+
+  const closeReviewPopup = () => {
+    setSelectedReview(null);
+    setIsReviewPopupOpen(false);
+  };
+
+  const handleLikeToggle = (reviewId) => {
+    if (selectedReview && selectedReview.id === reviewId) {
+      setSelectedReview(prev => ({
+        ...prev,
+        isLiked: !prev.isLiked,
+        likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1
+      }));
+    }
+  };
+
+  const handleBookmarkToggle = (reviewId) => {
+    if (selectedReview && selectedReview.id === reviewId) {
+      setSelectedReview(prev => ({
+        ...prev,
+        isBookmarked: !prev.isBookmarked,
+        bookmarkCount: prev.isBookmarked ? prev.bookmarkCount - 1 : prev.bookmarkCount + 1
+      }));
+    }
+  };
+
+  const handleAddComment = (reviewId, content) => {
+    if (selectedReview && selectedReview.id === reviewId) {
+      const newComment = {
+        id: new Date().getTime(), // dummy id
+        author: { username: currentUser?.username || 'You' },
+        content: content,
+      };
+      setSelectedReview(prev => ({
+        ...prev,
+        comments: [...(prev.comments || []), newComment],
+        commentCount: (prev.commentCount || 0) + 1
+      }));
+    }
+  };
+
+  // Dummy review data for HomePage's hardcoded blocks
+  const dummyReview = {
+    id: 1, // Unique ID
+    author: { username: "USERNAME" },
+    title: "스노우쉴드 롱패딩",
+    createDate: new Date(),
+    category: "의류",
+    content: "패딩이 정말 가볍고 따뜻해서 깜짝 놀랐어요. 안에 얇은 기모티만 입어도 충분히 한겨울 기온을 버틸 정도라서 요즘 거의 매일 입고 다닙니다. 지퍼도 부드럽게 잘 올라가고 주머니 털 안감도 포근해서 만족스러워요. 전체적으로 착용감이 편안해서 오래 입고 있어도 부담이 없고, 바람 부는 날에도 체온을 잘 유지해줘서 외출할 때마다 든든합니다. 디자인도 깔끔해서 어떤 옷과 매치해도 잘 어울려 데일리 아우터로 손색이 없어요. 개인적으로 이번 시즌에 산 옷 중 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다",
+    productLink: "제품 링크",
+    likeCount: 10,
+    commentCount: 10,
+    bookmarkCount: 10,
+    isLiked: false,
+    isBookmarked: false,
+    comments: []
+  };
+
   return (
     <>
       <strong>Backend-API-Test:</strong> {apiMessage}
@@ -65,7 +142,7 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
             <div className={styles.frame282}>
               <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
               <div className={styles.frame914}>
-                <div className={styles._4000}>4000</div>
+                <div className={styles._4000}>{points}</div>
               </div>
               <div className={styles._6000pt}>승급까지 -6000PT</div>
             </div>
@@ -75,7 +152,8 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
               <div className={styles.frame6}> {/* Corresponds to frame-6 */}
                 <ConsumptionStatus username={user.username} currentUser={user} />
               </div>
-              <VisitHistory /> {/* Render VisitHistory here */}
+              {/* New container for VisitHistory and Attend button */}
+              <VisitHistory onAttend={handleAttend} /> {/* Render VisitHistory here */}
               {/* Other elements from frame-45 if any */}
             </div>
             <div className={styles.line1}></div> {/* Corresponds to line-1 */}
@@ -141,7 +219,7 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
         <div className={styles.line42}></div> {/* Corresponds to line-42 */}
         <div className={styles.frame117}> {/* Corresponds to frame-117 */}
           <ShoppingList />
-          <RecommendedReviews />
+          <RecommendedReviews openReviewPopup={openReviewPopup} />
         </div>
       </div>
 
@@ -190,7 +268,7 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
         </div>
         <div className={styles.frame144}> {/* Corresponds to frame-144 */}
 
-                 <div className={styles.frame120}>
+                 <div className={styles.frame120} onClick={() => openReviewPopup(dummyReview)}>
             <div className={styles.frame107}>
               <div className={styles.frame138}>
                 <div className={styles.frame194}>
@@ -424,12 +502,22 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
         </div>
       </div>
       
-      
-
+      {isReviewPopupOpen && selectedReview && (
+        <ReviewPopup 
+          show={isReviewPopupOpen} 
+          onClose={closeReviewPopup} 
+          review={selectedReview} 
+          onLikeToggle={handleLikeToggle}
+          onBookmarkToggle={handleBookmarkToggle}
+          onAddComment={handleAddComment}
+          currentUser={currentUser}
+        />
+      )}
     </div>
-  </>
-);
+    </>
+  );
 }
+      
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null); // Add state for current user
@@ -474,7 +562,7 @@ export default function App() {
           <Route path="/" element={<HomePage user={user} notifications={notifications} apiMessage={apiMessage} />} />
           <Route path="/review-feed" element={<ReviewFeedPage />} />
           <Route path="/consume-plan" element={<ConsumePlanPage currentUser={currentUser} />} />
-          <Route path="/profile/:username" element={<ProfilePage currentUser={currentUser} />} />
+          <Route path="/profile/:username" element={<ProfileRedirector currentUser={currentUser} />} />
           <Route path="/mypage" element={<Mypage currentUser={currentUser} />} />
           <Route path="/review-write" element={<ReviewWritePage />} />
           {/* <Route path="/Userprofile" element={<Userprofile currentUser={currentUser} />} /> Userprofile 라우팅은 ProfilePage로 통일 */}

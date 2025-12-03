@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styles from "./ReviewFeed.module.css";
 import { ShoppingList } from "../ShoppingList/ShoppingList";
 import MoreOptionsPopup from "../MoreOptionsPopup/MoreOptionsPopup";
 
+import ReviewPopup from "../ReviewPopup"; // ReviewPopup import
+
 export const ReviewFeed = () => {
   // State for review data and pagination
   const [reviewList, setReviewList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [popupConfig, setPopupConfig] = useState({ show: false, username: '' });
@@ -16,13 +17,17 @@ export const ReviewFeed = () => {
   const [selectedCategory, setSelectedCategory] = useState('전체'); // New state for selected category, default to '전체'
   const [selectedFilter, setSelectedFilter] = useState(''); // New state for selected filter ('추천', '비추천', or '')
 
+  // State for ReviewPopup
+  const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+
   const categories = ['전체', '뷰티', '식품', '의류', '주방', '생활·가전', '청소·욕실', '가구', '문구', '인테리어', '취미·레저', '기타'];
 
   // Fetch reviews from the API
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const token = localStorage.getItem('token'); // 토큰 가져오기
+        const token = localStorage.getItem('jwtToken'); // 토큰 가져오기
         let url = `/api/reviews?page=${currentPage}&sort=${sortBy},${sortDirection}`;
         if (selectedCategory && selectedCategory !== '전체') { // '전체'가 아닐 때만 필터 적용
           url += `&searchType=category&kw=${selectedCategory}`;
@@ -39,7 +44,7 @@ export const ReviewFeed = () => {
         const data = await response.json();
         if (data.success && data.data) {
           setReviewList(await Promise.all(data.data.content.map(async review => {
-            const token = localStorage.getItem('token'); // 토큰 가져오기
+            const token = localStorage.getItem('jwtToken'); // 토큰 가져오기
             const commentsResponse = await fetch(`/api/reviews/${review.id}/comments`, {
               headers: token ? { 'Authorization': `Bearer ${token}` } : {} // 토큰이 있으면 헤더에 추가
             });
@@ -76,39 +81,27 @@ export const ReviewFeed = () => {
     { id: 5, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
   ];
 
-  // Pagination logic
-  const handlePageChange = (page) => {
-    if (page >= 0 && page < totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const renderPageNumbers = () => {
-    const pageNumbers = [];
-    const startPage = Math.floor(currentPage / 4) * 4;
-    const endPage = Math.min(startPage + 4, totalPages);
-
-    for (let i = startPage; i < endPage; i++) {
-      pageNumbers.push(
-        <div key={i} className={styles.frame1804} onClick={() => handlePageChange(i)}>
-          <div className={i === currentPage ? styles.currentPage : styles._10}>{i + 1}</div>
-        </div>
-      );
-    }
-    return pageNumbers;
-  };
-
   // Popup handlers
-  const openPopup = (username) => {
+  const openUserPopup = (username) => { // Renamed to avoid conflict with ReviewPopup's openPopup
     setPopupConfig({ show: true, username: username });
   };
 
-  const closePopup = () => {
+  const closeUserPopup = () => { // Renamed
     setPopupConfig({ show: false, username: '' });
   };
 
+  const openReviewPopup = (review) => {
+    setSelectedReview(review);
+    setIsReviewPopupOpen(true);
+  };
+
+  const closeReviewPopup = () => {
+    setSelectedReview(null);
+    setIsReviewPopupOpen(false);
+  };
+
   const handleFollow = async (username) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -158,7 +151,7 @@ export const ReviewFeed = () => {
   };
 
   const handleLikeToggle = async (reviewId) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -170,9 +163,14 @@ export const ReviewFeed = () => {
       });
       const data = await response.json();
       if (data.success) {
-        setReviewList(prevReviewList => prevReviewList.map(review =>
+        const updatedReviewList = reviewList.map(review =>
           review.id === reviewId ? { ...review, isLiked: !review.isLiked, likeCount: review.isLiked ? review.likeCount - 1 : review.likeCount + 1 } : review
-        ));
+        );
+        setReviewList(updatedReviewList);
+
+        if (selectedReview && selectedReview.id === reviewId) {
+          setSelectedReview(prev => ({ ...prev, isLiked: !prev.isLiked, likeCount: prev.isLiked ? prev.likeCount - 1 : prev.likeCount + 1 }));
+        }
       } else {
         throw new Error(data.error?.message || '좋아요 처리 실패');
       }
@@ -182,7 +180,7 @@ export const ReviewFeed = () => {
   };
 
   const handleBookmarkToggle = async (reviewId) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -194,9 +192,14 @@ export const ReviewFeed = () => {
       });
       const data = await response.json();
       if (data.success) {
-        setReviewList(prevReviewList => prevReviewList.map(review =>
+        const updatedReviewList = reviewList.map(review =>
           review.id === reviewId ? { ...review, isBookmarked: !review.isBookmarked, bookmarkCount: review.isBookmarked ? review.bookmarkCount - 1 : review.bookmarkCount + 1 } : review
-        ));
+        );
+        setReviewList(updatedReviewList);
+
+        if (selectedReview && selectedReview.id === reviewId) {
+          setSelectedReview(prev => ({ ...prev, isBookmarked: !prev.isBookmarked, bookmarkCount: prev.isBookmarked ? prev.bookmarkCount - 1 : prev.bookmarkCount + 1 }));
+        }
       } else {
         throw new Error(data.error?.message || '북마크 처리 실패');
       }
@@ -207,7 +210,7 @@ export const ReviewFeed = () => {
 
   const fetchCommentsForReview = async (reviewId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('jwtToken');
       const commentsResponse = await fetch(`/api/reviews/${reviewId}/comments`, {
         headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
@@ -225,7 +228,7 @@ export const ReviewFeed = () => {
   };
 
   const handleAddComment = async (reviewId, content) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -245,12 +248,29 @@ export const ReviewFeed = () => {
       });
       const data = await response.json();
       if (data.success) {
-        // 댓글 추가 후 댓글 목록 새로고침
-        await fetchCommentsForReview(reviewId); // 정의된 함수 호출
-        // 댓글 수 업데이트
-        setReviewList(prevReviewList => prevReviewList.map(review =>
-          review.id === reviewId ? { ...review, commentCount: review.commentCount + 1, newCommentContent: '' } : review
-        ));
+        // After adding a comment, fetch the updated comments for the review
+        await fetchCommentsForReview(reviewId);
+
+        // Also update the comment count for the review in the main list
+        const updatedReviewList = reviewList.map(review =>
+          review.id === reviewId ? { ...review, commentCount: review.commentCount + 1 } : review
+        );
+        setReviewList(updatedReviewList);
+
+        // If the commented review is the selected one, update it to show the new comment
+        if (selectedReview && selectedReview.id === reviewId) {
+            const commentsResponse = await fetch(`/api/reviews/${reviewId}/comments`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
+            const commentsData = await commentsResponse.json();
+            if (commentsData.success) {
+                setSelectedReview(prev => ({
+                    ...prev,
+                    comments: commentsData.data,
+                    commentCount: prev.commentCount + 1
+                }));
+            }
+        }
       } else {
         throw new Error(data.error?.message || '댓글 추가 실패');
       }
@@ -422,7 +442,22 @@ export const ReviewFeed = () => {
                     <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={() => handlePageChange(0)} />
                     <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={() => handlePageChange(currentPage - 1)} />
                   </div>
-                  {renderPageNumbers()}
+                  {/* Original static pagination placeholder */}
+                  <div className={styles.frame1804}> 
+                    <div className={styles._10}>1</div>
+                  </div>
+                  <div className={styles.frame1804}> 
+                    <div className={styles._10}>2</div>
+                  </div>
+                  <div className={styles.frame1804}> 
+                    <div className={styles._10}>3</div>
+                  </div>
+                  <div className={styles.frame1804}> 
+                    <div className={styles._10}>4</div>
+                  </div>
+                  <div className={styles.frame1804}> 
+                    <div className={styles._10}>5</div>
+                  </div>
                   <div className={styles.frame1901}>
                     <img className={styles.group20953} src="/right_icon.svg" alt=">" onClick={() => handlePageChange(currentPage + 1)} />
                     <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" onClick={() => handlePageChange(totalPages - 1)} />
@@ -442,7 +477,7 @@ export const ReviewFeed = () => {
             <div className={styles.frame119}>
               {reviewList.map((review) => (
                 <React.Fragment key={review.id}>
-                  <div key={review.id} className={styles.frame50} onClick={() => handleReviewClick(review.id)}>
+                  <div key={review.id} className={styles.frame50} onClick={() => openReviewPopup(review)}>
                     <div className={styles.frame1222}>
                       <div className={styles.reviewContentWrapper}>
                         <div className={styles.section01}>
@@ -458,7 +493,7 @@ export const ReviewFeed = () => {
                                     className={styles.riMoreLine} 
                                     src="/More_info.svg" 
                                     alt="moreoptions" 
-                                    onClick={() => openPopup(review.author?.username)}
+                                    onClick={(e) => {e.stopPropagation(); openUserPopup(review.author?.username);}} // Modified onClick
                                     style={{cursor: 'pointer'}}
                                   />
                                 </div>
@@ -467,7 +502,6 @@ export const ReviewFeed = () => {
                                 </div>
                                 {/* 조회수와 날짜를 함께 표시하는 div */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <img className={styles.viewIcon} src="/public2/More_info.svg" alt="View" style={{ width: '16px', height: '16px' }} /> {/* 임시 아이콘 */}
                                   <div className={styles.viewCount}>{review.viewCount || 0}</div>
                                   <div className={styles._20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
                                 </div>
@@ -484,7 +518,6 @@ export const ReviewFeed = () => {
                           </div>
                           <div className={styles.frame153}>
                             <div className={styles.div7}>{review.content}</div>
-                            {review.receiptImagePath && <img src={review.receiptImagePath} alt="Receipt" className={styles.receiptImage} />}
                             <div className={styles.frame129}>
                               <div className={styles.frame246}>
                                 <div className={styles.frame248}>
@@ -532,7 +565,7 @@ export const ReviewFeed = () => {
                             {/* Comments are not fetched from this endpoint, so this section will be empty */}
                             <div className={styles.frame197}>
                               <div className={styles.line53}></div>
-                              <div className={styles.div9}>더보기</div>
+    
                               <div className={styles.commentSection}> {/* 조건부 렌더링 제거 */}
                                 <div className={styles.commentList}>
                                   {review.comments.map(comment => (
@@ -589,7 +622,7 @@ export const ReviewFeed = () => {
             <div className={styles.frame168}>
               <div className={styles.div14}>추천 리뷰</div>
               {recommendedReviews.map((review) => (
-                <div key={review.id} className={styles.frame167}>
+                <div key={review.id} className={styles.frame167} onClick={() => openReviewPopup(review)}>
                   <div className={styles.frame162}>
                     <div className={styles.frame161}>
                       <div className={styles.frame160}>
@@ -618,11 +651,21 @@ export const ReviewFeed = () => {
           onFollow={handleFollow}
           onBlock={handleBlock}
           onReport={handleReport}
-          onClose={closePopup}
+          onClose={closeUserPopup}
         />
       )}
       </div>
       </div>
+    {isReviewPopupOpen && selectedReview && (
+        <ReviewPopup 
+          show={isReviewPopupOpen} 
+          onClose={closeReviewPopup} 
+          review={selectedReview} 
+          onLikeToggle={handleLikeToggle}
+          onBookmarkToggle={handleBookmarkToggle}
+          onAddComment={handleAddComment}
+        />
+      )}
     </>
   );
 };

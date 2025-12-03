@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.mysite.sbb.follow.UserDto;
 import org.springframework.web.bind.annotation.PathVariable;
+import java.security.Principal; // Missing import
+import org.springframework.security.access.prepost.PreAuthorize; // Missing import
 
 
 @RequiredArgsConstructor
@@ -41,6 +43,17 @@ public class UserController {
     public ResponseEntity<APIResponse<UserDto>> getUserProfile(@PathVariable("username") String username) {
         try {
             UserDto userDto = userService.getUserDto(username);
+            return ResponseEntity.ok(APIResponse.success("User profile fetched successfully.", userDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error("User not found.", 404));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/api/users/me")
+    public ResponseEntity<APIResponse<UserDto>> getMyProfile(Principal principal) {
+        try {
+            UserDto userDto = userService.getUserDto(principal.getName());
             return ResponseEntity.ok(APIResponse.success("User profile fetched successfully.", userDto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error("User not found.", 404));
@@ -107,4 +120,17 @@ public class UserController {
 
 		return ResponseEntity.ok(new LoginResponse(jwt, siteUser.getUsername(), siteUser.getEmail(), true, "로그인 성공"));
 	}
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/user/attend")
+    public ResponseEntity<APIResponse<?>> attend(Principal principal) {
+        try {
+            userService.attend(principal.getName());
+            return ResponseEntity.ok(APIResponse.success("출석이 성공적으로 기록되었습니다."));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(APIResponse.error(e.getMessage(), HttpStatus.CONFLICT.value()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("출석 처리 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 }

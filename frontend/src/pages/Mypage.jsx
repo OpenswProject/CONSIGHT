@@ -13,28 +13,34 @@ const Mypage = ({ currentUser }) => {
   const [showFollowingPopup, setShowFollowingPopup] = useState(false);
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
   const [showNameChangePopup, setShowNameChangePopup] = useState(false);
-  const [myReviewData, setMyReviewData] = useState(null); // State to store fetched review data
+  const [myReviewData, setMyReviewData] = useState(null);
+  const [activeTab, setActiveTab] = useState('written');
+  const [likedReviewData, setLikedReviewData] = useState(null);
+  const [bookmarkedReviewData, setBookmarkedReviewData] = useState(null);
+  const [commentedReviewData, setCommentedReviewData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // 1-indexed page
+  const [selectedReview, setSelectedReview] = useState(null); // State to store the selected review for popup
 
-  const [followersCount, setFollowersCount] = useState(0); // 초기 팔로워 수 0
-  const [followingCount, setFollowingCount] = useState(0); // 초기 팔로잉 수 0
-  const [followersList, setFollowersList] = useState([]); // 초기 팔로워 목록 비어있음
-  const [followingList, setFollowingList] = useState([]); // 초기 팔로잉 목록 비어있음
+  // Helper to update review data in all relevant states
+  const updateReviewInStates = (reviewId, updateFn) => {
+    setMyReviewData(prev => prev ? prev.map(r => r.id === reviewId ? updateFn(r) : r) : prev);
+    setLikedReviewData(prev => prev ? prev.map(r => r.id === reviewId ? updateFn(r) : r) : prev);
+    setBookmarkedReviewData(prev => prev ? prev.map(r => r.id === reviewId ? updateFn(r) : r) : prev);
+    setCommentedReviewData(prev => prev ? prev.map(r => r.id === reviewId ? updateFn(r) : r) : prev);
+    // Also update selectedReview if it's the one being modified
+    setSelectedReview(prev => prev && prev.id === reviewId ? updateFn(prev) : prev);
+  };
 
-  const moreOptionsRef = useRef(null); // Ref for the more options container
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+
+  const moreOptionsRef = useRef(null);
 
   const usernameToDisplay = currentUser ? currentUser.username : "USERNAME";
   const userInfoToDisplay = currentUser ? currentUser.email : "USERINFO_1";
 
-  // 팔로우/팔로워 수 및 목록을 가져오는 useEffect
   useEffect(() => {
-    if (!currentUser) {
-      setFollowersCount(0);
-      setFollowingCount(0);
-      setFollowersList([]);
-      setFollowingList([]);
-      return;
-    }
-
+    if (!currentUser) return;
     const token = localStorage.getItem('jwtToken');
     if (!token) {
       console.warn("No JWT token found, cannot fetch follow data.");
@@ -43,47 +49,22 @@ const Mypage = ({ currentUser }) => {
 
     const fetchFollowData = async () => {
       try {
-        // 팔로우/팔로워 수 가져오기
         const countsResponse = await fetch(`/api/follow/${currentUser.username}/counts`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (countsResponse.ok) {
           const countsData = await countsResponse.json();
-          setFollowersCount(countsData.data.followersCount);
+          setFollowersCount(countsData.data.followerCount);
           setFollowingCount(countsData.data.followingCount);
         } else {
           console.error("Failed to fetch follow counts:", countsResponse.statusText);
         }
-
-        // 팔로워 목록 가져오기
-        const followersResponse = await fetch(`/api/follow/${currentUser.username}/followers`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (followersResponse.ok) {
-          const followersData = await followersResponse.json();
-          setFollowersList(followersData.data);
-        } else {
-          console.error("Failed to fetch followers list:", followersResponse.statusText);
-        }
-
-        // 팔로잉 목록 가져오기
-        const followingResponse = await fetch(`/api/follow/${currentUser.username}/following`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (followingResponse.ok) {
-          const followingData = await followingResponse.json();
-          setFollowingList(followingData.data);
-        } else {
-          console.error("Failed to fetch following list:", followingResponse.statusText);
-        }
-
       } catch (error) {
         console.error("Error fetching follow data:", error);
       }
     };
-
     fetchFollowData();
-  }, [currentUser]); // currentUser가 변경될 때마다 다시 가져옴
+  }, [currentUser]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -91,88 +72,312 @@ const Mypage = ({ currentUser }) => {
         setShowMyProfileMoreInfoPopup(false);
       }
     };
-
-    if (showMyProfileMoreInfoPopup) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showMyProfileMoreInfoPopup]);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [moreOptionsRef]);
 
   useEffect(() => {
-    const fetchMyReviewData = async () => {
-      if (!currentUser) {
-        setMyReviewData(null);
-        return;
-      }
+    if (!currentUser) return;
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      console.warn("No JWT token found, cannot fetch my page data.");
+      return;
+    }
 
-      const token = localStorage.getItem('jwtToken');
-      if (!token) {
-        console.warn("No JWT token found, cannot fetch my review data.");
-        setMyReviewData(null);
-        return;
-      }
-
+    const fetchMyPageData = async () => {
       try {
         const response = await fetch('/api/reviews/me', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const apiResponse = await response.json();
+        if (apiResponse.success && apiResponse.data) {
+          const { written, liked, bookmarked, comments } = apiResponse.data;
+          setMyReviewData(written || []);
+          setLikedReviewData(liked || []);
+          setBookmarkedReviewData(bookmarked || []);
+          if (comments) {
+            const reviewsFromComments = comments.map(comment => comment.review).filter(Boolean);
+            const uniqueReviews = Array.from(new Map(reviewsFromComments.map(review => [review.id, review])).values());
+            setCommentedReviewData(uniqueReviews);
+          } else {
+            setCommentedReviewData([]);
+          }
+        } else {
+          throw new Error(apiResponse.message || "Failed to fetch data");
         }
-
-        const data = await response.json();
-        setMyReviewData(data.data); // Assuming APIResponse wraps the actual data in a 'data' field
       } catch (error) {
-        console.error("Failed to fetch my review data:", error);
-        setMyReviewData(null);
+        console.error(`Failed to fetch my page data:`, error);
+        setMyReviewData([]);
+        setLikedReviewData([]);
+        setBookmarkedReviewData([]);
+        setCommentedReviewData([]);
       }
     };
+    fetchMyPageData();
+  }, [currentUser]);
 
-    fetchMyReviewData();
-  }, [currentUser]); // Refetch when currentUser changes
+  useEffect(() => {
+    setCurrentPage(1); // Reset page when activeTab changes
+  }, [activeTab]);
 
-  const openPopup = () => setPopupOpen(true);
-  const closePopup = () => setPopupOpen(false);
+  const openPopup = (review) => {
+    setSelectedReview(review);
+    setPopupOpen(true);
+  };
+  const closePopup = () => {
+    setSelectedReview(null);
+    setPopupOpen(false);
+  };
   const openFollowerPopup = () => setShowFollowerPopup(true);
   const closeFollowerPopup = () => setShowFollowerPopup(false);
   const openFollowingPopup = () => setShowFollowingPopup(true);
   const closeFollowingPopup = () => setShowFollowingPopup(false);
 
+  const handleLikeToggle = async (reviewId) => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/like`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        updateReviewInStates(reviewId, (review) => ({
+          ...review,
+          isLiked: !review.isLiked,
+          likeCount: review.isLiked ? review.likeCount - 1 : review.likeCount + 1
+        }));
+      } else {
+        throw new Error(data.error?.message || '좋아요 처리 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleBookmarkToggle = async (reviewId) => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/bookmark`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        updateReviewInStates(reviewId, (review) => ({
+          ...review,
+          isBookmarked: !review.isBookmarked,
+          bookmarkCount: review.isBookmarked ? review.bookmarkCount - 1 : review.bookmarkCount + 1
+        }));
+      } else {
+        throw new Error(data.error?.message || '북마크 처리 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const handleAddComment = async (reviewId, content) => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
+    if (!content.trim()) {
+      alert('댓글 내용을 입력해주세요.');
+      return;
+    }
+    try {
+      const response = await fetch(`/api/reviews/${reviewId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ content })
+      });
+      const data = await response.json();
+      if (data.success) {
+        const commentsResponse = await fetch(`/api/reviews/${reviewId}/comments`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+        const commentsData = await commentsResponse.json();
+        if (commentsData.success) {
+            updateReviewInStates(reviewId, (review) => ({
+                ...review,
+                comments: commentsData.data,
+                commentCount: review.commentCount + 1
+            }));
+        }
+      } else {
+        throw new Error(data.error?.message || '댓글 추가 실패');
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   const [weeklyCurrentConsumption, setWeeklyCurrentConsumption] = useState(140);
   const [weeklyTargetConsumption, setWeeklyTargetConsumption] = useState(200);
   const [isWeeklyEditing, setIsWeeklyEditing] = useState(false);
 
-  const handleWeeklyEditToggle = () => {
-    setIsWeeklyEditing(!isWeeklyEditing);
-  };
-
-  const handleWeeklyCurrentChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setWeeklyCurrentConsumption(value);
-    } else if (e.target.value === '') {
-      setWeeklyCurrentConsumption(0);
-    }
-  };
-
-  const handleWeeklyTargetChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setWeeklyTargetConsumption(value);
-    } else if (e.target.value === '') {
-      setWeeklyTargetConsumption(0);
-    }
-  };
-
+  const handleWeeklyEditToggle = () => setIsWeeklyEditing(!isWeeklyEditing);
+  const handleWeeklyCurrentChange = (e) => setWeeklyCurrentConsumption(parseInt(e.target.value, 10) || 0);
+  const handleWeeklyTargetChange = (e) => setWeeklyTargetConsumption(parseInt(e.target.value, 10) || 0);
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
+
+  const getActiveData = () => {
+    switch (activeTab) {
+      case 'written': return myReviewData;
+      case 'liked': return likedReviewData;
+      case 'bookmarked': return bookmarkedReviewData;
+      case 'commented': return commentedReviewData;
+      default: return null;
+    }
+  };
+
+  const getActiveDataInfo = () => {
+    const data = getActiveData();
+    const count = data ? data.length : 0;
+    switch (activeTab) {
+      case 'written': return { title: '작성한 리뷰', count };
+      case 'liked': return { title: '좋아요한 리뷰', count };
+      case 'bookmarked': return { title: '북마크한 리뷰', count };
+      case 'commented': return { title: '댓글단 리뷰', count };
+      default: return { title: '', count: 0 };
+    }
+  };
+
+  // Pagination logic for Mypage
+  const itemsPerPage = 6; // 3 rows * 2 columns
+
+  const handlePageChange = (pageNumber) => {
+    const reviews = getActiveData();
+    const totalPages = Math.ceil((reviews ? reviews.length : 0) / itemsPerPage);
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const reviews = getActiveData();
+    const totalPages = Math.ceil((reviews ? reviews.length : 0) / itemsPerPage);
+    const pageNumbers = [];
+    const startPage = Math.floor((currentPage - 1) / 4) * 4 + 1; // 1-indexed
+    const endPage = Math.min(startPage + 3, totalPages); // Show up to 4 page numbers
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <div key={i} className={styles.frame1804} onClick={() => handlePageChange(i)}>
+          <div className={i === currentPage ? styles.currentPage : styles._10}>{i}</div>
+        </div>
+      );
+    }
+    return pageNumbers;
+  };
+
+
+  const renderReviewGrid = () => {
+    const reviews = getActiveData();
+
+    if (reviews === null) {
+      return <div className={styles.reviewsWrapper}><p>리뷰를 불러오는 중입니다...</p></div>;
+    }
+
+    const itemsPerPage = 6; // 3 rows * 2 columns
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = reviews.slice(startIndex, endIndex);
+    
+    const placeholders = Array(itemsPerPage - currentItems.length).fill(null);
+    const displayItems = [...currentItems, ...placeholders];
+
+    const column1 = displayItems.slice(0, 3);
+    const column2 = displayItems.slice(3, 6);
+
+    const renderBlock = (review, index) => {
+      if (!review) {
+        return <div key={`placeholder-${index}`} className={`${styles.frame83} ${styles.placeholderReviewBlock}`} />;
+      }
+      return (
+        <div className={styles.frame83} key={review.id} onClick={() => openPopup(review)}>
+          <div className={styles.frame105}>
+            <div className={styles.frame109}>
+              <div className={styles.frame113}>
+                <div className={styles.frame107}>
+                  <div className={styles.frame1063}>
+                    <div className={styles.profile3}></div>
+                    <div className={styles.username3}>{review.author.username}</div>
+                    <div className={styles.div13}>{review.title}</div>
+                    <div className={styles.frame108}>
+                      <div className={styles.date20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
+                      <div className={styles.frame912}>
+                        <div className={styles.div12}>{review.category}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.frame110}>
+                  <div className={styles.div14}>{review.content.substring(0, 100)}...</div>
+                  <div className={styles.frame111}>
+                    <div className={styles.div15}>제품 링크</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={styles.frame155}>
+              <img className={styles.iconframe} src="/like.svg" alt="Like" />
+              <img className={styles.frame1325} src="/bookmark_icon.svg" alt="Bookmark" />
+              <img className={styles.frame1304} src="/comment_icon.svg" alt="Comment" />
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <div className={styles.reviewsWrapper}>
+        <div className={styles.reviewBlocksWrapper}>
+          {column1.map((review, index) => renderBlock(review, index))}
+        </div>
+        <div className={styles.reviewBlocksWrapper}>
+          {column2.map((review, index) => renderBlock(review, index + 3))}
+        </div>
+      </div>
+    );
+  };
+
+  const Pagination = () => {
+    const reviews = getActiveData();
+    if (!reviews || reviews.length <= itemsPerPage) return null; // Only show pagination if more than 6 items
+
+    const totalPages = Math.ceil(reviews.length / itemsPerPage);
+
+    return (
+      <div className={styles.pagination}>
+        <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={() => handlePageChange(1)} style={{cursor: 'pointer'}} />
+        <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={() => handlePageChange(currentPage - 1)} style={{cursor: 'pointer'}} />
+        {renderPageNumbers()}
+        <img className={styles.group20953} src="/right_icon.svg" alt=">" onClick={() => handlePageChange(currentPage + 1)} style={{cursor: 'pointer'}} />
+        <img className={styles.group20953} src="/rightright_icon.svg" alt=">>" onClick={() => handlePageChange(totalPages)} style={{cursor: 'pointer'}} />
+      </div>
+    );
+  };
+
+  
+  const activeDataInfo = getActiveDataInfo();
+  const reviewsForPagination = getActiveData();
+  const totalPages = Math.ceil((reviewsForPagination ? reviewsForPagination.length : 0) / itemsPerPage);
 
   return (
     <>
@@ -204,7 +409,7 @@ const Mypage = ({ currentUser }) => {
                     </div>
                   </div>
                   <div className={styles.frame282}>
-                    <img className={styles.vector} src="/vector0.svg" alt="Vector" />
+                    <img className={styles.vector} src="/leaf_point_icon.svg" alt="Vector" />
                     <div className={styles.frame91}>
                       <div className={styles._4000}>4000</div>
                     </div>
@@ -225,7 +430,7 @@ const Mypage = ({ currentUser }) => {
                       <div className={styles.frame212}>
                         <div className={styles._100}>{followingCount}</div>
                       </div>
-                      <div className={styles.line43}></div>
+                      <div className={styles.line43}></div> {/* 구분선 다시 추가 */}
                       <div className={styles.frame211}>
                         <div className={styles._200}>{followersCount}</div>
                       </div>
@@ -338,10 +543,10 @@ const Mypage = ({ currentUser }) => {
             </div>
             <div className={styles.frame220}>
               <div className={styles.frame2053}>
-                <img className={styles.group2095} src="/group-20950.svg" alt="Group 2095" />
+                <img className={styles.group2095} src="/left_icon.svg" alt="Group 2095" />
               </div>
               <div className={styles.frame188}>
-                <img className={styles.group20952} src="/group-20951.svg" alt="Group 20952" />
+                <img className={styles.group20952} src="/rigth_icon.svg" alt="Group 20952" />
               </div>
             </div>
           </div>
@@ -730,9 +935,8 @@ const Mypage = ({ currentUser }) => {
     <div className={styles.dashbox_}>
       <div className={styles.frame143}>
         <div className={styles.frame236}>
-      
-            <div className={styles.a4}>작성한 리뷰</div>
-            <div className={styles._30}>총 30건</div>
+            <div className={styles.a4}>{activeDataInfo.title}</div>
+            <div className={styles._30}>총 {activeDataInfo.count}건</div>
         </div>
         <div className={styles.line53}></div>
       </div>
@@ -741,7 +945,7 @@ const Mypage = ({ currentUser }) => {
       
         <div className={styles.completeWrapper}>
           <div className={styles.frame231_tab_container}>
-            <div className={styles.frame2092}>
+            <div className={`${styles.frame2092} ${activeTab === 'written' ? styles.activeTab : ''}`} onClick={() => setActiveTab('written')}>
               <div className={styles.frame232}>
                 <div className={styles.frame1062}>
                   <div className={styles.a5}>작성한 리뷰</div>
@@ -749,7 +953,7 @@ const Mypage = ({ currentUser }) => {
               </div>
             </div>
 
-            <div className={styles.frame2092}>
+            <div className={`${styles.frame2092} ${activeTab === 'liked' ? styles.activeTab : ''}`} onClick={() => setActiveTab('liked')}>
               <div className={styles.frame232}>
                 <div className={styles.frame1062}>
                   <div className={styles.a5}>좋아요한 리뷰</div>             
@@ -759,7 +963,7 @@ const Mypage = ({ currentUser }) => {
             </div>
 
 
-            <div className={styles.frame2092}>
+            <div className={`${styles.frame2092} ${activeTab === 'bookmarked' ? styles.activeTab : ''}`} onClick={() => setActiveTab('bookmarked')}>
               <div className={styles.frame232}>
                 <div className={styles.frame1062}>
                   <div className={styles.a5}>북마크한 리뷰</div>             
@@ -769,7 +973,7 @@ const Mypage = ({ currentUser }) => {
             </div>
       
 
-          <div className={styles.frame2092}>
+          <div className={`${styles.frame2092} ${activeTab === 'commented' ? styles.activeTab : ''}`} onClick={() => setActiveTab('commented')}>
             <div className={styles.frame232}>
               <div className={styles.frame1062}>
                 <div className={styles.a5}>댓글단 리뷰</div>             
@@ -780,73 +984,23 @@ const Mypage = ({ currentUser }) => {
           
         </div>
         
+        {renderReviewGrid()}
+        {totalPages > 1 && <Pagination />}
 
-        <div className={styles.reviewsWrapper}>
-            {myReviewData && myReviewData.written ? (
-              <>
-                {myReviewData.written.map((review) => (
-                  <div className={styles.frame83} key={review.id} onClick={openPopup}>
-                    <div className={styles.frame105}>
-                      <div className={styles.frame109}>
-                        <div className={styles.frame113}>
-                          <div className={styles.frame107}>
-                            <div className={styles.frame1063}>
-                              <div className={styles.profile3}></div>
-                              <div className={styles.username3}>{review.author.username}</div>
-                              <div className={styles.div13}>{review.title}</div>
-                              <div className={styles.frame108}>
-                                <div className={styles.date20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
-                                <div className={styles.frame912}>
-                                  <div className={styles.div12}>{review.category}</div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className={styles.frame110}>
-                            <div className={styles.div14}>
-                              {review.content.substring(0, 100)}... {/* Truncate content */}
-                            </div>
-                            <div className={styles.frame111}>
-                              <div className={styles.div15}>제품 링크</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className={styles.frame155}>
-                        <img className={styles.iconframe} src="like.svg" alt="Like" />
-                        <img className={styles.frame1325} src="bookmark_icon.svg" alt="Bookmark" />
-                        <img className={styles.frame1304} src="comment_icon.svg" alt="Comment" />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {Array.from({ length: Math.max(0, 6 - myReviewData.written.length) }).map((_, index) => (
-                  <div key={`placeholder-${index}`} className={`${styles.frame83} ${styles.placeholderReviewBlock}`}>
-                    {/* Placeholder content, e.g., empty div or transparent content */}
-                  </div>
-                ))}
-              </>
-            ) : (
-              <>
-                <p>작성한 리뷰가 없습니다.</p>
-                {Array.from({ length: 6 }).map((_, index) => (
-                  <div key={`placeholder-${index}`} className={`${styles.frame83} ${styles.placeholderReviewBlock}`}>
-                    {/* Placeholder content */}
-                  </div>
-                ))}
-              </>
-            )}
-          </div>
-
-
-
-
-        </div>
+    </div>
     
 
         </div>
       </div>
-      <ReviewPopup show={isPopupOpen} onClose={closePopup} />
+      <ReviewPopup 
+        show={isPopupOpen} 
+        onClose={closePopup} 
+        review={selectedReview} 
+        onLikeToggle={handleLikeToggle}
+        onBookmarkToggle={handleBookmarkToggle}
+        onAddComment={handleAddComment}
+        currentUser={currentUser}
+      />
       {showFollowerPopup && (
         <FollowListPopup 
           onClose={closeFollowerPopup} 
@@ -876,5 +1030,4 @@ const Mypage = ({ currentUser }) => {
     </>
   );
 };
-
 export default Mypage;

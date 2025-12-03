@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import styles from "./RecommendedReviews.module.css";
 import ReviewPopup from "../ReviewPopup";
-export const RecommendedReviews = () => {
-  const [isPopupOpen, setPopupOpen] = useState(false);
-
-  const openPopup = () => setPopupOpen(true);
-  const closePopup = () => setPopupOpen(false);
-
+export const RecommendedReviews = ({ openReviewPopup }) => {
   const recommendedReviews = [
     {
       id: 1,
@@ -119,7 +114,7 @@ export const RecommendedReviews = () => {
         <div className={styles.reviewList}> {/* Corresponds to .frame-116 */}
           <div className={styles.reviewColumn}> {/* Corresponds to .frame-114 */}
             {recommendedReviews.slice(0, 3).map((review) => (
-              <div key={review.id} className={styles.reviewItem} onClick={openPopup}> {/* Corresponds to .frame-832, .frame-1053 */}
+              <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
                 <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
                   <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}
                     <div className={styles.userInfo}> {/* Corresponds to .frame-1065 */}
@@ -165,7 +160,7 @@ export const RecommendedReviews = () => {
           </div>
           <div className={styles.reviewColumn}> {/* Corresponds to .frame-115 */}
             {recommendedReviews.slice(3, 6).map((review) => (
-              <div key={review.id} className={styles.reviewItem} onClick={openPopup}> {/* Corresponds to .frame-832, .frame-1053 */}
+              <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
                 <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
                   <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}
                     <div className={styles.userInfo}> {/* Corresponds to .frame-1065 */}
@@ -211,7 +206,6 @@ export const RecommendedReviews = () => {
           </div>
         </div>
       </div>
-      <ReviewPopup show={isPopupOpen} onClose={closePopup} />
-    </>
+      </>
   );
 };

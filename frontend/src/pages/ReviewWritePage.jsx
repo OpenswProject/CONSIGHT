@@ -17,7 +17,7 @@ const ReviewWritePage = () => {
   };
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       // Optionally redirect to login page
@@ -71,8 +71,6 @@ const ReviewWritePage = () => {
 
   return (
     <div className={styles.div}>
-      <div className={styles.rectangle10}></div>
-      <div className={styles.rectangle9}></div>
       
       <div className={styles.mainContentWrapper}> {/* 새로운 래퍼 추가 */}
         <div className={styles.reviewEditorSection}> {/* 메인 콘텐츠 섹션 */}
@@ -112,21 +110,10 @@ const ReviewWritePage = () => {
                               <option value="청소·욕실">청소·욕실</option>
                               {/* 다른 카테고리 옵션 추가 */}
                             </select>
-                            <img className={styles.polygon1} src="/public/polygon-10.svg" alt="Category dropdown" />
+                           
                           </div>
                         </div>
-                        <div className={styles.frame112}>
-                          <label htmlFor="receipt-upload" className={styles.frame305}>
-                            <div className={styles.div8}>영수증 인증</div>
-                            <input
-                              id="receipt-upload"
-                              type="file"
-                              accept="image/*"
-                              onChange={handleImageUpload}
-                              style={{ display: 'none' }}
-                            />
-                          </label>
-                        </div>
+                       
                         <div className={styles.frame111}>
                           <div className={styles.frame913}>
                             <div className={styles.div8}>제품 링크</div>
@@ -146,10 +133,7 @@ const ReviewWritePage = () => {
                   </div>
                 </div>
                 <div className={styles.frame307}>
-                  <div className={styles.frame914}>
-                    <div className={styles.div9}>인증하기</div>
-                    <img className={styles.maskGroup} src="/public/mask-group0.svg" alt="Certification icon" />
-                  </div>
+              
                   <div className={styles.frame92}>
                     <input
                       type="text"
@@ -163,7 +147,7 @@ const ReviewWritePage = () => {
               </div>
               <textarea
                 className={styles.div11}
-                placeholder="패딩이 정말 가볍고 따뜻해서 깜짝 놀랐어요. 안에 얇은 기모티만 입어도 충분히 한겨울 기온을 버틸 정도라서 요즘 거의 매일 입고 다닙니다. 지퍼도 부드럽게 잘 올라가고 주머니 털 안감도 포근해서 만족스러워요. 전체적으로 착용감이 편안해서 오래 입고 있어도 부담이 없고, 바람 부는 날에도 체온을 잘 유지해줘서 외출할 때마다 든든합니다. 디자인도 깔끔해서 어떤 옷과 매치해도 잘 어울려 데일리 아우터로 손색이 없어요. 개인적으로 이번 시즌에 산 옷 중 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다"
+                placeholder="리뷰 내용을 입력하세요"
                 value={reviewContent}
                 onChange={(e) => setReviewContent(e.target.value)}
               ></textarea>

@@ -23,8 +23,30 @@
   font-family: "Inter-Bold", sans-serif;
   font-size: 14px;
   font-weight: 700;
-  width: 824px; /* Match reference content width */
+  /* width: 824px; 제거 */ /* Match reference content width */
   text-align: left;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the start */
+  gap: 10px; /* Space between title and attendText */
+  width: 100%; /* Take full width of parent */
+}
+
+.attendText {
+  color: rgba(130, 183, 158, 1); /* Use the button color */
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px; /* Smaller font size for text */
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.attendText:hover {
+  color: rgba(110, 150, 130, 1); /* Darker on hover */
 }
 
 .graph {

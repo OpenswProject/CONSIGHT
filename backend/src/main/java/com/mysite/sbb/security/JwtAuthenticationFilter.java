@@ -41,26 +41,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
+        logger.debug("Authorization Header: {}", authHeader); // 로그 추가
         final String jwt;
         final String username;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            logger.warn("JWT Token not found or does not start with Bearer for request: {}", request.getRequestURI()); // 로그 추가
             filterChain.doFilter(request, response);
             return;
         }
 
         jwt = authHeader.substring(7);
+        logger.debug("Extracted JWT: {}", jwt); // 로그 추가
         try {
             username = jwtUtil.getUsernameFromToken(jwt);
+            logger.debug("Username from JWT: {}", username); // 로그 추가
         } catch (Exception e) {
-            // Token parsing error
+            logger.error("Error extracting username from JWT: {}", e.getMessage()); // 로그 추가
             filterChain.doFilter(request, response);
             return;
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userSecurityService.loadUserByUsername(username);
+            logger.debug("UserDetails loaded for username {}: {}", username, userDetails != null); // 로그 추가
             if (jwtUtil.validateToken(jwt, userDetails)) {
+                logger.debug("JWT Token is valid for user: {}", username); // 로그 추가
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -70,6 +76,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                logger.debug("Authentication set for user: {}", username); // 로그 추가
+            } else {
+                logger.warn("JWT Token is NOT valid for user: {}", username); // 로그 추가
             }
         }
         filterChain.doFilter(request, response);

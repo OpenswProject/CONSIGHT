@@ -1999,12 +1999,6 @@
   display: flex;
 }
 
-.placeholderReviewBlock {
-  visibility: hidden; /* Make it transparent */
-  /* You might want to add a border for debugging during development */
-  /* border: 1px dashed #ccc; */
-}
-
 .frame36__ {
   display: flex;
   flex-direction: row;

@@ -87,7 +87,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 2px;
   padding: 0px 8px 0px 24px;
   display: flex;
@@ -148,7 +148,7 @@
 
 .followDivider {
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   width: 20px;
   transform: rotate(90deg);
@@ -276,7 +276,7 @@
   background: #f3f3f3;
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1.5px;
   padding: 5px 8px 5px 8px;
   display: flex;
@@ -290,7 +290,7 @@
 }
 
 ._4000 {
-  color: #4b858f;
+  color: #7daab3;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 10px;
@@ -326,7 +326,7 @@
 .line5 {
   margin-top: -1.5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   flex-shrink: 0;
   width: 100%;
@@ -435,7 +435,7 @@
 }
 
 .d30 {
-  color: #5ca196;
+  color: #8cbfae;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 25px;
@@ -450,7 +450,7 @@
 .line4 {
   margin-top: -1.5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   flex-shrink: 0;
   width: 100%;
@@ -465,7 +465,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 2px;
   display: flex;
   flex-direction: row;
@@ -493,7 +493,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 2px;
   padding: 12px 111px 12px 111px;
   display: flex;
@@ -557,7 +557,7 @@
 .line42 {
   margin-top: -1.5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   flex-shrink: 0;
   width: 250px;
@@ -610,7 +610,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1px;
   padding: 12px 29px;
   display: flex;
@@ -642,7 +642,7 @@
 }
 
 ._140 {
-  color: #82b79e;
+  color: #a8c9b9;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 25px;
@@ -673,7 +673,7 @@
   display: flex;
   flex-direction: row;
   gap: 0px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   flex-shrink: 0;
   width: 186px;
@@ -683,7 +683,7 @@
   background: #e9eaeb;
   border-radius: 20px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 2.5px;
   padding: 3px;
   display: flex;
@@ -842,7 +842,7 @@
 }
 
 .ellipseFill {
-  background: #c9d3d0;
+  background: #dbe4e1;
   border-radius: 50%;
   border-style: solid;
   border-color: transparent;
@@ -861,10 +861,10 @@
 }
 
 .frame322 {
-  background: #e9eaeb;
+  background: #e6e9eb;
   border-radius: 20px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 2.5px;
   padding: 3px;
   display: flex;
@@ -880,8 +880,8 @@
 .frame272 {
   background: linear-gradient(
     -90deg,
-    rgba(201, 211, 208, 1) 0%,
-    rgba(233, 240, 238, 1) 100%
+    rgba(219, 228, 225, 1) 0%,
+    rgba(230, 233, 235, 1) 100%
   );
   border-radius: 15px;
   padding: 12px 111px 12px 111px;
@@ -963,7 +963,7 @@
 .frame277 {
   background: linear-gradient(
     -90deg,
-    rgba(217, 221, 223, 1) 0%,
+    rgba(230, 233, 235, 1) 0%,
     rgba(243, 243, 243, 1) 100%
   );
   border-radius: 15px;
@@ -1019,7 +1019,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 2px;
   padding: 10px 20px 10px 23px;
   display: flex;
@@ -1048,7 +1048,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 2px;
   padding: 10px 20px 10px 23px;
   display: flex;
@@ -1093,7 +1093,7 @@
 .line43 {
   margin-top: -1.5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   flex-shrink: 0;
   width: 580px;
@@ -1145,7 +1145,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1px;
   padding: 12px 111px 12px 111px;
   display: flex;
@@ -1159,7 +1159,7 @@
 }
 
 ._140 {
-  color: #82b79e;
+  color: #a8c9b9;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 25px;
@@ -1291,7 +1291,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1px;
   padding: 12px 111px 12px 111px;
   display: flex;
@@ -1402,10 +1402,10 @@
 }
 
 .frame323 {
-  background: #e9eaeb;
+  background: #e6e9eb;
   border-radius: 20px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 2.5px;
   padding: 1px 3px 3px 1px;
   display: flex;
@@ -1436,7 +1436,7 @@
 .frame2652 {
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 2px;
   display: flex;
   flex-direction: row;
@@ -1487,7 +1487,7 @@
 }
 
 .ellipseFill2 {
-  background: #abcebe;
+  background: #c8d9d2;
   border-radius: 50%;
   border-style: solid;
   border-color: transparent;
@@ -1499,7 +1499,7 @@
 }
 
 .ellipseFill3 {
-  background: #c9d3d0;
+  background: #dbe4e1;
   border-radius: 50%;
   border-style: solid;
   border-color: transparent;
@@ -1519,7 +1519,7 @@
 }
 
 ._35Span {
-  color: #82b79e;
+  color: #a8c9b9;
 }
 
 .div11 {
@@ -1573,7 +1573,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1px;
   padding: 12px 111px 12px 111px;
   display: flex;
@@ -1591,7 +1591,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 100%; /* 부모 요소에 맞게 너비 조정 */
   grid-column: 2 / 3; /* .div의 두 번째 컬럼에 배치 */
@@ -1602,7 +1602,7 @@
 .line52 {
   margin-top: -1.5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px 0 0 0;
   flex-shrink: 0;
   width: 100%; /* 1295.1px 대신 100% 사용 */
@@ -1668,7 +1668,7 @@
   width: 121px;
 }
 ._20 {
-  color: #82b79e;
+  color: #a8c9b9;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 25px;
@@ -1681,14 +1681,14 @@
 }
 
 .targetAmountInput {
-  color: #82b79e;
+  color: #a8c9b9;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 25px;
   font-weight: 700;
   width: 80px; /* 적절한 너비 설정 */
   height: 37px;
-  border: 1px solid #e3e5e7;
+  border: 1px solid #ebedef;
   border-radius: 5px;
   padding: 0 5px;
   box-sizing: border-box; /* padding이 width에 포함되도록 */
@@ -1767,7 +1767,7 @@
   );
   border-radius: 10px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1px;
   padding: 6px 11px 6px 11px;
   display: flex;
@@ -1804,7 +1804,7 @@
   );
   border-radius: 20px;
   border-style: solid;
-  border-color: #e3e5e7;
+  border-color: #ebedef;
   border-width: 1px;
   padding: 12px 111px 12px 111px;
   display: flex;
@@ -1851,7 +1851,7 @@
 .frame83 {
   border-radius: 5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px;
   padding: 6px 7px 6px 8px;
   display: flex;
@@ -1909,7 +1909,7 @@
 .frame189 {
   border-radius: 5px;
   border-style: solid;
-  border-color: #dadee1;
+  border-color: #eef0f2;
   border-width: 1.5px;
   padding: 6px 7px 6px 8px;
   display: flex;
@@ -1998,277 +1998,51 @@
   flex-direction: row;
   gap: 10px;
   align-items: center;
-  justify-content: center;
-  align-self: stretch;
-  flex-shrink: 0;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(-1, 1);
-}
-._2 {
-  color: #787878;
-  text-align: center;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 16px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(-1, 1);
-}
-.frame186 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 24px;
-}
-._3 {
-  color: #787878;
-  text-align: center;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 16px;
-
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(-1, 1);
-}
-.frame1872 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 24px;
-}
-._4 {
-  color: #787878;
-  text-align: center;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 16px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(-1, 1);
 }
 
-.moreOptionsContainer {
-  position: relative;
-  display: flex; /* Changed to flex to better control content */
-  align-items: center;
-  justify-content: center;
-}
-.frame188 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 24px;
-}
-._5 {
-  color: #787878;
-  text-align: center;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 16px;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(-1, 1);
-}
-.frame1882 {
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 1.5px;
-  padding: 6px 7px 6px 8px;
+.categoryItem {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-shrink: 0;
-  width: 24px;
-}
-.group20953 {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  position: relative;
-  overflow: visible;
+  width: 262px; /* 기존 frame40 등의 너비와 동일하게 설정 */
 }
 
-.frame190 {
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 1.5px;
-  padding: 6px 7px 6px 8px;
+.addCategoryInput {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 24px;
-}
-.group20954 {
-  flex-shrink: 0;
-  width: 5px;
-  height: 6px;
-  overflow: visible;
-}
-.group20962 {
-  flex-shrink: 0;
-  width: 5px;
-  height: 6px;
-  overflow: visible;
+  flex-direction: column; /* 입력 필드를 세로로 배치 */
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ebedef;
+  border-radius: 10px;
+  background-color: #fcfcfc;
 }
 
 .inputField {
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 25px;
-  font-weight: 700;
-  color: var(--green-ab);
   width: 100%;
-  max-width: 60px;
-  height: 37px;
-  text-align: center;
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  border-radius: 0;
-  -moz-appearance: textfield;
-}
-.inputField:focus {
-    outline: none;
-    border-bottom-color: var(--green-ab);
-}
-.inputField::-webkit-outer-spin-button,
-.inputField::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.targetInput {
-  color: #747474;
-  font-size: 18px;
-}
-.targetInput:focus {
-    border-bottom-color: #747474;
-}
-
-.amountSeparator, .amountUnit {
-  color: #747474;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  height: 37px;
-  white-space: nowrap;
-}
-.amountSeparator {
-    padding: 0 2px;
-}
-
-.editButton {
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-  border: 1px solid #ccc;
+  padding: 8px;
+  border: 1px solid #eef0f2;
   border-radius: 5px;
-  background-color: #f0f0f0;
-  flex-shrink: 0;
+  font-size: 14px;
+  box-sizing: border-box; /* padding이 width에 포함되도록 */
 }
 
-.progressBarContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 7px; /* Adjusted gap */
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-  width: 148px; /* Original width */
-  height: 22px; /* Original height */
-}
-
-.progressBar {
-  width: 100%;
-  height: 100%;
+.updateConsumptionButton {
+  background-color:rgb(222, 222, 222); /* 채도 낮은 초록색 계열 */
+  color: rgb(56, 56, 56);
+  padding: 10px 15px;
+  border: none;
   border-radius: 20px;
-  overflow: hidden;
-  border: 2.5px solid var(--gray-da);
-  background-color: var(--gray-e9);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 30px; /* 위쪽 여백 */
+  width: 200px; /* 너비 100% */
 }
 
-.progressBar .rc-progress-line-wrap {
-  padding: 3px; /* Simulate original padding */
-}
-
-.progressBar .rc-progress-line-path {
-  border-radius: 8px; /* Original border-radius for progress */
-  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
-}
-
-.progressLabel {
-  position: absolute;
-  color: var(--gray-9d);
-  text-align: center;
-  font-family: "Inter-SemiBold", sans-serif;
-  font-size: 10px;
-  font-weight: 600;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%; /* Center the label */
-}
-
-.thickProgressBarContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 7px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-  width: 219px; /* Adjusted width for thick bar */
-  height: 32px; /* Original height for thick bar */
-}
-
-.thickProgressBar {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 2.5px solid #dadee1;
-  background-color: #e9eaeb;
-}
-
-.thickProgressBar .rc-progress-line-wrap {
-  padding: 3px; /* Simulate original padding */
-}
-
-.thickProgressBar .rc-progress-line-path {
-  border-radius: 20px 10px 10px 20px; /* Original border-radius for thick progress */
-  transition: stroke-dashoffset 0.3s ease-in-out; /* Added for smooth animation */
-}
-
-.thickProgressLabel {
-  position: absolute;
-  color: #676767;
-  text-align: center;
-  font-family: "Inter-SemiBold", sans-serif;
-  font-size: 10px;
-  font-weight: 600;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%; /* Center the label */
+.saveButton:hover {
+  background-color: #91b3a4; /* 호버 시 색상 변경 */
 }

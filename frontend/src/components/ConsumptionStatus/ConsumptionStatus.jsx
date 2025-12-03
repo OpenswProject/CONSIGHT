@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./ConsumptionStatus.module.css";
 import { Line } from 'rc-progress';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'; // recharts import
 
 export const ProgressBar = ({ value, max, label, percentageColor, isThick }) => {
   const [animatedPercent, setAnimatedPercent] = useState(0);
@@ -114,6 +115,28 @@ export const ConsumptionStatus = ({ username, currentUser }) => {
   const percentage = targetConsumption > 0 ? Math.round((currentConsumption / targetConsumption) * 100) : 0;
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
 
+  // Pie Chart Data
+  const pieData = [
+    { name: '주거비', value: 300000 },
+    { name: '식비', value: 200000 },
+    { name: '교통비', value: 150000 },
+    { name: '기타', value: 50000 }, // Added a '기타' category for completeness
+  ];
+
+  const COLORS = ['#9BC4B0', '#AEC6CF', '#D3D3D3', '#F0F0F0']; // Desaturated green, blue, gray, light gray
+
+  // Custom Tooltip for Pie Chart
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={styles.customTooltip}>
+          <p className="label">{`${payload[0].name} : ${payload[0].value.toLocaleString()}원`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <> {/* This component now directly renders the content of frame-6 */}
       <div className={styles.frame21}> {/* Corresponds to frame-21 */}
@@ -132,40 +155,38 @@ export const ConsumptionStatus = ({ username, currentUser }) => {
                   <div className={styles.frame44}> {/* Corresponds to frame-44 */}
                     <div className={styles.legends}> {/* Corresponds to legends */}
                       <div className={styles.frame35}> {/* Corresponds to frame-35 */}
-                        <div className={styles.legend}>
-                          <div className={styles.frame27}>
-                            <div className={styles.ellipseFill}></div>
-                            <div className={styles.div4}>주거비</div>
-                          </div>
-                        </div>
-                        <div className={styles.legend}>
-                          <div className={styles.legendNode}>
-                            <div className={styles.basicNode}>
-                              <div className={styles.ellipseFill2}></div>
+                        {pieData.map((entry, index) => (
+                          <div className={styles.legend} key={`legend-${index}`}>
+                            <div className={styles.frame27}>
+                              <div className={styles.ellipseFill} style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                              <div className={styles.div4}>{entry.name}</div>
                             </div>
                           </div>
-                          <div className={styles.div4}>식비</div>
-                        </div>
-                        <div className={styles.legend}>
-                          <div className={styles.legendNode}>
-                            <div className={styles.basicNode}>
-                              <div className={styles.ellipseFill3}></div>
-                            </div>
-                          </div>
-                          <div className={styles.div4}>교통비</div>
-                        </div>
+                        ))}
                       </div>
                     </div>
                     <div className={styles.mainChart}> {/* Corresponds to main-chart */}
-                      <div className={styles.pieLayer}> {/* Corresponds to pie-layer */}
-                        <div className={styles.pie3}></div>
-                        <div className={styles.pie2}></div>
-                        <div className={styles.pie1}></div>
-                        <div className={styles.labelContent}>
-                          <div className={styles.labelName}>교통비</div>
-                          <div className={styles.labelValue}>31.23</div>
-                        </div>
-                      </div>
+                      <ResponsiveContainer width="100%" height={200}>
+                        <PieChart>
+                          <Pie
+                            data={pieData}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={20} // 1/3로 줄임
+                            outerRadius={80}
+                            fill="#8884d8"
+                            paddingAngle={5}
+                            dataKey="value"
+                            labelLine={false}
+                            // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} // 잘림 문제 확인을 위해 임시 제거
+                          >
+                            {pieData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip content={<CustomTooltip />} />
+                        </PieChart>
+                      </ResponsiveContainer>
                     </div>
                   </div>
                 </div>

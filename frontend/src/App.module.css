@@ -1450,3 +1450,25 @@
   height: 16px;
   cursor: pointer;
 }
+
+.visitHistoryAndAttendContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px; /* Adjust spacing as needed */
+  margin-top: 10px; /* Adjust positioning relative to ConsumptionStatus */
+}
+
+.attendText {
+  color: rgba(130, 183, 158, 1); /* 버튼 색깔로 글씨색 변경 */
+  border: none;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.3s ease; /* 텍스트 색상 변화에 대한 트랜지션 */
+}
+
+.attendText:hover {
+  color: rgba(110, 150, 130, 1); /* 호버 시 색상 변경 */
+}
