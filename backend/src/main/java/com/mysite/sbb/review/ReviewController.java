@@ -169,4 +169,30 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("조회수 업데이트 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
+
+    @GetMapping("/recommended")
+    public ResponseEntity<APIResponse<List<Review>>> getRecommendedReviews() {
+        try {
+            List<Review> recommendedReviews = reviewService.getRecommendedReviews();
+            return ResponseEntity.ok(APIResponse.success("추천 리뷰 목록을 성공적으로 불러왔습니다.", recommendedReviews));
+        } catch (Exception e) {
+            log.error("추천 리뷰 목록을 불러오는 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("추천 리뷰 목록을 불러오는 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @GetMapping("/most-liked-by-category")
+    public ResponseEntity<APIResponse<Review>> getMostLikedReviewByCategory(@RequestParam("category") String category) {
+        try {
+            List<Review> reviews = reviewService.getRecommendedReviewsByCategory(category);
+            if (reviews.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error("해당 카테고리의 추천 리뷰를 찾을 수 없습니다.", HttpStatus.NOT_FOUND.value()));
+            }
+            // Return the first one, which is the most liked due to sorting in service
+            return ResponseEntity.ok(APIResponse.success("카테고리별 가장 많은 좋아요를 받은 리뷰를 성공적으로 불러왔습니다.", reviews.get(0)));
+        } catch (Exception e) {
+            log.error("카테고리별 가장 많은 좋아요를 받은 리뷰를 불러오는 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("카테고리별 가장 많은 좋아요를 받은 리뷰를 불러오는 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
 }

@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './FeedbackPopup.module.css';
 
-const FeedbackPopup = ({ onClose }) => {
+const FeedbackPopup = ({ onClose, onSubmit, monthEndDate }) => {
+  const [feedbackText, setFeedbackText] = useState('');
+  const [satisfactionRating, setSatisfactionRating] = useState(3); // Default to 3/5
+
+  const handleSubmit = () => {
+    onSubmit(feedbackText, satisfactionRating); // Pass satisfactionRating
+    setFeedbackText('');
+    setSatisfactionRating(3); // Reset to default
+  };
+
   return (
     <div className={styles.overlay} onClick={onClose}> {/* overlay 클릭 시 닫기 */}
       <div className={styles.popup} onClick={(e) => e.stopPropagation()}> {/* 팝업 내부 클릭 시 이벤트 전파 중단 */}
         <div className={styles.div}>
           <div className={styles.div2}>
             <div className={styles.frame300}>
-              <div className={styles._10}>10월 피드백 작성하기</div>
+              <div className={styles._10}>{monthEndDate.substring(0, monthEndDate.lastIndexOf('.'))}월 피드백 작성하기</div>
               <div className={styles.frame294}>
                 <div className={styles.frame261}>
                   <div className={styles.frame41}>
@@ -129,7 +138,7 @@ const FeedbackPopup = ({ onClose }) => {
                 </div>
                 <div className={styles.frame295}>
                   <div className={styles.frame297}>
-                    <div className={styles._103}>10월의 피드백</div>
+                    <div className={styles._103}>이번 달의 피드백</div>
                     <div className={styles.frame21}>
                       <div className={styles.frame298}>
                         <div className={styles.frame271}>
@@ -138,15 +147,18 @@ const FeedbackPopup = ({ onClose }) => {
                               <div className={styles.div6}>만족도</div>
                               <div className={styles.frame269}>
                                 <div className={styles.frame266}>
-                                  <div className={styles.ellipseFill2}></div>
-                                  <div className={styles.ellipseFill2}></div>
-                                  <div className={styles.ellipseFill2}></div>
-                                  <div className={styles.ellipseFill3}></div>
-                                  <div className={styles.ellipseFill3}></div>
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <div
+                                      key={star}
+                                      className={star <= satisfactionRating ? styles.ellipseFill2 : styles.ellipseFill3}
+                                      onClick={() => setSatisfactionRating(star)}
+                                      style={{ cursor: 'pointer' }}
+                                    ></div>
+                                  ))}
                                 </div>
                                 <div className={styles['3-5']}>
                                   <span>
-                                    <span className={styles['3-5Span']}>3</span>
+                                    <span className={styles['3-5Span']}>{satisfactionRating}</span>
                                     <span className={styles['3-5Span']}>/5</span>
                                   </span>
                                 </div>
@@ -157,27 +169,12 @@ const FeedbackPopup = ({ onClose }) => {
                             </div>
                           </div>
                         </div>
-                        <div className={styles.div8}>
-                          <span>
-                            <span className={styles.div8Span}>
-                              사용자 피드백
-                              <br />
-                            </span>
-                            <span className={styles.div8Span2}>
-                              <br />
-                            </span>
-                            <span className={styles.div8Span3}></span>
-                            <span className={styles.div8Span4}>
-                              이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                              특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                              횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이 큰
-                              원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                              번만&#039;이라는 생각으로 자제를 못 했습니다.&#039;이번 한
-                              번만&#039;이라는 생각으로 자제를 못 했습니다.&#039;이번 한
-                              번만&#039;이라는 생각으로 자제를 못 했습니다.
-                            </span>
-                          </span>
-                        </div>
+                        <textarea
+                          className={styles.feedbackTextarea}
+                          placeholder="이번 달 소비에 대한 피드백을 작성해주세요..."
+                          value={feedbackText}
+                          onChange={(e) => setFeedbackText(e.target.value)}
+                        ></textarea>
                       </div>
                     </div>
                   </div>
@@ -213,6 +210,7 @@ const FeedbackPopup = ({ onClose }) => {
             <img className={styles.vector} src="/vector0.svg" alt="Vector" />
           </div>
         </div>
+        <button onClick={handleSubmit} className={styles.submitButton}>작성하기</button>
         <button onClick={onClose} className={styles.closeButton}>X</button>
       </div>
     </div>

@@ -19,6 +19,8 @@ const ConsumePlanPage = ({ currentUser }) => {
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false); // 내 프로필 더보기 팝업 상태
   const [showNameChangePopup, setShowNameChangePopup] = useState(false); // 닉네임 변경 팝업 상태
 
+  const [dDay, setDDay] = useState(0);
+  const [monthEndDate, setMonthEndDate] = useState('');
 
 // 사용자 레벨 및 포인트 상태
 const [level, setLevel] = useState(1);
@@ -89,6 +91,21 @@ const handleAttend = () => {
     };
   }, [showMyProfileMoreInfoPopup]);
 
+  useEffect(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0-indexed
+
+    // Calculate the last day of the current month
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    setMonthEndDate(`${year}.${month + 1}.${lastDayOfMonth.getDate()}`);
+
+    // Calculate D-Day
+    const diffTime = Math.abs(lastDayOfMonth.getTime() - today.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    setDDay(diffDays);
+  }, []);
+
   const [isMonthlyEditing, setIsMonthlyEditing] = useState(false); // 월간 수정 모드 여부
 
   const [weeklyCategories, setWeeklyCategories] = useState([
@@ -120,6 +137,28 @@ const handleAttend = () => {
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryTarget, setNewCategoryTarget] = useState(0);
   const [showAddCategoryInput, setShowAddCategoryInput] = useState(false); // "추가하기" 입력 필드 표시 여부
+
+  const handleFeedbackButtonClick = () => {
+    if (dDay === 0) { // Assuming D-Day is 0 for the actual D-Day
+      setShowFeedbackPopup(true);
+    } else {
+      // Show warning popup
+      // For now, I'll just use a confirm dialog. Later, I can implement a custom warning popup.
+      const confirmProceed = window.confirm("아직 기한이 안 됐습니다. 그래도 하시겠습니까?");
+      if (confirmProceed) {
+        setShowFeedbackPopup(true);
+      }
+    }
+  };
+
+  const handleFeedbackSubmit = (feedbackText, satisfactionRating) => {
+    // Here you would typically send the feedback to a backend API
+    console.log("Feedback submitted:", feedbackText, "Satisfaction:", satisfactionRating);
+    setSubmittedFeedback(prev => [...prev, { date: new Date().toLocaleDateString(), text: feedbackText, rating: satisfactionRating }]);
+    setShowFeedbackPopup(false);
+  };
+
+  const [submittedFeedback, setSubmittedFeedback] = useState([]); // To store submitted feedback
 
   const handleAddCategory = () => {
     if (newCategoryName && newCategoryTarget > 0) {
@@ -242,15 +281,15 @@ const handleAttend = () => {
               <div className={styles.frame283}>
                 <div className={styles.frame37}>
                   <div className={styles.frame36}>
-                    <div className={styles._111}>11.1</div>
+                    <div className={styles._111}>{monthEndDate}</div>
                     <div className={styles.div2}>이번달 피드백까지</div>
                   </div>
                 </div>
-                <div className={styles.d30}>D-30</div>
+                <div className={styles.d30}>D-{dDay}</div>
               </div>
               <div className={styles.line4}></div>
             </div>
-            <div className={styles.frame6} onClick={() => setShowFeedbackPopup(true)}> {/* 피드백 버튼 클릭 이벤트 추가 */}
+            <div className={styles.frame6} onClick={handleFeedbackButtonClick}> {/* 피드백 버튼 클릭 이벤트 추가 */}
               <div className={styles.a}>피드백</div>
             </div>
             <div className={styles.frame6} onClick={() => setShowInitializePopup(true)}>
@@ -286,17 +325,17 @@ const handleAttend = () => {
                                          />
                       </div>
                 </div>
-                <button onClick={handleUpdateWeeklyConsumption} className={styles.updateConsumptionButton}>
-                  사용금액 갱신
-                </button>
+      
                     </div>
                 
                  <div className={styles.frame2732}>
                         <img className={styles.polygon13} src="/listup_icon.svg" alt="list" />
                         <div className={styles._11}>11월 목표 소비금액</div>
                       </div>
-                
                   </div>
+                   <button onClick={handleUpdateWeeklyConsumption} className={styles.updateConsumptionButton}>
+                  사용금액 갱신
+                </button>
                   <div className={styles.frame262}>
                     <div className={styles.frame261}>
                      
@@ -499,25 +538,33 @@ const handleAttend = () => {
                           <div className={styles.div9}>이번 달의 목표 기록</div>
                         </div>
                         <div className={styles.frame212}>
-                          <div className={styles.div11}>
-                            <span>
-                              <span className={styles.div11Span}>
-                                제목
-                                <br />
+                          {submittedFeedback.length > 0 ? (
+                            submittedFeedback.map((feedback, index) => (
+                              <div key={index} className={styles.div11}>
+                                <span>
+                                  <span className={styles.div11Span}>
+                                    {feedback.date} (만족도: {feedback.rating}/5)
+                                    <br />
+                                  </span>
+                                  <span className={styles.div11Span2}>
+                                    <br />
+                                  </span>
+                                  <span className={styles.div11Span3}></span>
+                                  <span className={styles.div11Span4}>
+                                    {feedback.text}
+                                  </span>
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <div className={styles.div11}>
+                              <span>
+                                <span className={styles.div11Span}>
+                                  아직 작성된 피드백이 없습니다.
+                                </span>
                               </span>
-                              <span className={styles.div11Span2}>
-                                <br />
-                              </span>
-                              <span className={styles.div11Span3}></span>
-                              <span className={styles.div11Span4}>
-                                이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                번만&#039;이라는 생각으로 자제를 못 했습니다.
-                              </span>
-                            </span>
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -890,7 +937,7 @@ const handleAttend = () => {
       <div className={styles.rectangle8}></div>
       <img className={styles.rectangle10} src="/rectangle-100.svg" alt="Rectangle" />
 
-      {showFeedbackPopup && <FeedbackPopup onClose={() => setShowFeedbackPopup(false)} />} {/* 팝업 조건부 렌더링 */}
+      {showFeedbackPopup && <FeedbackPopup onClose={() => setShowFeedbackPopup(false)} onSubmit={handleFeedbackSubmit} monthEndDate={monthEndDate} />} {/* 팝업 조건부 렌더링 */}
       {showFollowerPopup && (
         <FollowListPopup 
           onClose={() => setShowFollowerPopup(false)} 

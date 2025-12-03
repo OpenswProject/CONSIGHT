@@ -118,6 +118,8 @@ const Mypage = ({ currentUser }) => {
     fetchMyPageData();
   }, [currentUser]);
 
+  
+
   useEffect(() => {
     setCurrentPage(1); // Reset page when activeTab changes
   }, [activeTab]);
@@ -453,92 +455,7 @@ const Mypage = ({ currentUser }) => {
                 <div className={styles.line5}></div>
               </div>
               <div className={styles.frame205}>
-                <div className={styles.frame203}>
-                  <div className={styles.frame174}>
-                    <div className={styles.frame106}>
-                      <div className={styles.frame141}>
-                        <div className={styles.frame140}>
-                          <div className={styles.profile2}></div>
-                          <div className={styles.username2}>
-                            <span>
-                              <span className={styles.username2Span}>팔로우중인</span>
-                              <span className={styles.username2Span2}>USERNAME</span>
-                              <span className={styles.username2Span}>
-                                님의
-                                <br />
-                                새로운 글 업로드
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={styles.line6}></div>
-                  </div>
-                </div>
-                <div className={styles.frame174}>
-                  <div className={styles.frame106}>
-                    <div className={styles.frame141}>
-                      <div className={styles.frame140}>
-                        <div className={styles.profile2}></div>
-                        <div className={styles.username2}>
-                          <span>
-                            <span className={styles.username2Span}>팔로우중인</span>
-                            <span className={styles.username2Span2}>USERNAME</span>
-                            <span className={styles.username2Span}>
-                              님의
-                              <br />
-                              새로운 글 업로드
-                            </span>
-                            </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.line6}></div>
-                </div>
-                <div className={styles.frame2052}>
-                  <div className={styles.frame106}>
-                    <div className={styles.frame141}>
-                      <div className={styles.frame140}>
-                        <div className={styles.profile2}></div>
-                        <div className={styles.username2}>
-                          <span>
-                            <span className={styles.username2Span}>팔로우중인</span>
-                            <span className={styles.username2Span2}>USERNAME</span>
-                            <span className={styles.username2Span}>
-                              님의
-                              <br />
-                              새로운 글 업로드
-                            </span>
-                            </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.line6}></div>
-                </div>
-                <div className={styles.frame2042}>
-                  <div className={styles.frame106}>
-                    <div className={styles.frame141}>
-                      <div className={styles.frame140}>
-                        <div className={styles.profile2}></div>
-                        <div className={styles.username2}>
-                          <span>
-                            <span className={styles.username2Span}>팔로우중인</span>
-                            <span className={styles.username2Span2}>USERNAME</span>
-                            <span className={styles.username2Span}>
-                              님의
-                              <br />
-                              새로운 글 업로드
-                            </span>
-                            </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.line6}></div>
-                </div>
+                {/* Notifications removed */}
               </div>
             </div>
             <div className={styles.frame220}>

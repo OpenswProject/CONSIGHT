@@ -229,4 +229,16 @@ public class ReviewService {
 
         return new MyReviewResponse(writtenReviews, likedReviews, bookmarkedReviews, comments);
     }
+
+    public List<Review> getRecommendedReviewsByCategory(String category) {
+        return reviewRepository.findByCategoryOrderByLikeCountDesc(category);
+    }
+
+    public List<Review> getRecommendedReviews() {
+        // For a general recommendation, we can fetch a few top-liked reviews across all categories
+        // Or, implement more sophisticated logic here (e.g., based on user's past activity, trending reviews)
+        // For now, let's just get the top 6 most liked reviews overall.
+        Pageable pageable = PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "likeCount"));
+        return reviewRepository.findAll(pageable).getContent();
+    }
 }

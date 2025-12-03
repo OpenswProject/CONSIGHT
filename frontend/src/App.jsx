@@ -19,7 +19,7 @@ import MyProfileMoreInfoPopup from "./components/MyProfileMoreInfoPopup/MyProfil
 import NameChangePopup from "./components/NameChangePopup/NameChangePopup"; // Import NameChangePopup
 import ReviewPopup from "./components/ReviewPopup"; // Import ReviewPopup
 
-const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add currentUser prop
+const HomePage = ({ user, apiMessage, currentUser }) => { // Remove notifications prop
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
   const [showNameChangePopup, setShowNameChangePopup] = useState(false);
   const moreOptionsRef = useRef(null);
@@ -193,17 +193,7 @@ const HomePage = ({ user, notifications, apiMessage, currentUser }) => { // Add 
               <div className={styles.notificationsHeader}>알림</div>
               <div className={styles.line5}></div> {/* Corresponds to line-5 */}
               <div className={styles.frame205}> {/* Corresponds to frame-205 */}
-                {notifications.map((item, index) => (
-                  <div key={index} className={styles.notificationItem}>
-                    <div className={styles.notificationAvatar}></div>
-                    <div className={styles.notificationText}>
-                      <span>팔로우중인</span>
-                      <span>USERNAME</span>
-                      <span>님의<br />새로운 글 업로드</span>
-                    </div>
-                    <div className={styles.notificationLine}></div>
-                  </div>
-                ))}
+                {/* Notifications removed */}
               </div>
               <div className={styles.notificationControls}>
                 <img src="/left_icon.svg" alt="Previous" className={styles.notificationControlIcon} />

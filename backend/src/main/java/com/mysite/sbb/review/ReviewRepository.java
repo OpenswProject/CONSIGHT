@@ -13,4 +13,5 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     Page<Review> findByCategory(String category, Pageable pageable);
     Page<Review> findByAuthor(SiteUser author, Pageable pageable);
     List<Review> findByAuthor(SiteUser author); // Add this for getMyReviews
+    List<Review> findByCategoryOrderByLikeCountDesc(String category); // New method for recommended reviews
 }

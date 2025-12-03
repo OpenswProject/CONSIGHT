@@ -1,21 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./ShoppingList.module.css";
 
 const CATEGORIES = ["뷰티", "식품", "의류", "주방", "생활·가전", "청소·욕실", "가구", "문구", "인테리어", "취미·레저"];
 
 export const ShoppingList = () => {
   const [items, setItems] = useState([
-    { id: 1, text: "겨울 옷 구매", category: "의류" },
-    { id: 2, text: "12월 식재료 구매", category: "식품" },
-    { id: 3, text: "전기장판 구매", category: "생활·가전" },
-    { id: 4, text: "핸드워시 구매", category: "청소·욕실" },
-    { id: 5, text: "난방텐트 구매", category: "생활·가전" },
-    { id: 6, text: "수면양말 구매", category: "의류" },
-    { id: 7, text: "크리스마스 트리 구매", category: "기타" },
-    { id: 8, text: "새해 다이어리 구매", category: "문구" },
-    { id: 9, text: "귤 한박스 구매", category: "식품" },
+    { id: 1, text: "겨울 옷 구매", category: "의류", recommendedReview: null },
+    { id: 2, text: "12월 식재료 구매", category: "식품", recommendedReview: null },
+    { id: 3, text: "전기장판 구매", category: "생활·가전", recommendedReview: null },
+    { id: 4, text: "핸드워시 구매", category: "청소·욕실", recommendedReview: null },
+    { id: 5, text: "난방텐트 구매", category: "생활·가전", recommendedReview: null },
+    { id: 6, text: "수면양말 구매", category: "의류", recommendedReview: null },
+    { id: 7, text: "크리스마스 트리 구매", category: "기타", recommendedReview: null },
+    { id: 8, text: "새해 다이어리 구매", category: "문구", recommendedReview: null },
+    { id: 9, text: "귤 한박스 구매", category: "식품", recommendedReview: null },
   ]);
   const [showAllItems, setShowAllItems] = useState(false); // 모든 아이템 표시 여부 상태 추가
+
+  useEffect(() => {
+    const fetchRecommendedReviews = async () => {
+      const updatedItems = await Promise.all(items.map(async (item) => {
+        if (item.category) {
+          try {
+            const response = await fetch(`/api/reviews/most-liked-by-category?category=${item.category}`);
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            if (data.success && data.data) {
+              return { ...item, recommendedReview: data.data };
+            }
+          } catch (error) {
+            console.error(`Failed to fetch recommended review for category ${item.category}:`, error);
+          }
+        }
+        return item;
+      }));
+      setItems(updatedItems);
+    };
+
+    fetchRecommendedReviews();
+  }, [items]); // Rerun when items change to fetch new recommendations
   const [isAdding, setIsAdding] = useState(false);
   const [newItemText, setNewItemText] = useState("");
   const [newItemCategory, setNewItemCategory] = useState(CATEGORIES[0]);
@@ -62,18 +87,28 @@ export const ShoppingList = () => {
         <div className={styles.listItemsWrapper}>
           {itemsToDisplay.map((item) => (
             <div key={item.id} className={styles.listItem}>
-              <span className={styles.itemText}>{item.text}</span>
-              <div className={styles.itemActions}>
-                <div className={styles.categoryTagWrapper}>
-                  <span className={styles.categoryTag}>{item.category}</span>
-                </div>
-                <div 
-                  onClick={() => handleRemoveItem(item.id)} 
-                  className={styles.removeItemButton}
-                >
-                  -
+              <div className={styles.itemDetails}>
+                <span className={styles.itemText}>{item.text}</span>
+                <div className={styles.itemActions}>
+                  <div className={styles.categoryTagWrapper}>
+                    <span className={styles.categoryTag}>{item.category}</span>
+                  </div>
+                  <div 
+                    onClick={() => handleRemoveItem(item.id)} 
+                    className={styles.removeItemButton}
+                  >
+                    -
+                  </div>
                 </div>
               </div>
+              {item.recommendedReview && (
+                <div className={styles.recommendedReview}>
+                  <span className={styles.recommendedReviewTitle}>추천 리뷰: {item.recommendedReview.title}</span>
+                  <span className={styles.recommendedReviewAuthor}>by {item.recommendedReview.author?.username || 'Unknown'}</span>
+                  <p className={styles.recommendedReviewContent}>{item.recommendedReview.content.substring(0, 100)}...</p>
+                  {/* Add a link to the review if available */}
+                </div>
+              )}
             </div>
           ))}
           {isAdding && (

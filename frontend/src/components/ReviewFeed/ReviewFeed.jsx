@@ -22,6 +22,7 @@ export const ReviewFeed = () => {
   // State for ReviewPopup
   const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const categories = ['전체', '뷰티', '식품', '의류', '주방', '생활·가전', '청소·욕실', '가구', '문구', '인테리어', '취미·레저', '기타'];
 
