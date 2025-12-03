@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./ReviewFeed.module.css";
 import { ShoppingList } from "../ShoppingList/ShoppingList";
 import MoreOptionsPopup from "../MoreOptionsPopup/MoreOptionsPopup";
@@ -8,6 +8,8 @@ import ReviewPopup from "../ReviewPopup"; // ReviewPopup import
 export const ReviewFeed = () => {
   // State for review data and pagination
   const [reviewList, setReviewList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const reviewsPerPage = 4;
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [popupConfig, setPopupConfig] = useState({ show: false, username: '' });
@@ -28,7 +30,7 @@ export const ReviewFeed = () => {
     const fetchReviews = async () => {
       try {
         const token = localStorage.getItem('jwtToken'); // 토큰 가져오기
-        let url = `/api/reviews?page=${currentPage}&sort=${sortBy},${sortDirection}`;
+        let url = `/api/reviews?page=${currentPage}&size=${reviewsPerPage}&sort=${sortBy},${sortDirection}`;
         if (selectedCategory && selectedCategory !== '전체') { // '전체'가 아닐 때만 필터 적용
           url += `&searchType=category&kw=${selectedCategory}`;
         }
@@ -80,6 +82,28 @@ export const ReviewFeed = () => {
     { id: 4, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
     { id: 5, username: "USERNAME", title: "소프트 터치 라운드 니트", date: "2025.11.16", category: "의류" },
   ];
+
+  // Pagination logic
+  const handlePageChange = (page) => {
+    if (page >= 0 && page < totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const startPage = Math.floor(currentPage / 4) * 4;
+    const endPage = Math.min(startPage + 4, totalPages);
+
+    for (let i = startPage; i < endPage; i++) {
+      pageNumbers.push(
+        <div key={i} className={styles.frame1804} onClick={() => handlePageChange(i)}>
+          <div className={i === currentPage ? styles.currentPage : styles._10}>{i + 1}</div>
+        </div>
+      );
+    }
+    return pageNumbers;
+  };
 
   // Popup handlers
   const openUserPopup = (username) => { // Renamed to avoid conflict with ReviewPopup's openPopup
@@ -437,12 +461,12 @@ export const ReviewFeed = () => {
                   <div className={styles._30}>총 {totalElements}건</div>
                 </div>
                 {/* Pagination (Top) */}
+                {/* Pagination (Top) */}
                 <div className={styles.frame2222}>
                   <div className={styles.frame1901}>
                     <img className={styles.group20953} src="/leftleft_icon.svg" alt="<<" onClick={() => handlePageChange(0)} />
                     <img className={styles.group20953} src="/left_icon.svg" alt="<" onClick={() => handlePageChange(currentPage - 1)} />
                   </div>
-                  {/* Original static pagination placeholder */}
                   <div className={styles.frame1804}> 
                     <div className={styles._10}>1</div>
                   </div>
