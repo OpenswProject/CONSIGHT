@@ -59,69 +59,31 @@ export const ProgressBar = ({ value, max, label, percentageColor, isThick }) => 
   );
 };
 
-export const ConsumptionStatus = ({ username, currentUser }) => {
-  const [currentConsumption, setCurrentConsumption] = useState(140);
-  const [targetConsumption, setTargetConsumption] = useState(200);
-  const [isEditing, setIsEditing] = useState(false);
+export const ConsumptionStatus = ({ 
+  username, 
+  currentUser, 
+  monthlyCategories,
+  weeklyCurrentConsumption,
+  weeklyTargetConsumption,
+  monthlyCurrentConsumption,
+  monthlyTargetConsumption,
+  lastFeedback
+}) => {
+  // Monthly Consumption
+  const monthlyPercentage = monthlyTargetConsumption > 0 ? Math.round((monthlyCurrentConsumption / monthlyTargetConsumption) * 100) : 0;
 
-  const [weeklyCurrentConsumption, setWeeklyCurrentConsumption] = useState(140);
-  const [weeklyTargetConsumption, setWeeklyTargetConsumption] = useState(200);
-  const [isWeeklyEditing, setIsWeeklyEditing] = useState(false);
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleCurrentChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setCurrentConsumption(value);
-    } else if (e.target.value === '') {
-      setCurrentConsumption(0);
-    }
-  };
-
-  const handleTargetChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setTargetConsumption(value);
-    } else if (e.target.value === '') {
-      setTargetConsumption(0);
-    }
-  };
-
-  const handleWeeklyEditToggle = () => {
-    setIsWeeklyEditing(!isWeeklyEditing);
-  };
-
-  const handleWeeklyCurrentChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setWeeklyCurrentConsumption(value);
-    } else if (e.target.value === '') {
-      setWeeklyCurrentConsumption(0);
-    }
-  };
-
-  const handleWeeklyTargetChange = (e) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value)) {
-      setWeeklyTargetConsumption(value);
-    } else if (e.target.value === '') {
-      setWeeklyTargetConsumption(0);
-    }
-  };
-
-  const percentage = targetConsumption > 0 ? Math.round((currentConsumption / targetConsumption) * 100) : 0;
+  // Weekly Consumption
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
 
   // Pie Chart Data
-  const pieData = [
-    { name: '주거비', value: 300000 },
-    { name: '식비', value: 200000 },
-    { name: '교통비', value: 150000 },
-    { name: '기타', value: 50000 }, // Added a '기타' category for completeness
-  ];
+  const pieData = monthlyCategories && monthlyCategories.length > 0
+    ? monthlyCategories.map(cat => ({ name: cat.name, value: cat.current }))
+    : [
+        { name: '주거비', value: 300000 },
+        { name: '식비', value: 200000 },
+        { name: '교통비', value: 150000 },
+        { name: '기타', value: 50000 },
+      ];
 
   const COLORS = ['#9BC4B0', '#AEC6CF', '#D3D3D3', '#F0F0F0']; // Desaturated green, blue, gray, light gray
 
@@ -223,27 +185,15 @@ export const ConsumptionStatus = ({ username, currentUser }) => {
             <div className={styles.frame19}> {/* Corresponds to frame-19 */}
               <div className={styles.frame37}>
                 <div className={styles.frame36}>
-                    {isEditing ? (
-                        <div className={styles.editAmountWrapper}>
-                            <input type="number" value={currentConsumption} onChange={handleCurrentChange} className={styles.inputField} />
-                            <span className={styles.amountSeparator}>/</span>
-                            <input type="number" value={targetConsumption} onChange={handleTargetChange} className={`${styles.inputField} ${styles.targetInput}`} />
-                            <span className={styles.amountUnit}>&nbsp;만원</span>
-                        </div>
-                    ) : (
-                        <div className={styles.viewAmountWrapper}>
-                            <div className={styles._140}>{currentConsumption}</div>
-                            <div className={styles._200}>/{targetConsumption} 만원</div>
-                        </div>
-                    )}
-                    <button onClick={handleEditToggle} className={styles.editButton}>
-                        {isEditing ? '저장' : '수정'}
-                    </button>
+                    <div className={styles.viewAmountWrapper}>
+                        <div className={styles._140}>{monthlyCurrentConsumption}</div>
+                        <div className={styles._200}>/{monthlyTargetConsumption} 만원</div>
+                    </div>
                 </div>
                 <ProgressBar
-                  value={currentConsumption}
-                  max={targetConsumption}
-                  label={`${percentage}%`}
+                  value={monthlyCurrentConsumption}
+                  max={monthlyTargetConsumption}
+                  label={`${monthlyPercentage}%`}
                   percentageColor="#9BC4B0"
                   isThick={true}
                 />
@@ -256,13 +206,13 @@ export const ConsumptionStatus = ({ username, currentUser }) => {
               <div className={styles.frame20}> {/* Corresponds to frame-20 */}
                 <div className={styles.frame37}>
                   <div className={styles.frame36}>
-                    <div className={styles._240}>240</div>
-                    <div className={styles._2002}>/200 만원</div>
+                    <div className={styles._240}>{lastFeedback ? lastFeedback.currentConsumption : 0}</div>
+                    <div className={styles._2002}>/{lastFeedback ? lastFeedback.targetConsumption : 0} 만원</div>
                   </div>
                   <ProgressBar
-                    value={140} // Changed from 120 to 140 for 70%
-                    max={200}
-                    label="70%" // Changed from 60% to 70%
+                    value={lastFeedback ? lastFeedback.currentConsumption : 0}
+                    max={lastFeedback ? lastFeedback.targetConsumption : 0}
+                    label={`${lastFeedback && lastFeedback.targetConsumption > 0 ? Math.round((lastFeedback.currentConsumption / lastFeedback.targetConsumption) * 100) : 0}%`}
                     percentageColor="#9BC4B0"
                     isThick={true}
                   />
@@ -285,22 +235,10 @@ export const ConsumptionStatus = ({ username, currentUser }) => {
               <div className={styles.frame19}>
                 <div className={styles.frame37}>
                   <div className={styles.frame36}>
-                    {isWeeklyEditing ? (
-                        <div className={styles.editAmountWrapper}>
-                            <input type="number" value={weeklyCurrentConsumption} onChange={handleWeeklyCurrentChange} className={styles.inputField} />
-                            <span className={styles.amountSeparator}>/</span>
-                            <input type="number" value={weeklyTargetConsumption} onChange={handleWeeklyTargetChange} className={`${styles.inputField} ${styles.targetInput}`} />
-                            <span className={styles.amountUnit}>&nbsp;만원</span>
-                        </div>
-                    ) : (
-                        <div className={styles.viewAmountWrapper}>
-                            <div className={styles._140}>{weeklyCurrentConsumption}</div>
-                            <div className={styles._200}>/{weeklyTargetConsumption} 만원</div>
-                        </div>
-                    )}
-                    <button onClick={handleWeeklyEditToggle} className={styles.editButton}>
-                        {isWeeklyEditing ? '저장' : '수정'}
-                    </button>
+                    <div className={styles.viewAmountWrapper}>
+                        <div className={styles._140}>{weeklyCurrentConsumption}</div>
+                        <div className={styles._200}>/{weeklyTargetConsumption} 만원</div>
+                    </div>
                   </div>
                   <ProgressBar
                     value={weeklyCurrentConsumption}

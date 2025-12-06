@@ -8,7 +8,16 @@ const FeedbackPopup = ({ onClose, onSubmit, monthEndDate, monthlyCategories, mon
   const [nextMonthGoal, setNextMonthGoal] = useState(''); // 다음 달 목표 상태 추가
 
   const handleSubmit = () => {
-    onSubmit(feedbackText, satisfactionRating, nextMonthGoal); // nextMonthGoal 전달
+    const feedbackData = {
+      date: new Date().toLocaleDateString('ko-KR'), // Add current date
+      currentConsumption: monthlyCurrentConsumption,
+      targetConsumption: monthlyTargetConsumption,
+      percentage: monthlyPercentage,
+      text: feedbackText,
+      rating: satisfactionRating,
+      nextMonthGoal: nextMonthGoal,
+    };
+    onSubmit(feedbackData);
     setFeedbackText('');
     setSatisfactionRating(3); // Reset to default
     setNextMonthGoal(''); // 다음 달 목표 초기화

@@ -358,6 +358,11 @@
     rgba(245, 245, 245, 1) 0%,
     rgba(241, 241, 241, 1) 100%
   );
+  border-radius: 20px; /* Added border-radius from frame107 */
+  border-style: solid; /* Added border-style from frame107 */
+  border-color: #dadee1; /* Added border-color from frame107 */
+  border-width: 2px; /* Added border-width from frame107 */
+  padding: 10px 20px 10px 23px; /* Added padding from frame107 */
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -365,7 +370,7 @@
   justify-content: flex-start;
   align-self: stretch;
   flex-shrink: 0;
-  height: 549px;
+  /* height: 549px; */ /* Removed fixed height */
   position: relative;
 }
 .frameshort {
@@ -374,6 +379,11 @@
     rgba(245, 245, 245, 1) 0%,
     rgba(241, 241, 241, 1) 100%
   );
+  border-radius: 20px; /* Added border-radius from frame107short */
+  border-style: solid; /* Added border-style from frame107short */
+  border-color: #dadee1; /* Added border-color from frame107short */
+  border-width: 2px; /* Added border-width from frame107short */
+  padding: 10px 20px 10px 23px; /* Added padding from frame107short */
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -381,40 +391,34 @@
   justify-content: flex-start;
   align-self: stretch;
   flex-shrink: 0;
-  height: 300px;
+  /* height: 300px; */ /* Removed fixed height */
   position: relative;
 }
 .frame107 {
-  border-radius: 20px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 2px;
-  padding: 10px 20px 10px 23px;
+  /* height: 549px; */ /* Removed fixed height */
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
   align-self: stretch;
   flex-shrink: 0;
-  height: 549px;
   position: relative;
+  flex-grow: 1; /* Allow it to grow */
+  /* Removed redundant border-radius, border-style, border-color, border-width, padding */
 }
 .frame107short {
-  border-radius: 20px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 2px;
-  padding: 10px 20px 10px 23px;
+  /* height: 300px; */ /* Removed fixed height */
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Changed from center to flex-start */
   align-self: stretch;
   flex-shrink: 0;
-  height: 300px;
   position: relative;
+  flex-grow: 1; /* Allow it to grow */
+  /* Removed redundant border-radius, border-style, border-color, border-width, padding */
 }
 .frame138 {
   display: flex;
@@ -1018,33 +1022,37 @@
 }
 .frame143 { /* Corresponds to .frame-143 */
   display: flex;
-  flex-direction: row;
-  gap: 66px;
-  align-items: center;
+  flex-direction: column; /* Changed to column */
+  gap: 20px; /* Adjusted gap */
+  align-items: stretch; /* Stretch children */
   justify-content: flex-start;
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
 }
 
+.reviewFeedHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .reviewFeedTitle { /* Corresponds to .div8 */
   color: var(--gray-57);
-  text-align: center;
+  text-align: left; /* Align to left */
   font-family: "Inter-Bold", sans-serif;
   font-size: 20px;
   font-weight: 700;
   position: relative;
-  width: 162px;
 }
 
 .frame144 { /* Corresponds to .frame-144 */
-  display: flex;
-  flex-direction: row;
-  gap: 60px;
-  align-items: flex-start;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
+  display: grid; /* Changed to grid */
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 20px; /* Gap between grid items */
+  width: 100%; /* Take full width */
 }
 .frame2222 {
   /* Corresponds to .frame-144 */
@@ -1361,6 +1369,36 @@
   margin-bottom: 14px; /* Matches frame-204 gap */
   color: var(--gray-59); /* Matches a3 color */
   text-align: center;
+}
+
+.notificationsList {
+  flex-grow: 1; /* Allow it to take available space */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding-right: 5px; /* Add some padding for scrollbar */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gap between notification items */
+}
+
+.noNotifications {
+  padding: 10px;
+  text-align: center;
+  color: #888;
+}
+
+.markAllAsReadButton {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  align-self: center;
+  font-size: 0.9em;
+}
+
+.markAllAsReadButton:hover {
+  background-color: #e0e0e0;
 }
 
 .notificationItem {

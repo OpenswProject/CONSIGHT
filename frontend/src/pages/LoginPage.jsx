@@ -27,6 +27,7 @@ const LoginPage = ({ setCurrentUser }) => {
         // Store token and user info in localStorage
         localStorage.setItem('jwtToken', data.token);
         localStorage.setItem('username', data.username);
+        localStorage.setItem('email', data.email);
         
         // Update the user state in App.jsx
         setCurrentUser({

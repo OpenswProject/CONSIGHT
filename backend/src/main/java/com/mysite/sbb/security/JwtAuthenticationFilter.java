@@ -30,9 +30,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path = request.getRequestURI();
-        logger.debug("Checking shouldNotFilter for path: {}", path); // 로그 추가
-        boolean skipFilter = path.startsWith("/api/user/login");
-        logger.debug("Should skip JwtAuthenticationFilter: {}", skipFilter); // 로그 추가
+        String method = request.getMethod();
+        logger.debug("Checking shouldNotFilter for path: {} and method: {}", path, method);
+
+        // permitAll()로 설정된 경로들을 여기에 추가
+        boolean skipFilter = (path.startsWith("/api/user/login") ||
+                             (method.equals("GET") && path.startsWith("/api/reviews/") && !path.equals("/api/reviews/me")) || // /me를 제외한 모든 리뷰 관련 GET 요청
+                             (method.equals("POST") && path.matches("/api/reviews/\\d+/view")) || // 조회수 업데이트
+                             (method.equals("POST") && path.matches("/api/reviews/\\d+/like")) || // 좋아요
+                             (method.equals("POST") && path.matches("/api/reviews/\\d+/bookmark")) || // 북마크
+                             path.startsWith("/api/follow/") ||
+                             path.equals("/api/test") ||
+                             path.equals("/api/hello") ||
+                             path.equals("/") ||
+                             path.startsWith("/h2-console/") ||
+                             path.equals("/user/signup"));
+
+        logger.debug("Should skip JwtAuthenticationFilter: {}", skipFilter);
         return skipFilter;
     }
 

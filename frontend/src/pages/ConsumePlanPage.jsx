@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './ConsumePlanPage.module.css';
 import FeedbackPopup from '../../src/components/FeedbackPopup/FeedbackPopup'; // FeedbackPopup import
 import FollowListPopup from '../../src/components/FollowListPopup'; // FollowListPopup import
@@ -9,8 +9,53 @@ import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 
 import UpdateConsumptionPopup from '../components/UpdateConsumptionPopup/UpdateConsumptionPopup'; // UpdateConsumptionPopup import
 
-const ConsumePlanPage = ({ currentUser }) => {
-  const [targetAmount, setTargetAmount] = useState(20); // 초기 목표 금액
+const ConsumePlanPage = (props) => {
+  const {
+    currentUser,
+    monthlyCategories, setMonthlyCategories,
+    showAllCategories, setShowAllCategories,
+    newCategoryName, setNewCategoryName,
+    newCategoryTarget, setNewCategoryTarget,
+    showAddCategoryInput, setShowAddCategoryInput,
+    handleAddCategory,
+    showUpdateMonthlyConsumptionPopup, setShowUpdateMonthlyConsumptionPopup,
+    weeklyCategories, setWeeklyCategories,
+    showAllWeeklyCategories, setShowAllWeeklyCategories,
+    newWeeklyCategoryName, setNewWeeklyCategoryName,
+    newWeeklyCategoryTarget, setNewWeeklyCategoryTarget,
+    showAddWeeklyCategoryInput, setShowAddWeeklyCategoryInput,
+    handleAddWeeklyCategory,
+    showUpdateWeeklyConsumptionPopup, setShowUpdateWeeklyConsumptionPopup,
+    submittedFeedback, handleFeedbackSubmit,
+    weeklyCurrentConsumption, weeklyTargetConsumption,
+    monthlyCurrentConsumption, monthlyTargetConsumption,
+    lastFeedback,
+    points,
+    handleAttend
+  } = props;
+
+  if (!weeklyCategories) {
+    console.error("weeklyCategories is undefined in ConsumePlanPage");
+    return <div>Loading Consume Plan Page...</div>;
+  }
+  
+  const getAssetForLevel = (points) => {
+    if (points > 4000) return '/grow_assets/level5.svg';
+    if (points > 3000) return '/grow_assets/level4.svg';
+    if (points > 2000) return '/grow_assets/level3.svg';
+    if (points > 1000) return '/grow_assets/level2.svg';
+    return '/leaf_point_icon.svg'; // Default icon
+  };
+
+  const handleInitializeConfirm = () => {
+    console.log("Initialize confirmed");
+    setShowInitializePopup(false);
+  };
+
+  const handleFeedbackButtonClick = () => {
+    setShowFeedbackPopup(true);
+  };
+
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false); // 피드백 팝업 상태
   const [showFollowerPopup, setShowFollowerPopup] = useState(false); // 팔로워 팝업 상태
@@ -22,37 +67,7 @@ const ConsumePlanPage = ({ currentUser }) => {
   const [dDay, setDDay] = useState(0);
   const [monthEndDate, setMonthEndDate] = useState('');
 
-// 사용자 레벨 및 포인트 상태
-const [level, setLevel] = useState(1);
-const [points, setPoints] = useState(0);
 
-// 포인트에 따라 레벨 에셋을 결정하는 함수
-const getAssetForLevel = (currentPoints) => {
-  if (currentPoints >= 100000) {
-    return "/grow_assets/level5.svg";
-  } else if (currentPoints >= 50000) {
-    return "/grow_assets/level4.svg";
-  } else if (currentPoints >= 30000) {
-    return "/grow_assets/level3.svg";
-  } else if (currentPoints >= 10000) {
-    return "/grow_assets/level2.svg";
-  } else {
-    return "/leaf_point_icon.svg"; // Level 1
-  }
-};
-
-// 출석하기 버튼 클릭 핸들러
-const handleAttend = () => {
-  setPoints((prevPoints) => {
-    const newPoints = prevPoints + 10;
-
-    // 레벨 업데이트 로직 (필요시)
-    // setLevel(calculateLevel(newPoints)); // calculateLevel 함수가 있다면
-
-    alert(`출석이 기록되었습니다! ${newPoints} 포인트 획득!`);
-    return newPoints;
-  });
-};
 
 
 
@@ -106,124 +121,16 @@ const handleAttend = () => {
     setDDay(diffDays);
   }, []);
 
-  const [isMonthlyEditing, setIsMonthlyEditing] = useState(false); // 월간 수정 모드 여부
-
-  const [weeklyCategories, setWeeklyCategories] = useState([
-    { id: 1, name: '식비', current: 30, target: 100, color: '#dbe4e1' },
-    { id: 2, name: '교통비', current: 30, target: 100, color: '#e6e9eb' },
-    { id: 3, name: '주거비', current: 50, target: 150, color: '#c8d9d2' },
-    { id: 4, name: '문화생활', current: 20, target: 80, color: '#a8c9b9' },
-    { id: 5, name: '의류', current: 10, target: 50, color: '#7daab3' },
-    { id: 6, name: '통신비', current: 10, target: 50, color: '#dbe4e1' },
-    { id: 7, name: '교육', current: 10, target: 50, color: '#e6e9eb' },
-    { id: 8, name: '기타', current: 10, target: 50, color: '#c8d9d2' },
-  ]);
-  const [showAllWeeklyCategories, setShowAllWeeklyCategories] = useState(false); // "더보기" 상태
-  const [newWeeklyCategoryName, setNewWeeklyCategoryName] = useState('');
-  const [newWeeklyCategoryTarget, setNewWeeklyCategoryTarget] = useState(0);
-  const [showAddWeeklyCategoryInput, setShowAddWeeklyCategoryInput] = useState(false); // "추가하기" 입력 필드 표시 여부
-  const [showUpdateWeeklyConsumptionPopup, setShowUpdateWeeklyConsumptionPopup] = useState(false); // 주간 사용금액 갱신 팝업 상태
-
-  const [monthlyCategories, setMonthlyCategories] = useState([
-    { id: 1, name: '식비', current: 30, target: 100, color: '#dbe4e1' },
-    { id: 2, name: '교통비', current: 30, target: 100, color: '#e6e9eb' },
-    { id: 3, name: '주거비', current: 50, target: 150, color: '#c8d9d2' },
-    { id: 4, name: '문화생활', current: 20, target: 80, color: '#a8c9b9' },
-    { id: 6, name: '의류', current: 10, target: 50, color: '#dbe4e1' },
-    { id: 7, name: '통신비', current: 10, target: 50, color: '#e6e9eb' },
-    { id: 8, name: '교육', current: 10, target: 50, color: '#c8d9d2' },
-  ]);
-  const [showAllCategories, setShowAllCategories] = useState(false); // "더보기" 상태
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryTarget, setNewCategoryTarget] = useState(0);
-  const [showAddCategoryInput, setShowAddCategoryInput] = useState(false); // "추가하기" 입력 필드 표시 여부
-
-  const handleFeedbackButtonClick = () => {
-    if (dDay === 0) { // Assuming D-Day is 0 for the actual D-Day
-      setShowFeedbackPopup(true);
-    } else {
-      // Show warning popup
-      // For now, I'll just use a confirm dialog. Later, I can implement a custom warning popup.
-      const confirmProceed = window.confirm("아직 기한이 안 됐습니다. 그래도 하시겠습니까?");
-      if (confirmProceed) {
-        setShowFeedbackPopup(true);
-      }
-    }
-  };
-
-  const handleFeedbackSubmit = (feedbackText, satisfactionRating, nextMonthGoal) => {
-    // Here you would typically send the feedback to a backend API
-    console.log("Feedback submitted:", feedbackText, "Satisfaction:", satisfactionRating, "Next Month Goal:", nextMonthGoal);
-    setSubmittedFeedback(prev => [...prev, { date: new Date().toLocaleDateString(), text: feedbackText, rating: satisfactionRating, nextMonthGoal: nextMonthGoal }]);
-    setShowFeedbackPopup(false);
-  };
-
-  const [submittedFeedback, setSubmittedFeedback] = useState([]); // To store submitted feedback
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [feedbacksPerPage] = useState(4); // 페이지당 피드백 수
-
-  const handleAddCategory = () => {
-    if (newCategoryName && newCategoryTarget > 0) {
-      setMonthlyCategories(prevCategories => [
-        ...prevCategories,
-        { id: prevCategories.length + 1, name: newCategoryName, current: 0, target: newCategoryTarget, color: '#cccccc' } // 기본 색상
-      ]);
-      setNewCategoryName('');
-      setNewCategoryTarget(0);
-      setShowAddCategoryInput(false);
-    } else {
-      alert('카테고리 이름과 목표 금액을 올바르게 입력해주세요.');
-    }
-  };
-
-  const handleAddWeeklyCategory = () => {
-    if (newWeeklyCategoryName && newWeeklyCategoryTarget > 0) {
-      setWeeklyCategories(prevCategories => [
-        ...prevCategories,
-        { id: prevCategories.length + 1, name: newWeeklyCategoryName, current: 0, target: newWeeklyCategoryTarget, color: '#cccccc' } // 기본 색상
-      ]);
-      setNewWeeklyCategoryName('');
-      setNewWeeklyCategoryTarget(0);
-      setShowAddWeeklyCategoryInput(false);
-    } else {
-      alert('카테고리 이름과 목표 금액을 올바르게 입력해주세요.');
-    }
-  };
-
-  const handleUpdateWeeklyConsumption = () => {
-    setShowUpdateWeeklyConsumptionPopup(true);
-  };
-
-  const handleInitializeConfirm = () => {
-    // 초기화 로직을 여기에 추가하세요.
-    console.log("소비 계획을 초기화합니다.");
-    setShowInitializePopup(false);
-  };
-
-  const weeklyCurrentConsumption = useMemo(() => {
-    return weeklyCategories.reduce((sum, category) => sum + category.current, 0);
-  }, [weeklyCategories]);
-
-  const weeklyTargetConsumption = useMemo(() => {
-    return weeklyCategories.reduce((sum, category) => sum + category.target, 0);
-  }, [weeklyCategories]);
-
- 
-  const monthlyCurrentConsumption = useMemo(() => {
-    return monthlyCategories.reduce((sum, category) => sum + category.current, 0);
-  }, [monthlyCategories]);
-
-  const monthlyTargetConsumption = useMemo(() => {
-    return monthlyCategories.reduce((sum, category) => sum + category.target, 0);
-  }, [monthlyCategories]);
-
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
   const monthlyPercentage = monthlyTargetConsumption > 0 ? Math.round((monthlyCurrentConsumption / monthlyTargetConsumption) * 100) : 0;
+
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [feedbacksPerPage] = useState(4); // 페이지당 피드백 수
 
   // 피드백 페이지네이션 로직
   const indexOfLastFeedback = currentPage * feedbacksPerPage;
   const indexOfFirstFeedback = indexOfLastFeedback - feedbacksPerPage;
-  const currentFeedbacks = submittedFeedback.slice(indexOfFirstFeedback, indexOfLastFeedback);
+  const currentFeedbacks = submittedFeedback.slice(indexOfFirstFeedback, indexOfFirstFeedback + feedbacksPerPage); // Changed slice end to match feedbacksPerPage
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -355,19 +262,20 @@ const handleAttend = () => {
                 
                  <div className={styles.frame2732}>
                         <img className={styles.polygon13} src="/listup_icon.svg" alt="list" />
-                        <div className={styles._11}>11월 목표 소비금액</div>
-                      </div>
-                  </div>
-                   <button onClick={handleUpdateWeeklyConsumption} className={styles.updateConsumptionButton}>
+                        <div className={styles._11}>12월 분야별 소비금액</div>
+                         <button onClick={() => setShowUpdateWeeklyConsumptionPopup(true)} className={styles.updateConsumptionButton}>
                   사용금액 갱신
                 </button>
+                      </div>
+                  </div>
+                
                   <div className={styles.frame262}>
                     <div className={styles.frame261}>
                      
                       <div className={styles.frame34}>
                         <div className={styles.frame252}>
                           <div className={styles.frame258}>
-                            {weeklyCategories.slice(0, showAllWeeklyCategories ? weeklyCategories.length : 8).map(category => (
+                          {weeklyCategories.slice(0, showAllWeeklyCategories ? weeklyCategories.length : 8).map(category => (
                               <div className={styles.categoryItem} key={category.id}>
                                 <div className={styles.frame26}>
                                   <div className={styles.ellipseFill} style={{ backgroundColor: category.color }}></div>
@@ -439,10 +347,14 @@ const handleAttend = () => {
                       </div>
                       
                     </div>
+                  
                     <div className={styles.frame2772}>
                       <div className={styles.frame2732}>
                         <img className={styles.polygon13} src="/listup_icon.svg" alt="list" />
-                        <div className={styles._11}>11월 목표 소비금액</div>
+                        <div className={styles._11}>12월 분야별 소비금액</div>
+                         <button onClick={() => setShowUpdateMonthlyConsumptionPopup(true)} className={styles.updateConsumptionButton}>
+                      사용금액 갱신
+                    </button>
                       </div>
                       <div className={styles.frame34}>
                         <div className={styles.frame252}>
@@ -495,97 +407,98 @@ const handleAttend = () => {
                         <div className={styles.frame259}>
                           <div className={styles.div9}>지난 달의 피드백</div>
                         </div>
-                        <div className={styles.frame21}>
-                          <div className={styles.frame271}>
-                            <div className={styles.frame270}>
-                              <div className={styles.frame373}>
-                                
-                                
-                              </div>
-                              <div className={styles.frame313}>
-                                <div className={styles.frame363}>
-                                  <div className={styles._240}>240</div>
-                                  <div className={styles._2002}>/200 만원</div>
+                        {lastFeedback ? (
+                          <div className={styles.frame21}>
+                            <div className={styles.frame271}>
+                              <div className={styles.frame270}>
+                                <div className={styles.frame373}>
                                 </div>
-                                <ProgressBar
-                                  value={240}
-                                  max={200}
-                                  isThick={true}
-                                  percentageColor="#dadee1"
-                                  label="120% 초과"
-                                />
-                              </div>
-                            </div>
-                            <div className={styles.frame2652}>
-                              <div className={styles.frame267}>
-                                <div className={styles.div10}>만족도</div>
-                                <div className={styles.frame269}>
-                                  <div className={styles.frame266}>
-                                    <div className={styles.ellipseFill2}></div>
-                                    <div className={styles.ellipseFill2}></div>
-                                    <div className={styles.ellipseFill2}></div>
-                                    <div className={styles.ellipseFill3}></div>
-                                    <div className={styles.ellipseFill3}></div>
+                                <div className={styles.frame313}>
+                                  <div className={styles.frame363}>
+                                    <div className={styles._240}>{lastFeedback.currentConsumption}</div>
+                                    <div className={styles._2002}>/{lastFeedback.targetConsumption} 만원</div>
                                   </div>
-                                  <div className={styles._35}>
-                                    <span>
-                                      <span className={styles._35Span}>3</span>
-                                      <span className={styles._35Span}>/5</span>
-                                    </span>
-                                  </div>
+                                  <ProgressBar
+                                    value={lastFeedback.currentConsumption}
+                                    max={lastFeedback.targetConsumption}
+                                    isThick={true}
+                                    percentageColor="#dadee1"
+                                    label={`${Math.round((lastFeedback.currentConsumption / lastFeedback.targetConsumption) * 100)}%`}
+                                  />
                                 </div>
                               </div>
+                              <div className={styles.frame2652}>
+                                <div className={styles.frame267}>
+                                  <div className={styles.div10}>만족도</div>
+                                  <div className={styles.frame269}>
+                                    <div className={styles.frame266}>
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <div
+                                          key={star}
+                                          className={star <= lastFeedback.rating ? styles.ellipseFill2 : styles.ellipseFill3}
+                                        ></div>
+                                      ))}
+                                    </div>
+                                    <div className={styles._35}>
+                                      <span>
+                                        <span className={styles._35Span}>{lastFeedback.rating}</span>
+                                        <span className={styles._35Span}>/5</span>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                          <div className={styles.div11}>
-                            <span>
-                              <span className={styles.div11Span}>
-                                사용자 피드백
-                                <br />
-                              </span>
-                              <span className={styles.div11Span2}>
-                                <br />
-                              </span>
-                              <span className={styles.div11Span3}></span>
+                            <div className={styles.div11}>
+                              <span>
+                                <span className={styles.div11Span}>
+                                  {lastFeedback.date} 피드백
+                                  <br />
+                                </span>
+                                <span className={styles.div11Span2}>
+                                  <br />
+                                </span>
+                                <span className={styles.div11Span3}></span>
                                 <span className={styles.div11Span4}>
-                                  이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                                  특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문
-                                  횟수가 늘었고, 가을 신상 의류를 충동적으로 구매한 것이
-                                  큰 원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                                  번만&#039;이라는 생각으로 자제를 못 했습니다.
+                                  {lastFeedback.text}
                                 </span>
                               </span>
                             </div>
                           </div>
-                        </div>
+                        ) : (
+                          <div className={styles.frame21}>
+                            <div className={styles.div11}>
+                              <span>
+                                <span className={styles.div11Span}>
+                                  지난 달의 피드백이 없습니다.
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       <div className={styles.frame2733}>
                         <div className={styles.frame259}>
                           <div className={styles.div9}>이번 달의 목표 기록</div>
                         </div>
                         <div className={styles.frame212}>
-                          {submittedFeedback.length > 0 ? (
-                            submittedFeedback.map((feedback, index) => (
-                              <div key={index} className={styles.div11}>
-                                <span>
-                                  <span className={styles.div11Span}>
-                                    {feedback.date} (만족도: {feedback.rating}/5)
-                                    <br />
-                                  </span>
-                                  <span className={styles.div11Span2}>
-                                    <br />
-                                  </span>
-                                  <span className={styles.div11Span3}></span>
-                                  <span className={styles.div11Span4}>
-                                    {feedback.text}
-                                  </span>
+                          {lastFeedback && lastFeedback.nextMonthGoal ? (
+                            <div className={styles.div11}>
+                              <span>
+                                <span className={styles.div11Span}>
+                                  {lastFeedback.date} 기준 다음 달 목표:
+                                  <br />
                                 </span>
-                              </div>
-                            ))
+                                <span className={styles.div11Span4}>
+                                  {lastFeedback.nextMonthGoal}
+                                </span>
+                              </span>
+                            </div>
                           ) : (
                             <div className={styles.div11}>
                               <span>
                                 <span className={styles.div11Span}>
-                                  아직 작성된 피드백이 없습니다.
+                                  지난 달의 목표 기록이 없습니다.
                                 </span>
                               </span>
                             </div>
@@ -624,20 +537,23 @@ const handleAttend = () => {
                             <div className={styles.frame270}>
                               <div className={styles.frame373}>
                                 <div className={styles.frame363}>
-                                  <div className={styles._240}>240</div> {/* TODO: 실제 목표 금액으로 변경 */}
-                                  <div className={styles._2002}>/200 만원</div> {/* TODO: 실제 목표 금액으로 변경 */}
+                                  <div className={styles._240}>{feedback.currentConsumption}</div>
+                                  <div className={styles._2002}>/{feedback.targetConsumption} 만원</div>
                                 </div>
                                 <div className={styles.frame312}>
-                                  <div className={styles.labelValue3}>120% 초과</div> {/* TODO: 실제 초과율로 변경 */}
+                                  <div className={styles.labelValue3}>
+                                    {feedback.targetConsumption > 0 ? `${Math.round((feedback.currentConsumption / feedback.targetConsumption) * 100)}%` : '0%'}
+                                    {((feedback.currentConsumption / feedback.targetConsumption) > 1) && ' 초과'}
+                                  </div>
                                 </div>
                               </div>
                               <div className={styles.frame313}>
                                 <ProgressBar
-                                  value={240} // TODO: 실제 값으로 변경
-                                  max={200} // TODO: 실제 값으로 변경
+                                  value={feedback.currentConsumption}
+                                  max={feedback.targetConsumption}
                                   isThick={true}
                                   percentageColor="#dadee1"
-                                  label="120% 초과" // TODO: 실제 값으로 변경
+                                  label={feedback.targetConsumption > 0 ? `${Math.round((feedback.currentConsumption / feedback.targetConsumption) * 100)}%` : '0%'}
                                 />
                               </div>
                             </div>
@@ -780,6 +696,15 @@ const handleAttend = () => {
           title="주간 사용 금액 갱신"
           categories={weeklyCategories}
           setCategories={setWeeklyCategories}
+        />
+      )}
+
+      {showUpdateMonthlyConsumptionPopup && (
+        <UpdateConsumptionPopup
+          onClose={() => setShowUpdateMonthlyConsumptionPopup(false)}
+          title="월간 사용 금액 갱신"
+          categories={monthlyCategories}
+          setCategories={setMonthlyCategories}
         />
       )}
     </div>

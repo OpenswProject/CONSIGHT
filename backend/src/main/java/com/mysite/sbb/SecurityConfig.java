@@ -58,10 +58,11 @@ public class SecurityConfig {
                 // 아래 경로들은 인증 없이 접근 허용
                 .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/view").permitAll() // 조회수 업데이트
-                .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() // 모든 리뷰 관련 GET 요청
+                .requestMatchers(HttpMethod.GET, "/api/reviews/me").authenticated() // /me 경로는 인증 필요
+                .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() // 나머지 GET 요청은 허용
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/like").permitAll() // 좋아요 (인증 필요하지만 테스트를 위해 임시 허용)
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/bookmark").permitAll() // 북마크 (인증 필요하지만 테스트를 위해 임시 허용)
-                .requestMatchers(HttpMethod.POST, "/api/reviews/*/comments").permitAll() // 댓글 작성 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/comments").authenticated() // 댓글 작성 (인증 필요)
                 .requestMatchers("/api/follow/**").permitAll() // 팔로우 관련 (인증 필요하지만 테스트를 위해 임시 허용)
                 .requestMatchers("/api/test", "/hello", "/", "/h2-console/**", "/user/signup").permitAll()
                 // 그 외 모든 요청은 인증 필요

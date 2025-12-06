@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Import JsonIgnore
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +25,7 @@ public class SiteUser {
 	@Column(unique = true)
 	private String username;
 
+	@JsonIgnore // Add this annotation
 	private String password;
 
 	@Column(unique = true)
@@ -32,4 +35,17 @@ public class SiteUser {
 	private int level = 1; // Default level
 
 	private LocalDate lastAttendanceDate; // Last attendance date
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SiteUser)) return false;
+		SiteUser siteUser = (SiteUser) o;
+		return id != null && id.equals(siteUser.getId());
+	}
+
+	@Override
+	public int hashCode() {
+		return getClass().hashCode();
+	}
 }

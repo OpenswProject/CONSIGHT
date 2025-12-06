@@ -23,6 +23,10 @@ export const ShoppingList = () => {
         if (item.category) {
           try {
             const response = await fetch(`/api/reviews/most-liked-by-category?category=${item.category}`);
+            if (response.status === 404) {
+              console.warn(`No recommended review found for category ${item.category}.`);
+              return item; // Return item without recommended review
+            }
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -40,7 +44,7 @@ export const ShoppingList = () => {
     };
 
     fetchRecommendedReviews();
-  }, [items]); // Rerun when items change to fetch new recommendations
+  }, []); // Empty dependency array means this runs once on mount
   const [isAdding, setIsAdding] = useState(false);
   const [newItemText, setNewItemText] = useState("");
   const [newItemCategory, setNewItemCategory] = useState(CATEGORIES[0]);
@@ -59,16 +63,37 @@ export const ShoppingList = () => {
     setNewItemCategory(CATEGORIES[0]);
   };
 
-  const handleSaveNewItem = () => {
+  const handleSaveNewItem = async () => { // async 추가
     if (newItemText.trim() === "") {
       // Optionally, show an alert or handle empty input
       return;
     }
-    const newItem = {
+    let newItem = {
       id: Date.now(), // Simple unique ID
       text: newItemText,
       category: newItemCategory,
+      recommendedReview: null // 초기값 설정
     };
+
+    if (newItem.category) {
+      try {
+        const response = await fetch(`/api/reviews/most-liked-by-category?category=${newItem.category}`);
+        if (response.status === 404) {
+          console.warn(`No recommended review found for category ${newItem.category}.`);
+          // No need to set recommendedReview, it's already null
+        } else if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+          const data = await response.json();
+          if (data.success && data.data) {
+            newItem.recommendedReview = data.data;
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to fetch recommended review for category ${newItem.category}:`, error);
+      }
+    }
+
     setItems(prevItems => [...prevItems, newItem]);
     handleCancel(); // Reset form
   };

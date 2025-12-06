@@ -2,6 +2,8 @@ package com.mysite.sbb.follow;
 
 import com.mysite.sbb.user.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,4 +16,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     List<Follow> findByFollowee(SiteUser followee);
     long countByFollower(SiteUser follower);
     long countByFollowee(SiteUser followee);
+
+    @Query("SELECT f.follower FROM Follow f WHERE f.followee = :followee")
+    List<SiteUser> findFollowersOf(@Param("followee") SiteUser followee);
 }

@@ -3,7 +3,9 @@ package com.mysite.sbb.review;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService; // 추가
+import com.mysite.sbb.notification.NotificationService; // 추가
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
@@ -29,11 +32,13 @@ public class ReviewService {
     private final ReviewBookmarkRepository reviewBookmarkRepository;
     private final ReviewCommentRepository reviewCommentRepository;
     private final UserService userService; // 추가
+    private final NotificationService notificationService; // 추가
 
     // Placeholder for image storage directory
     // User should configure this in application.properties or similar
     private final String imageStorageDir = "uploads/receipts"; // Example path
 
+    @Transactional
     public void create(String title, String category, String productLink, String content, MultipartFile receiptImage, SiteUser author) throws IOException {
         Review review = new Review();
         review.setTitle(title);
@@ -59,6 +64,7 @@ public class ReviewService {
         }
 
         this.reviewRepository.save(review);
+        notificationService.createNotificationForNewReview(review);
     }
 
     public Page<Review> getList(int page, String kw, String searchType, String username, String sort) {
@@ -209,23 +215,32 @@ public class ReviewService {
     }
 
     public MyReviewResponse getMyReviews(SiteUser siteUser) {
+        log.info("Fetching 'My Page' data for user: {}", siteUser.getUsername());
+
         // Written reviews
         List<Review> writtenReviews = reviewRepository.findByAuthor(siteUser);
+        log.info("Found {} written reviews for user {}", writtenReviews.size(), siteUser.getUsername());
+
 
         // Liked reviews
         List<ReviewLike> likedReviewLikes = reviewLikeRepository.findByUser(siteUser);
         List<Review> likedReviews = likedReviewLikes.stream()
                 .map(ReviewLike::getReview)
                 .collect(java.util.stream.Collectors.toList());
+        log.info("Found {} liked reviews for user {}", likedReviews.size(), siteUser.getUsername());
 
         // Bookmarked reviews
         List<ReviewBookmark> bookmarkedReviewBookmarks = reviewBookmarkRepository.findByUser(siteUser);
         List<Review> bookmarkedReviews = bookmarkedReviewBookmarks.stream()
                 .map(ReviewBookmark::getReview)
                 .collect(java.util.stream.Collectors.toList());
+        log.info("Found {} bookmarked reviews for user {}", bookmarkedReviews.size(), siteUser.getUsername());
+
 
         // Comments
         List<ReviewComment> comments = reviewCommentRepository.findByAuthor(siteUser);
+        log.info("Found {} comments for user {}", comments.size(), siteUser.getUsername());
+
 
         return new MyReviewResponse(writtenReviews, likedReviews, bookmarkedReviews, comments);
     }

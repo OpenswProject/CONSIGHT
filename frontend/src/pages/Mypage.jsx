@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/Mypage.module.css';
 import ReviewPopup from '../components/ReviewPopup';
@@ -7,7 +7,15 @@ import MyProfileMoreInfoPopup from '../components/MyProfileMoreInfoPopup/MyProfi
 import NameChangePopup from '../components/NameChangePopup/NameChangePopup';
 import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 
-const Mypage = ({ currentUser }) => {
+const Mypage = ({ 
+  currentUser,
+  monthlyCategories,
+  monthlyCurrentConsumption,
+  monthlyTargetConsumption,
+  lastFeedback,
+  weeklyCurrentConsumption,
+  weeklyTargetConsumption
+}) => {
   const [isPopupOpen, setPopupOpen] = useState(false);
   const [showFollowerPopup, setShowFollowerPopup] = useState(false);
   const [showFollowingPopup, setShowFollowingPopup] = useState(false);
@@ -20,6 +28,31 @@ const Mypage = ({ currentUser }) => {
   const [commentedReviewData, setCommentedReviewData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // 1-indexed page
   const [selectedReview, setSelectedReview] = useState(null); // State to store the selected review for popup
+
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const [filteredReviews, setFilteredReviews] = useState([]); // 필터링된 리뷰 상태 추가
+
+  // 검색어 변경 핸들러
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // 검색 실행 핸들러
+  const handleSearch = () => {
+    const reviewsToFilter = getActiveDataForSearch(); // 현재 활성화된 탭의 데이터를 가져옴
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const newFilteredReviews = reviewsToFilter.filter(review =>
+      review.title.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+    setFilteredReviews(newFilteredReviews);
+  };
+
+  // 엔터 키 입력 핸들러
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   // Helper to update review data in all relevant states
   const updateReviewInStates = (reviewId, updateFn) => {
@@ -94,16 +127,16 @@ const Mypage = ({ currentUser }) => {
         const apiResponse = await response.json();
         if (apiResponse.success && apiResponse.data) {
           const { written, liked, bookmarked, comments } = apiResponse.data;
+          const processedComments = comments ? comments.map(comment => comment.review).filter(Boolean) : [];
+          const uniqueCommentedReviews = Array.from(new Map(processedComments.map(review => [review.id, review])).values());
+
           setMyReviewData(written || []);
           setLikedReviewData(liked || []);
           setBookmarkedReviewData(bookmarked || []);
-          if (comments) {
-            const reviewsFromComments = comments.map(comment => comment.review).filter(Boolean);
-            const uniqueReviews = Array.from(new Map(reviewsFromComments.map(review => [review.id, review])).values());
-            setCommentedReviewData(uniqueReviews);
-          } else {
-            setCommentedReviewData([]);
-          }
+          setCommentedReviewData(uniqueCommentedReviews);
+
+          // 초기 필터링된 리뷰 설정 (기본은 작성한 리뷰)
+          setFilteredReviews(written || []);
         } else {
           throw new Error(apiResponse.message || "Failed to fetch data");
         }
@@ -113,16 +146,30 @@ const Mypage = ({ currentUser }) => {
         setLikedReviewData([]);
         setBookmarkedReviewData([]);
         setCommentedReviewData([]);
+        setFilteredReviews([]); // 에러 발생 시 필터링된 리뷰도 초기화
       }
     };
     fetchMyPageData();
   }, [currentUser]);
 
+  // 현재 활성화된 탭의 원본 데이터를 반환하는 함수 (검색 필터링 전)
+  const getActiveDataForSearch = () => {
+    switch (activeTab) {
+      case 'written': return myReviewData || [];
+      case 'liked': return likedReviewData || [];
+      case 'bookmarked': return bookmarkedReviewData || [];
+      case 'commented': return commentedReviewData || [];
+      default: return [];
+    }
+  };
+
   
 
   useEffect(() => {
+    setSearchTerm(""); // 검색어 초기화
+    setFilteredReviews(getActiveDataForSearch()); // 현재 탭의 모든 리뷰로 필터링된 리뷰 초기화
     setCurrentPage(1); // Reset page when activeTab changes
-  }, [activeTab]);
+  }, [activeTab, myReviewData, likedReviewData, bookmarkedReviewData, commentedReviewData]); // myReviewData 등을 의존성 배열에 추가
 
   const openPopup = (review) => {
     setSelectedReview(review);
@@ -229,27 +276,16 @@ const Mypage = ({ currentUser }) => {
     }
   };
 
-  const [weeklyCurrentConsumption, setWeeklyCurrentConsumption] = useState(140);
-  const [weeklyTargetConsumption, setWeeklyTargetConsumption] = useState(200);
-  const [isWeeklyEditing, setIsWeeklyEditing] = useState(false);
-
-  const handleWeeklyEditToggle = () => setIsWeeklyEditing(!isWeeklyEditing);
-  const handleWeeklyCurrentChange = (e) => setWeeklyCurrentConsumption(parseInt(e.target.value, 10) || 0);
-  const handleWeeklyTargetChange = (e) => setWeeklyTargetConsumption(parseInt(e.target.value, 10) || 0);
+  const monthlyPercentage = monthlyTargetConsumption > 0 ? Math.round((monthlyCurrentConsumption / monthlyTargetConsumption) * 100) : 0;
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
 
-  const getActiveData = () => {
-    switch (activeTab) {
-      case 'written': return myReviewData;
-      case 'liked': return likedReviewData;
-      case 'bookmarked': return bookmarkedReviewData;
-      case 'commented': return commentedReviewData;
-      default: return null;
-    }
-  };
+  // getActiveData 함수를 useMemo로 변경하여 filteredReviews를 반환하도록 함
+  const getActiveData = useMemo(() => {
+    return filteredReviews;
+  }, [filteredReviews]);
 
   const getActiveDataInfo = () => {
-    const data = getActiveData();
+    const data = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
     const count = data ? data.length : 0;
     switch (activeTab) {
       case 'written': return { title: '작성한 리뷰', count };
@@ -264,7 +300,7 @@ const Mypage = ({ currentUser }) => {
   const itemsPerPage = 6; // 3 rows * 2 columns
 
   const handlePageChange = (pageNumber) => {
-    const reviews = getActiveData();
+    const reviews = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
     const totalPages = Math.ceil((reviews ? reviews.length : 0) / itemsPerPage);
     if (pageNumber >= 1 && pageNumber <= totalPages) {
       setCurrentPage(pageNumber);
@@ -272,7 +308,7 @@ const Mypage = ({ currentUser }) => {
   };
 
   const renderPageNumbers = () => {
-    const reviews = getActiveData();
+    const reviews = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
     const totalPages = Math.ceil((reviews ? reviews.length : 0) / itemsPerPage);
     const pageNumbers = [];
     const startPage = Math.floor((currentPage - 1) / 4) * 4 + 1; // 1-indexed
@@ -290,7 +326,7 @@ const Mypage = ({ currentUser }) => {
 
 
   const renderReviewGrid = () => {
-    const reviews = getActiveData();
+    const reviews = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
 
     if (reviews === null) {
       return <div className={styles.reviewsWrapper}><p>리뷰를 불러오는 중입니다...</p></div>;
@@ -360,7 +396,7 @@ const Mypage = ({ currentUser }) => {
   };
 
   const Pagination = () => {
-    const reviews = getActiveData();
+    const reviews = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
     if (!reviews || reviews.length <= itemsPerPage) return null; // Only show pagination if more than 6 items
 
     const totalPages = Math.ceil(reviews.length / itemsPerPage);
@@ -378,7 +414,7 @@ const Mypage = ({ currentUser }) => {
 
   
   const activeDataInfo = getActiveDataInfo();
-  const reviewsForPagination = getActiveData();
+  const reviewsForPagination = getActiveData; // useMemo로 변경되었으므로 함수 호출이 아닌 직접 접근
   const totalPages = Math.ceil((reviewsForPagination ? reviewsForPagination.length : 0) / itemsPerPage);
 
   return (
@@ -399,7 +435,7 @@ const Mypage = ({ currentUser }) => {
                       <div className={styles.usernameInfo}>
                         <div className={styles.frame224}>
                           <div className={styles.frame223}>
-                            <div className={styles.username}>{usernameToDisplay}</div>
+                            <div className={styles.username}>{usernameToDisplay}님</div>
                           </div>
                         </div>
                         <div className={styles.userinfo1}>{userInfoToDisplay}</div>
@@ -463,7 +499,7 @@ const Mypage = ({ currentUser }) => {
                 <img className={styles.group2095} src="/left_icon.svg" alt="Group 2095" />
               </div>
               <div className={styles.frame188}>
-                <img className={styles.group20952} src="/rigth_icon.svg" alt="Group 20952" />
+                <img className={styles.group20952} src="/right_icon.svg" alt="Group 20952" />
               </div>
             </div>
           </div>
@@ -592,107 +628,104 @@ const Mypage = ({ currentUser }) => {
                 <div className={styles.frame422}>
                   <div className={styles.frame41}>
                     <div className={styles.div6}>이번 달의 목표금액</div>
-                                      <div className={styles.frame19_}>
-                     <div className={styles.frame37_}>
+                    <div className={styles.frame19_}>
+                      <div className={styles.frame37_}>
                         <div className={styles.frame36__}>
-                                           {isWeeklyEditing ? (
-                                               <div className={styles.editAmountWrapper_}>
-                                                   <input type="number" value={weeklyCurrentConsumption} onChange={handleWeeklyCurrentChange} className={styles.inputField_} />
-                                                   <span className={styles.amountSeparator_}>/</span>
-                                                   <input type="number" value={weeklyTargetConsumption} onChange={handleWeeklyTargetChange} className={`${styles.inputField_} ${styles.targetInput_}`} />
-                                                   <span className={styles.amountUnit_}>&nbsp;만원</span>
-                                               </div>
-                                           ) : (
-                                               <div className={styles.viewAmountWrapper_}>
-                                                   <div className={styles._1420_}>{weeklyCurrentConsumption}</div>
-                                                   <div className={styles._2020_}>/{weeklyTargetConsumption} 만원</div>
-                                               </div>
-                                           )}
-                                           <button onClick={handleWeeklyEditToggle} className={styles.editButton_}>
-                                               {isWeeklyEditing ? '저장' : '수정'}
-                                           </button>
-                                         </div>
-                                         <ProgressBar
-                                           value={weeklyCurrentConsumption}
-                                           max={weeklyTargetConsumption}
-                                           label={`${weeklyPercentage}%`}
-                                           percentageColor="#9BC4B0"
-                                           isThick={true}
-                                         />
+                          <div className={styles.viewAmountWrapper_}>
+                            <div className={styles._1420_}>{monthlyCurrentConsumption}</div>
+                            <div className={styles._2020_}>/{monthlyTargetConsumption} 만원</div>
+                          </div>
+                        </div>
+                        <ProgressBar
+                          value={monthlyCurrentConsumption}
+                          max={monthlyTargetConsumption}
+                          label={`${monthlyPercentage}%`}
+                          percentageColor="#9BC4B0"
+                          isThick={true}
+                        />
                       </div>
-                </div>
                     </div>
                   </div>
+                </div>
                 <div className={styles.frame2732}>
                   <div className={styles.frame259}>
                     <div className={styles.div7}>이번 달의 목표 기록</div>
                   </div>
                   <div className={styles.frame21}>
-                    <div className={styles.div8}>
-                      <span>
-                        <span className={styles.div8Span}>
-                          제목
-                          <br />
+                    {lastFeedback && lastFeedback.nextMonthGoal ? (
+                      <div className={styles.div8}>
+                        <span>
+                          <span className={styles.div8Span}>
+                            {lastFeedback.date} 기준 다음 달 목표:
+                            <br />
+                          </span>
+                          <span className={styles.div8Span4}>
+                            {lastFeedback.nextMonthGoal}
+                          </span>
                         </span>
-                        <span className={styles.div8Span2}>
-                          <br />
+                      </div>
+                    ) : (
+                      <div className={styles.div8}>
+                        <span>
+                          <span className={styles.div8Span}>
+                            지난 달의 목표 기록이 없습니다.
+                          </span>
                         </span>
-                        <span className={styles.div8Span3}></span>
-                        <span className={styles.div8Span4}>
-                          이번 달은 외식과 의류 구매에서 계획을 크게 초과했습니다.
-                          특히 친구들과의 모임이 잦아지면서 고급 레스토랑 방문 횟수가
-                          늘었고, 가을 신상 의류를 충동적으로 구매한 것이 큰
-                          원인입니다. 소비 알림을 받았지만, &#039;이번 한
-                          번만&#039;이라는 생각으로 자제를 못 했습니다.
-                        </span>
-                      </span>
-                    </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className={styles.frame279}>
                   <div className={styles.div9}>지난 달의 피드백</div>
-                  <div className={styles.frame213}>
-                    <div className={styles.frame271}>
-                      <div className={styles.frame270}>
-                        <div className={styles.frame372}>
-                          <div className={styles.frame362}>
-                            <div className={styles._240}>240</div>
-                            <div className={styles._2003}>/200 만원</div>
-                          </div>
-                          <div className={styles.frame312}>
-                            <div className={styles.labelValue4}>120% 초과</div>
-                          </div>
-                        </div>
-                        <div className={styles.frame313}>
-                          <ProgressBar value={120} max={100} isThick={false} percentageColor="#dadee1" />
-                          <div className={styles.labelValue5}>120% 초과</div>
-                        </div>
-                      </div>
-                      <div className={styles.frame265}>
-                        <div className={styles.frame267}>
-                          <div className={styles.div10}>만족도</div>
-                          <div className={styles.frame269}>
-                            <div className={styles.frame266}>
-                              <div className={styles.ellipseFill5}></div>
-                              <div className={styles.ellipseFill5}></div>
-                              <div className={styles.ellipseFill5}></div>
-                              <div className={styles.ellipseFill6}></div>
-                              <div className={styles.ellipseFill6}></div>
-                            </div>
-                            <div className={styles._35}>
-                              <span>
-                                <span className={styles._35Span}>3</span>
-                                <span className={styles._35Span}>/5</span>
-                              </span>
+                  {lastFeedback ? (
+                    <div className={styles.frame213}>
+                      <div className={styles.frame271}>
+                        <div className={styles.frame270}>
+                          <div className={styles.frame372}>
+                            <div className={styles.frame362}>
+                              <div className={styles._240}>{lastFeedback.currentConsumption}</div>
+                              <div className={styles._2003}>/{lastFeedback.targetConsumption} 만원</div>
                             </div>
                           </div>
+                          <ProgressBar
+                            value={lastFeedback.currentConsumption}
+                            max={lastFeedback.targetConsumption}
+                            isThick={false}
+                            percentageColor="#dadee1"
+                            label={`${Math.round((lastFeedback.currentConsumption / lastFeedback.targetConsumption) * 100)}%`}
+                          />
+                        </div>
+                        <div className={styles.frame265}>
+                          <div className={styles.frame267}>
+                            <div className={styles.div10}>만족도</div>
+                            <div className={styles.frame269}>
+                              <div className={styles.frame266}>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <div
+                                    key={star}
+                                    className={star <= lastFeedback.rating ? styles.ellipseFill5 : styles.ellipseFill6}
+                                  ></div>
+                                ))}
+                              </div>
+                              <div className={styles._35}>
+                                <span>
+                                  <span className={styles._35Span}>{lastFeedback.rating}</span>
+                                  <span className={styles._35Span}>/5</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
+                      <div className={styles.feedbackText}>
+                        {lastFeedback.text}
+                      </div>
                     </div>
-                    <div className={styles.frame62}>
-                      <div className={styles.a}>더보기</div>
+                  ) : (
+                    <div className={styles.frame213}>
+                      <p>지난 달의 피드백이 없습니다.</p>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -706,35 +739,23 @@ const Mypage = ({ currentUser }) => {
                   <div className={styles.frame43}>
                     <div className={styles.frame41}>
                       <div className={styles.div7}>이번 주의 목표금액</div>
-                                      <div className={styles.frame19_}>
-                     <div className={styles.frame37_}>
-                        <div className={styles.frame36__}>
-                                           {isWeeklyEditing ? (
-                                               <div className={styles.editAmountWrapper_}>
-                                                   <input type="number" value={weeklyCurrentConsumption} onChange={handleWeeklyCurrentChange} className={styles.inputField_} />
-                                                   <span className={styles.amountSeparator_}>/</span>
-                                                   <input type="number" value={weeklyTargetConsumption} onChange={handleWeeklyTargetChange} className={`${styles.inputField_} ${styles.targetInput_}`} />
-                                                   <span className={styles.amountUnit_}>&nbsp;만원</span>
-                                               </div>
-                                           ) : (
-                                               <div className={styles.viewAmountWrapper_}>
-                                                   <div className={styles._1420_}>{weeklyCurrentConsumption}</div>
-                                                   <div className={styles._2020_}>/{weeklyTargetConsumption} 만원</div>
-                                               </div>
-                                           )}
-                                           <button onClick={handleWeeklyEditToggle} className={styles.editButton_}>
-                                               {isWeeklyEditing ? '저장' : '수정'}
-                                           </button>
-                                         </div>
-                                         <ProgressBar
-                                           value={weeklyCurrentConsumption}
-                                           max={weeklyTargetConsumption}
-                                           label={`${weeklyPercentage}%`}
-                                           percentageColor="#9BC4B0"
-                                           isThick={true}
-                                         />
+                      <div className={styles.frame19_}>
+                        <div className={styles.frame37_}>
+                          <div className={styles.frame36__}>
+                            <div className={styles.viewAmountWrapper_}>
+                              <div className={styles._1420_}>{weeklyCurrentConsumption}</div>
+                              <div className={styles._2020_}>/{weeklyTargetConsumption} 만원</div>
+                            </div>
+                          </div>
+                          <ProgressBar
+                            value={weeklyCurrentConsumption}
+                            max={weeklyTargetConsumption}
+                            label={`${weeklyPercentage}%`}
+                            percentageColor="#9BC4B0"
+                            isThick={true}
+                          />
+                        </div>
                       </div>
-                </div>
                     </div>
                   </div>
                   <div className={styles.frame342}>
@@ -858,7 +879,18 @@ const Mypage = ({ currentUser }) => {
         <div className={styles.line53}></div>
       </div>
 
-
+      {/* Search bar for Mypage */}
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="검색"
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+          onKeyDown={handleKeyDown}
+        />
+        <img src="/search_icon.svg" alt="Search" className={styles.searchIcon} onClick={handleSearch} />
+      </div>
       
         <div className={styles.completeWrapper}>
           <div className={styles.frame231_tab_container}>

@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // useState, useEffect import
 import styles from "./RecommendedReviews.module.css";
 import ReviewPopup from "../ReviewPopup";
+
 export const RecommendedReviews = ({ openReviewPopup }) => {
   const [dynamicRecommendedReviews, setDynamicRecommendedReviews] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
+  const [filteredReviews, setFilteredReviews] = useState([]); // 필터링된 리뷰 상태 추가
 
   useEffect(() => {
     const fetchRecommendedReviews = async () => {
@@ -14,6 +17,7 @@ export const RecommendedReviews = ({ openReviewPopup }) => {
         const data = await response.json();
         if (data.success && data.data) {
           setDynamicRecommendedReviews(data.data);
+          setFilteredReviews(data.data); // 초기에는 모든 리뷰를 보여줌
         } else {
           console.error("Failed to fetch recommended reviews:", data.error || "Invalid data structure");
         }
@@ -25,6 +29,27 @@ export const RecommendedReviews = ({ openReviewPopup }) => {
     fetchRecommendedReviews();
   }, []); // Empty dependency array means this runs once on mount
 
+  // 검색어 변경 핸들러
+  const handleSearchTermChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  // 검색 실행 핸들러
+  const handleSearch = () => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const newFilteredReviews = dynamicRecommendedReviews.filter(review =>
+      review.title.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+    setFilteredReviews(newFilteredReviews);
+  };
+
+  // 엔터 키 입력 핸들러
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <>
       <div className={styles.card}> {/* Corresponds to .frame-60 */}
@@ -34,16 +59,23 @@ export const RecommendedReviews = ({ openReviewPopup }) => {
           </div>
           {/* Search bar from mainpage reference */}
           <div className={styles.frame147}>
-          <div className={styles.frame146}>
-            <img className={styles.group1} src="/search_icon.svg" alt="Search icon" />
-            <div className={styles.line54}></div>
-            <input type="text" placeholder="검색..." className={styles.searchInput} />
+            <div className={styles.frame146}>
+              <img className={styles.group1} src="/search_icon.svg" alt="Search icon" />
+              <div className={styles.line54}></div>
+              <input
+                type="text"
+                placeholder="검색..."
+                className={styles.searchInput}
+                value={searchTerm} // 검색어 상태와 연결
+                onChange={handleSearchTermChange} // 검색어 변경 핸들러
+                onKeyDown={handleKeyDown} // 엔터 키 핸들러
+              />
+            </div>
           </div>
-        </div>
         </div>
         <div className={styles.reviewList}> {/* Corresponds to .frame-116 */}
           <div className={styles.reviewColumn}> {/* Corresponds to .frame-114 */}
-            {dynamicRecommendedReviews.slice(0, 3).map((review) => (
+            {filteredReviews.slice(0, 3).map((review) => ( // filteredReviews 사용
               <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
                 <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
                   <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}
@@ -89,7 +121,7 @@ export const RecommendedReviews = ({ openReviewPopup }) => {
             ))}
           </div>
           <div className={styles.reviewColumn}> {/* Corresponds to .frame-115 */}
-            {dynamicRecommendedReviews.slice(3, 6).map((review) => (
+            {filteredReviews.slice(3, 6).map((review) => ( // filteredReviews 사용
               <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
                 <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
                   <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}

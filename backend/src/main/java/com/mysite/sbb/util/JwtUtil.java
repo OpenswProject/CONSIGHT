@@ -37,7 +37,7 @@ public class JwtUtil {
         logger.info("JWT Secret Key initialized."); // 로그 추가
     }
 
-    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60; // 5시간
+    private static final long JWT_TOKEN_VALIDITY = 30 * 60; // 30분 (이전 5시간)
 
     public String getUsernameFromToken(String token) {
         try {

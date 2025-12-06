@@ -19,8 +19,9 @@ export const Header = ({ currentUser, setCurrentUser }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // JWT 토큰 삭제
+    localStorage.removeItem('jwtToken'); // JWT 토큰 삭제
     localStorage.removeItem('username'); // 사용자 이름도 삭제
+    localStorage.removeItem('email'); // 이메일도 삭제
     setCurrentUser(null); // 전역 사용자 상태 초기화
     navigate('/login'); // 로그인 페이지로 리다이렉트
   };
