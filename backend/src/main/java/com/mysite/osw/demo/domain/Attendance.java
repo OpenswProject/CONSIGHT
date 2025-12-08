@@ -1,6 +1,6 @@
 package com.mysite.osw.demo.domain;
 
-import com.mysite.osw.demo.user.User; // 기존 User 클래스 import 필요
+import com.mysite.sbb.user.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +19,12 @@ public class Attendance {
 
     @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계 (한 유저가 여러 번 출석 가능)
     @JoinColumn(name = "user_id") // 외래키 컬럼명
-    private User user;
+    private SiteUser user;
 
     private LocalDate date; // 출석 날짜 (YYYY-MM-DD)
 
     // 생성자: 유저와 날짜를 받아 객체 생성
-    public Attendance(User user, LocalDate date) {
+    public Attendance(SiteUser user, LocalDate date) {
         this.user = user;
         this.date = date;
     }

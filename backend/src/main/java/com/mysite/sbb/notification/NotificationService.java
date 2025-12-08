@@ -45,6 +45,10 @@ public class NotificationService {
         log.info("Found {} followers for author {}: {}", followers.size(), reviewAuthor.getUsername(), followers.stream().map(SiteUser::getUsername).collect(Collectors.joining(", ")));
 
         for (SiteUser follower : followers) {
+            // Prevent users from getting notifications about their own posts
+            if (follower.equals(reviewAuthor)) {
+                continue;
+            }
             String message = String.format("%s님이 새로운 글을 업로드하였습니다.", reviewAuthor.getUsername());
             String link = "/review/" + review.getId(); // Assuming a review detail page
             createNotification(follower, reviewAuthor, message, link, NotificationType.NEW_POST);
@@ -55,8 +59,11 @@ public class NotificationService {
         }
     }
 
-    public List<Notification> getNotificationsForUser(SiteUser user) {
-        return notificationRepository.findByRecipientOrderByCreatedDateDesc(user);
+    public List<NotificationDto> getNotificationsForUser(SiteUser user) {
+        List<Notification> notifications = notificationRepository.findByRecipientOrderByCreatedDateDesc(user);
+        return notifications.stream()
+                .map(NotificationDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Transactional

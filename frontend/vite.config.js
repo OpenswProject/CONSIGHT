@@ -23,5 +23,8 @@ export default defineConfig({
         }
       }
     }
+  },
+  build: {
+    minify: false // Temporarily disable minification to see console.log in production build
   }
 })

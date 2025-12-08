@@ -44,26 +44,5 @@ public class UserService {
 		return new UserDto(siteUser);
 	}
 
-	public void attend(String username) {
-		SiteUser user = getUser(username);
-		LocalDate today = LocalDate.now();
-
-		if (user.getLastAttendanceDate() == null || !user.getLastAttendanceDate().isEqual(today)) {
-			user.setLastAttendanceDate(today);
-			user.setPoints(user.getPoints() + 10); // Add 10 points for attendance
-			updateUserPointsAndLevel(user); // Check for level up
-			this.userRepository.save(user);
-		} else {
-			throw new IllegalStateException("Already attended today.");
-		}
-	}
-
-	private void updateUserPointsAndLevel(SiteUser user) {
-		// Level up logic
-		if (user.getLevel() == 1 && user.getPoints() >= 50) {
-			user.setLevel(2);
-			// Optionally reset points or carry over, depending on game design
-		}
-		// Add more level conditions as needed
-	}
+	
 }

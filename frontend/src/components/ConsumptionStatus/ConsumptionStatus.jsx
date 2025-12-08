@@ -100,7 +100,7 @@ export const ConsumptionStatus = ({
   };
 
   return (
-    <> {/* This component now directly renders the content of frame-6 */}
+    <div className={styles.consumptionBoxesContainer}> {/* New container for the three main sections */}
       <div className={styles.frame21}> {/* Corresponds to frame-21 */}
         <div className={styles.pieChart}> {/* Corresponds to pie-chart */}
           <div className={styles.frame25}> {/* Corresponds to frame-25 */}
@@ -283,6 +283,6 @@ export const ConsumptionStatus = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };

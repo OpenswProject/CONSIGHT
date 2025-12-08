@@ -121,16 +121,5 @@ public class UserController {
 		return ResponseEntity.ok(new LoginResponse(jwt, siteUser.getUsername(), siteUser.getEmail(), true, "로그인 성공"));
 	}
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/api/user/attend")
-    public ResponseEntity<APIResponse<?>> attend(Principal principal) {
-        try {
-            userService.attend(principal.getName());
-            return ResponseEntity.ok(APIResponse.success("출석이 성공적으로 기록되었습니다."));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(APIResponse.error(e.getMessage(), HttpStatus.CONFLICT.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("출석 처리 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
-    }
+    
 }

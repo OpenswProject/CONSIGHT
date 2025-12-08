@@ -7,11 +7,27 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 945px;
+  width: 100%; /* Changed from 945px to 100% */
   height: 347px;
   position: relative;
   border-radius: 20px;
   padding: 12px 111px 0px 111px;
+  flex: 1; /* Add flex: 1 to make it take available space */
+}
+
+.consumptionBoxesContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px; /* Gap between the three boxes */
+  width: 100%; /* Ensure it takes full width of its parent */
+  justify-content: space-between; /* Distribute space evenly */
+  align-items: flex-start; /* Align items to the top */
+}
+
+.frame21, .frame222, .frame18 {
+  flex: 1; /* Make each box take equal available space */
+  /* Ensure these elements have a min-width if content is too large */
+  min-width: 250px; /* Example min-width, adjust as needed */
 }
 
 .frame21 { /* Corresponds to .frame-21 */

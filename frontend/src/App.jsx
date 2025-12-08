@@ -2,23 +2,22 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import styles from "./App.module.css";
 import { Header } from "./components/Header/Header";
-import ProfilePage from "./pages/ProfilePage"; // Import the new ProfilePage
+import ProfilePage from "./pages/ProfilePage";
 import { ConsumptionStatus } from "./components/ConsumptionStatus/ConsumptionStatus";
-import { VisitHistory } from "./components/VisitHistory/VisitHistory"; // Import VisitHistory
+import { VisitHistory } from "./components/VisitHistory/VisitHistory";
 import { ShoppingList } from "./components/ShoppingList/ShoppingList";
 import { RecommendedReviews } from "./components/RecommendedReviews/RecommendedReviews";
-import { ReviewFeedPage } from "./pages/ReviewFeedPage"; // Import the new page
-import ConsumePlanPage from "./pages/ConsumePlanPage"; // Import ConsumePlanPage
-import Mypage from "./pages/Mypage"; // Import Mypage
-import ReviewWritePage from "./pages/ReviewWritePage"; // Import ReviewWritePage
-import ProfileRedirector from "./components/ProfileRedirector/ProfileRedirector"; // Import ProfileRedirector
-import LoginPage from "./pages/LoginPage"; // Import LoginPage
-import SignupPage from "./pages/SignupPage"; // Import SignupPage
-
-import MyProfileMoreInfoPopup from "./components/MyProfileMoreInfoPopup/MyProfileMoreInfoPopup"; // Import MyProfileMoreInfoPopup
-import NameChangePopup from "./components/NameChangePopup/NameChangePopup"; // Import NameChangePopup
-import ReviewPopup from "./components/ReviewPopup"; // Import ReviewPopup
-import NotificationItem from "./components/NotificationItem/NotificationItem"; // Import NotificationItem
+import { ReviewFeedPage } from "./pages/ReviewFeedPage";
+import ConsumePlanPage from "./pages/ConsumePlanPage";
+import Mypage from "./pages/Mypage";
+import ReviewWritePage from "./pages/ReviewWritePage";
+import ProfileRedirector from "./components/ProfileRedirector/ProfileRedirector";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import MyProfileMoreInfoPopup from "./components/MyProfileMoreInfoPopup/MyProfileMoreInfoPopup";
+import NameChangePopup from "./components/NameChangePopup/NameChangePopup";
+import ReviewPopup from "./components/ReviewPopup";
+import NotificationItem from "./components/NotificationItem/NotificationItem";
 
 const ReviewCard = ({ review, onClick, styles }) => (
   <div className={styles.frame120} onClick={() => onClick(review)}>
@@ -105,15 +104,16 @@ const HomePage = ({
   monthlyTargetConsumption,
   lastFeedback,
   points,
-  handleAttend
-}) => { // Remove notifications prop
-  const navigate = useNavigate(); // useNavigate 훅 초기화
+  handleAttend,
+  attendanceHistory,
+  isAttendedToday
+}) => {
+  const navigate = useNavigate();
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
   const [showNameChangePopup, setShowNameChangePopup] = useState(false);
-  const [notifications, setNotifications] = useState([]); // State for notifications
+  const [notifications, setNotifications] = useState([]);
   const moreOptionsRef = useRef(null);
 
-  // State for ReviewPopup
   const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
 
@@ -135,14 +135,15 @@ const HomePage = ({
     };
   }, [showMyProfileMoreInfoPopup]);
 
-  // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
-      if (!currentUser) return;
-
+      if (!currentUser) {
+        return;
+      }
       const token = localStorage.getItem('jwtToken');
-      if (!token) return;
-
+      if (!token) {
+        return;
+      }
       try {
         const response = await fetch('/api/notifications', {
           headers: { 'Authorization': `Bearer ${token}` }
@@ -151,25 +152,22 @@ const HomePage = ({
           const data = await response.json();
           if (data.success && data.data) {
             setNotifications(data.data);
+          } else {
+            setNotifications([]);
           }
         } else {
-          console.error("Failed to fetch notifications:", response.statusText);
+          setNotifications([]);
         }
       } catch (error) {
-        console.error("Error fetching notifications:", error);
+        setNotifications([]);
       }
     };
-
     fetchNotifications();
-    // Optionally, set up an interval to refetch notifications periodically
-    // const intervalId = setInterval(fetchNotifications, 60000); // Fetch every minute
-    // return () => clearInterval(intervalId);
   }, [currentUser]);
 
   const handleMarkAsRead = async (notificationId) => {
     const token = localStorage.getItem('jwtToken');
     if (!token) return;
-
     try {
       const response = await fetch(`/api/notifications/${notificationId}/read`, {
         method: 'POST',
@@ -181,8 +179,6 @@ const HomePage = ({
             notif.id === notificationId ? { ...notif, read: true } : notif
           )
         );
-      } else {
-        console.error("Failed to mark notification as read:", response.statusText);
       }
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -192,30 +188,21 @@ const HomePage = ({
   const handleMarkAllAsRead = async () => {
     const token = localStorage.getItem('jwtToken');
     if (!token) return;
-
     const unreadNotificationIds = notifications.filter(notif => !notif.read).map(notif => notif.id);
-
     for (const id of unreadNotificationIds) {
       try {
-        const response = await fetch(`/api/notifications/${id}/read`, {
+        await fetch(`/api/notifications/${id}/read`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        if (!response.ok) {
-          console.error(`Failed to mark notification ${id} as read:`, response.statusText);
-        }
       } catch (error) {
         console.error(`Error marking notification ${id} as read:`, error);
       }
     }
-
     setNotifications(prev => prev.map(notif => ({ ...notif, read: true })));
   };
 
   const handleNameChangeConfirm = (newUsername) => {
-    console.log("New username from HomePage:", newUsername);
-    // Here you would typically dispatch an action to update the username in the backend
-    // and then update the currentUser state in App.jsx
     setShowNameChangePopup(false);
   };
 
@@ -252,7 +239,7 @@ const HomePage = ({
   const handleAddComment = (reviewId, content) => {
     if (selectedReview && selectedReview.id === reviewId) {
       const newComment = {
-        id: new Date().getTime(), // dummy id
+        id: new Date().getTime(),
         author: { username: currentUser?.username || 'You' },
         content: content,
       };
@@ -264,12 +251,22 @@ const HomePage = ({
     }
   };
 
-  // State for Review Feed
   const [reviews, setReviews] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0); // Backend uses 0-indexed pages
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [loadingReviews, setLoadingReviews] = useState(true);
   const [errorReviews, setErrorReviews] = useState(null);
+
+  // ShoppingList에서 사용할 항목들을 정의합니다.
+  const shoppingItems = [
+    "겨울 옷 구매",
+    "12월 식재료 구매",
+    "전기장판 구매",
+    "핸드워시 구매"
+  ];
+
+  // RecommendedReviews에 전달할 첫 번째 쇼핑 항목을 구성합니다.
+  const firstShoppingItem = shoppingItems.length > 0 ? `1번 ${shoppingItems[0]}` : "추천 항목 없음";
 
   const fetchReviews = async (page) => {
     setLoadingReviews(true);
@@ -278,9 +275,7 @@ const HomePage = ({
       const token = localStorage.getItem('jwtToken');
       const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
       const response = await fetch(`/api/reviews?page=${page}&sort=createDate,desc`, { headers });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       if (data.success && data.data) {
         setReviews(data.data.content);
@@ -289,7 +284,6 @@ const HomePage = ({
         setErrorReviews(data.error?.message || "Failed to fetch reviews.");
       }
     } catch (error) {
-      console.error("Error fetching reviews:", error);
       setErrorReviews("리뷰를 불러오는 중 오류가 발생했습니다.");
     } finally {
       setLoadingReviews(false);
@@ -312,356 +306,396 @@ const HomePage = ({
     return <div>{pages}</div>;
   };
 
-  // Dummy review data for HomePage's hardcoded blocks
-  const dummyReview = {
-    id: 1, // Unique ID
-    author: { username: "USERNAME" },
-    title: "스노우쉴드 롱패딩",
-    createDate: new Date(),
-    category: "의류",
-    content: "패딩이 정말 가볍고 따뜻해서 깜짝 놀랐어요. 안에 얇은 기모티만 입어도 충분히 한겨울 기온을 버틸 정도라서 요즘 거의 매일 입고 다닙니다. 지퍼도 부드럽게 잘 올라가고 주머니 털 안감도 포근해서 만족스러워요. 전체적으로 착용감이 편안해서 오래 입고 있어도 부담이 없고, 바람 부는 날에도 체온을 잘 유지해줘서 외출할 때마다 든든합니다. 디자인도 깔끔해서 어떤 옷과 매치해도 잘 어울려 데일리 아우터로 손색이 없어요. 개인적으로 이번 시즌에 산 옷 중 가장 만족스러워서 주변에도 적극 추천하고 싶을 정도입니다",
-    productLink: "제품 링크",
-    likeCount: 10,
-    commentCount: 10,
-    bookmarkCount: 10,
-    isLiked: false,
-    isBookmarked: false,
-    comments: []
-  };
-
   return (
     <>
-      <strong>Backend-API-Test:</strong> {apiMessage}
-    
-    <div className={styles.backgroundRectangle}></div> {/* 새로 추가 */}
-    {/* Corresponds to rectangle-11 */}
-    <div className={styles.mainContentArea}>
-      {/* Corresponds to frame-193 */}
-      <div className={styles.frame193}>
-        <div className={styles.frame192}> {/* Corresponds to frame-192 */}
-          <div className={styles.headerRow}> {/* 새로운 div */}
-            <div className={styles.usernameTitle}>
-              {currentUser?.username ? `${currentUser.username}님` : 'Guest'}의 소비현황
-            </div>
-            <div className={styles.frame282}>
-              <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
-              <div className={styles.frame914}>
-                <div className={styles._4000}>{points}</div>
+      <div className={styles.backgroundRectangle}></div>
+      <div className={styles.mainContentArea}>
+        <div className={styles.frame193}>
+          <div className={styles.frame192}>
+            <div className={styles.headerRow}>
+              <div className={styles.usernameTitle}>
+                {currentUser?.username ? `${currentUser.username}님` : 'Guest'}의 소비현황
               </div>
-              <div className={styles._6000pt}>승급까지 -6000PT</div>
+              <div className={styles.frame282}>
+                <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
+                <div className={styles.frame914}>
+                  <div className={styles._4000}>{points}</div>
+                </div>
+                <div className={styles._6000pt}>승급까지 -6000PT</div>
+              </div>
+            </div>
+            <div className={styles.div2Wrapper}>
+              <div className={styles.frame45}>
+                <div className={styles.consumptionAndVisitContainer}>
+                  <div className={styles.consumptionAndVisitSection}>
+                    <ConsumptionStatus 
+                      username={currentUser?.username || 'Guest'} 
+                      currentUser={currentUser} 
+                      monthlyCategories={monthlyCategories}
+                      weeklyCurrentConsumption={weeklyCurrentConsumption}
+                      weeklyTargetConsumption={weeklyTargetConsumption}
+                      monthlyCurrentConsumption={monthlyCurrentConsumption}
+                      monthlyTargetConsumption={monthlyTargetConsumption}
+                      lastFeedback={lastFeedback}
+                    />
+                    <VisitHistory onAttend={handleAttend} currentUser={currentUser} attendanceHistory={attendanceHistory} isAttendedToday={isAttendedToday} />
+                  </div>
+                </div>
+              </div>
+              <div className={styles.line1}></div>
             </div>
           </div>
-          <div className={styles.div2Wrapper}> {/* Corresponds to div2 */}
-            <div className={styles.frame45}> {/* Corresponds to frame-45 */}
-              <div className={styles.frame6}> {/* Corresponds to frame-6 */}
-                <ConsumptionStatus 
-                  username={currentUser?.username || 'Guest'} 
-                  currentUser={currentUser} 
-                  monthlyCategories={monthlyCategories}
-                  weeklyCurrentConsumption={weeklyCurrentConsumption}
-                  weeklyTargetConsumption={weeklyTargetConsumption}
-                  monthlyCurrentConsumption={monthlyCurrentConsumption}
-                  monthlyTargetConsumption={monthlyTargetConsumption}
-                  lastFeedback={lastFeedback}
-                />
-              </div>
-              {/* New container for VisitHistory and Attend button */}
-              <VisitHistory onAttend={handleAttend} currentUser={currentUser} /> {/* Render VisitHistory here */}
-              {/* Other elements from frame-45 if any */}
-            </div>
-            <div className={styles.line1}></div> {/* Corresponds to line-1 */}
-          </div>
-        </div>
-        <div className={styles.frame48}> {/* Corresponds to frame-48 */}
-          <div className={styles.frame207}> {/* Corresponds to frame-207 */}
-            <div className={styles.userInfo}>
-                          <div className={styles.frame291}>
-                            <div className={styles.frame209}>
-                              <div className={styles.profile}></div>
-                              <div className={styles.frame225}>
-                                <div className={styles.usernameInfo}>
-                                  <div className={styles.frame224}>
-                                    <div className={styles.frame223}>
-                                      <div className={styles.username}>{currentUser?.username ? `${currentUser.username}님` : 'Guest'}</div>
-                                    </div>
-                                  </div>
-                                  <div className={styles.userinfo1}>{currentUser?.email || 'guest@example.com'}</div>
-                                </div>
-                                <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
-                                    <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowMyProfileMoreInfoPopup(!showMyProfileMoreInfoPopup)} />
-                                    {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} currentUser={currentUser} />}
-                                  </div>
-                              </div>
-                            </div>
-                            
+          <div className={styles.frame48}>
+            <div className={styles.frame207}>
+              <div className={styles.userInfo}>
+                <div className={styles.frame291}>
+                  <div className={styles.frame209}>
+                    <div className={styles.profile}></div>
+                    <div className={styles.frame225}>
+                      <div className={styles.usernameInfo}>
+                        <div className={styles.frame224}>
+                          <div className={styles.frame223}>
+                            <div className={styles.username}>{currentUser?.username ? `${currentUser.username}님` : 'Guest'}</div>
                           </div>
                         </div>
-            <div className={`${styles.actionButton} ${styles.primary}`} onClick={() => navigate('/review-write')}>
-              리뷰 작성
-            </div>
-            <div className={`${styles.actionButton} ${styles.secondary}`} onClick={() => navigate('/mypage')}>
-              내 리뷰
-            </div>
-            <div className={styles.notificationsCard}>
-              <div className={styles.notificationsHeader}>
-                알림
+                        <div className={styles.userinfo1}>{currentUser?.email || 'guest@example.com'}</div>
+                      </div>
+                      <div className={styles.moreOptionsContainer} ref={moreOptionsRef}>
+                        <img className={styles.riMoreLine} src="/More_info.svg" alt="More options" onClick={() => setShowMyProfileMoreInfoPopup(!showMyProfileMoreInfoPopup)} />
+                        {showMyProfileMoreInfoPopup && <MyProfileMoreInfoPopup onClose={() => setShowMyProfileMoreInfoPopup(false)} onNameChangeClick={() => setShowNameChangePopup(true)} currentUser={currentUser} />}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className={styles.line5}></div>
-              <div className={styles.notificationsList}> {/* New div for scrollable list */}
-                {notifications.length > 0 ? (
-                  notifications.map(notification => (
-                    <NotificationItem
-                      key={notification.id}
-                      notification={notification}
-                      onMarkAsRead={handleMarkAsRead}
-                    />
-                  ))
-                ) : (
-                  <div className={styles.noNotifications}>새로운 알림이 없습니다.</div>
+              <div className={`${styles.actionButton} ${styles.primary}`} onClick={() => navigate('/review-write')}>
+                리뷰 작성
+              </div>
+              <div className={`${styles.actionButton} ${styles.secondary}`} onClick={() => navigate('/mypage')}>
+                내 리뷰
+              </div>
+              <div className={styles.notificationsCard}>
+                <div className={styles.notificationsHeader}>
+                  알림
+                </div>
+                <div className={styles.line5}></div>
+                <div className={styles.notificationsList}>
+                  {notifications.length > 0 ? (
+                    notifications.map(notification => (
+                      <NotificationItem
+                        key={notification.id}
+                        notification={notification}
+                        onMarkAsRead={handleMarkAsRead}
+                      />
+                    ))
+                  ) : (
+                    <div className={styles.noNotifications}>새로운 알림이 없습니다.</div>
+                  )}
+                </div>
+                {notifications.filter(n => !n.read).length > 0 && (
+                  <button onClick={handleMarkAllAsRead} className={styles.markAllAsReadButton}>
+                    모두 읽음으로 표시
+                  </button>
                 )}
               </div>
-              {notifications.filter(n => !n.read).length > 0 && (
-                <button onClick={handleMarkAllAsRead} className={styles.markAllAsReadButton}>
-                  모두 읽음으로 표시
-                </button>
-              )}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Corresponds to frame-142 */}
-      <div className={styles.frame142}>
-        <div className={styles.line42}></div> {/* Corresponds to line-42 */}
-        <div className={styles.frame117}> {/* Corresponds to frame-117 */}
-          <ShoppingList />
-          <RecommendedReviews openReviewPopup={openReviewPopup} />
-        </div>
-      </div>
-
-      <div className={styles.frame145}>
-        <div className={styles.line42}></div>
-        <div className={styles.frame143}>
-          <div className={styles.reviewFeedHeader}>
-            <div className={styles.reviewFeedTitle}>리뷰 피드</div>
-            {renderPageNumbers()}
+        <div className={styles.frame142}>
+          <div className={styles.line42}></div>
+          <div className={styles.frame117}>
+            <ShoppingList />
+            <RecommendedReviews shoppingItem={firstShoppingItem} />
           </div>
-          {loadingReviews ? (
-            <div>리뷰를 불러오는 중...</div>
-          ) : errorReviews ? (
-            <div>오류: {errorReviews}</div>
-          ) : (
-            <div className={styles.frame144}>
-              {reviews.length > 0 ? (
-                reviews.map(review => (
-                  <ReviewCard key={review.id} review={review} onClick={openReviewPopup} styles={styles} />
-                ))
-              ) : (
-                <div>리뷰가 없습니다.</div>
-              )}
+        </div>
+        <div className={styles.frame145}>
+          <div className={styles.line42}></div>
+          <div className={styles.frame143}>
+            <div className={styles.reviewFeedHeader}>
+              <div className={styles.reviewFeedTitle}>리뷰 피드</div>
+              {renderPageNumbers()}
             </div>
-          )}
+            {loadingReviews ? (
+              <div>리뷰를 불러오는 중...</div>
+            ) : errorReviews ? (
+              <div>오류: {errorReviews}</div>
+            ) : (
+              <div className={styles.frame144}>
+                {reviews.length > 0 ? (
+                  reviews.map(review => (
+                    <ReviewCard key={review.id} review={review} onClick={openReviewPopup} styles={styles} />
+                  ))
+                ) : (
+                  <div>리뷰가 없습니다.</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-    {isReviewPopupOpen && selectedReview && (
-      <ReviewPopup
-        review={selectedReview}
-        onClose={closeReviewPopup}
-        onLikeToggle={handleLikeToggle}
-        onBookmarkToggle={handleBookmarkToggle}
-        onAddComment={handleAddComment}
-        currentUser={currentUser}
-      />
-    )}
-    {showNameChangePopup && (
-      <NameChangePopup
-        onClose={() => setShowNameChangePopup(false)}
-        onConfirm={handleNameChangeConfirm}
-        currentUsername={currentUser?.username}
-      />
-    )}
+      {isReviewPopupOpen && selectedReview && (
+        <ReviewPopup
+          review={selectedReview}
+          onClose={closeReviewPopup}
+          onLikeToggle={handleLikeToggle}
+          onBookmarkToggle={handleBookmarkToggle}
+          onAddComment={handleAddComment}
+          currentUser={currentUser}
+        />
+      )}
+      {showNameChangePopup && (
+        <NameChangePopup
+          onClose={() => setShowNameChangePopup(false)}
+          onConfirm={handleNameChangeConfirm}
+          currentUsername={currentUser?.username}
+        />
+      )}
     </>
   );
 };
 
 function App() {
-  const [user, setUser] = useState({ username: 'Consight', userInfo: '콘사이트에 오신 것을 환영합니다!' });
+  
   const [apiMessage, setApiMessage] = useState("Loading...");
-  const [currentUser, setCurrentUser] = useState(null); // Initialize to null
+  const [currentUser, setCurrentUser] = useState(null);
   const [monthlyCategories, setMonthlyCategories] = useState([]);
   const [weeklyCategories, setWeeklyCategories] = useState([
-    { id: 1, name: '식비', current: 5, target: 10, color: '#A7C7E7' }, // Desaturated Blue
-    { id: 2, name: '교통', current: 2, target: 3, color: '#B0E0E6' }, // Desaturated Green
-    { id: 3, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0' }, // Desaturated Light Green
-    { id: 4, name: '문화생활', current: 1, target: 4, color: '#FFFACD' }, // Desaturated Yellow
+    { id: 1, name: '식비', current: 5, target: 10, color: '#A7C7E7' },
+    { id: 2, name: '교통', current: 2, target: 3, color: '#B0E0E6' },
+    { id: 3, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0' },
+    { id: 4, name: '문화생활', current: 1, target: 4, color: '#FFFACD' },
   ]);
   const [lastFeedback, setLastFeedback] = useState(null);
-  const [points, setPoints] = useState(4000); // 포인트 상태 추가
+  const [submittedFeedback, setSubmittedFeedback] = useState([]); // submittedFeedback 상태를 빈 배열로 초기화
+  const [points, setPoints] = useState(0);
+  const [attendanceHistory, setAttendanceHistory] = useState([]);
+  const [isAttendedToday, setIsAttendedToday] = useState(false);
 
-  // Function to validate token with backend
-  const validateToken = async (token) => {
+  const handleFeedbackSubmit = (feedbackText, satisfactionRating) => {
+    setSubmittedFeedback({ text: feedbackText, rating: satisfactionRating, date: new Date().toISOString() });
+    setLastFeedback({ text: feedbackText, rating: satisfactionRating, date: new Date().toISOString() });
+  };
+
+  const handleAttend = async () => {
+    if (!currentUser || !currentUser.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
     try {
-      const response = await fetch('/api/reviews/me', { // Using /api/reviews/me as an authenticated endpoint
-        headers: { 'Authorization': `Bearer ${token}` }
+      const response = await fetch('/api/attendance', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
-      return response.ok; // True if 200 OK, false otherwise (e.g., 401)
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          alert("출석 체크 완료! " + data.pointsEarned + " 포인트를 획득했습니다.");
+          setPoints(prevPoints => prevPoints + data.pointsEarned);
+          setAttendanceHistory(prevHistory => [...prevHistory, new Date()]);
+          setIsAttendedToday(true);
+        } else {
+          alert(data.error?.message || "출석 체크에 실패했습니다.");
+        }
+      } else {
+        alert("출석 체크 서버 오류.");
+      }
     } catch (error) {
-      console.error("Token validation failed:", error);
-      return false;
+      console.error("Error during attendance:", error);
+      alert("출석 체크 중 오류가 발생했습니다.");
     }
   };
 
-  // Effect to initialize currentUser from localStorage and validate token
+  const weeklyCurrentConsumption = useMemo(() => {
+    if (!Array.isArray(weeklyCategories)) return 0;
+    return weeklyCategories.reduce((sum, category) => sum + category.current, 0);
+  }, [weeklyCategories]);
+
+  const weeklyTargetConsumption = useMemo(() => {
+    if (!Array.isArray(weeklyCategories)) return 0;
+    return weeklyCategories.reduce((sum, category) => sum + category.target, 0);
+  }, [weeklyCategories]);
+
+  const monthlyCurrentConsumption = useMemo(() => {
+    if (!Array.isArray(monthlyCategories)) return 0;
+    return monthlyCategories.reduce((sum, category) => sum + category.current, 0);
+  }, [monthlyCategories]);
+
+  const monthlyTargetConsumption = useMemo(() => {
+    if (!Array.isArray(monthlyCategories)) return 0;
+    return monthlyCategories.reduce((sum, category) => sum + category.target, 0);
+  }, [monthlyCategories]);
+
+  const validateToken = async (token) => {
+    try {
+      const response = await fetch('/api/users/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          return data.data;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Token validation failed:", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const initializeUser = async () => {
       const storedToken = localStorage.getItem('jwtToken');
-      const storedUsername = localStorage.getItem('username');
-      const storedEmail = localStorage.getItem('email');
-
-      if (storedToken && storedUsername && storedEmail) {
-        const isValid = await validateToken(storedToken);
-        if (isValid) {
-          setCurrentUser({ username: storedUsername, email: storedEmail, id: 1 });
+      if (storedToken) {
+        const userDto = await validateToken(storedToken);
+        if (userDto) {
+          setCurrentUser({ username: userDto.username, email: userDto.email, id: userDto.id });
         } else {
-          // Token is invalid, clear localStorage
           localStorage.removeItem('jwtToken');
           localStorage.removeItem('username');
           localStorage.removeItem('email');
           setCurrentUser(null);
         }
       } else {
-        setCurrentUser(null); // No stored token, ensure currentUser is null
+        setCurrentUser(null);
       }
     };
     initializeUser();
-  }, []); // Run only once on mount
-
-  const fetchPoints = async () => {
-    if (!currentUser || !currentUser.id) return;
-
-    const token = localStorage.getItem('jwtToken');
-    if (!token) return;
-
-    try {
-      const response = await fetch(`/api/attendance/info?userId=${currentUser.id}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setPoints(data.points);
-      } else {
-        console.error("Failed to fetch points");
-      }
-    } catch (error) {
-      console.error("Error fetching points:", error);
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchPoints();
+    const fetchData = async () => {
+      if (!currentUser || !currentUser.id) {
+        setPoints(0);
+        setAttendanceHistory([]);
+        setIsAttendedToday(false);
+        setMonthlyCategories([]); // Clear categories on logout
+        setWeeklyCategories([]); // Clear categories on logout
+        return;
+      }
+      const token = localStorage.getItem('jwtToken');
+      if (!token) {
+        setPoints(0);
+        setAttendanceHistory([]);
+        setIsAttendedToday(false);
+        setMonthlyCategories([]); // Clear categories if no token
+        setWeeklyCategories([]); // Clear categories if no token
+        return;
+      }
+
+      // Fetch user info (including points)
+      try {
+        const response = await fetch(`/api/users/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            setPoints(data.data.points);
+          }
+        } else {
+          console.error("Failed to fetch user info (points)");
+        }
+      } catch (error) {
+        console.error("Error fetching user info (points):", error);
+      }
+
+      // Fetch attendance history
+      try {
+        const response = await fetch(`/api/attendance/history`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setAttendanceHistory(data.map(dateString => new Date(dateString)));
+        }
+      } catch (error) {
+        console.error("Error fetching attendance history:", error);
+      }
+
+      // Check if attended today
+      try {
+        const response = await fetch(`/api/attendance/today`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setIsAttendedToday(data.attended);
+        }
+      } catch (error) {
+        console.error("Error checking today's attendance:", error);
+      }
+
+      // Fetch consumption categories
+      try {
+        const response = await fetch(`/api/consumption/categories`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && data.data) {
+            const fetchedMonthly = data.data.filter(cat => cat.type === 'MONTHLY');
+            const fetchedWeekly = data.data.filter(cat => cat.type === 'WEEKLY');
+            setMonthlyCategories(fetchedMonthly.length > 0 ? fetchedMonthly : [
+              { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
+              { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
+              { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
+              { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
+            ]);
+            setWeeklyCategories(fetchedWeekly.length > 0 ? fetchedWeekly : [
+              { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
+              { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
+              { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
+              { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
+            ]);
+          }
+        } else {
+          console.error("Failed to fetch consumption categories:", response.statusText);
+          // Fallback to default hardcoded values if fetch fails
+          setMonthlyCategories([
+            { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
+            { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
+            { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
+            { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
+          ]);
+          setWeeklyCategories([
+            { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
+            { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
+            { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
+            { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching consumption categories:", error);
+        // Fallback to default hardcoded values on error
+        setMonthlyCategories([
+          { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
+          { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
+          { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
+          { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
+        ]);
+        setWeeklyCategories([
+          { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
+          { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
+          { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
+          { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
+        ]);
+      }
+    };
+    fetchData();
   }, [currentUser]);
 
-  const handleAttend = async () => {
-    if (!currentUser || !currentUser.id) {
-      alert("로그인이 필요합니다.");
-      return false;
-    }
-
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-      alert("로그인이 필요합니다.");
-      return false;
-    }
-
-    try {
-      const response = await fetch(`/api/attendance/check?userId=${currentUser.id}`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      const resultMessage = await response.text();
-      alert(resultMessage);
-
-      if (response.ok) {
-        fetchPoints();
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Error during attendance check:", error);
-      alert("출석 체크 중 오류가 발생했습니다.");
-      return false;
-    }
-  };
-
-  // ConsumePlanPage related states and handlers
-  const [submittedFeedback, setSubmittedFeedback] = useState([]);
-  const handleFeedbackSubmit = (feedbackData) => {
-    setSubmittedFeedback(prev => [...prev, feedbackData]);
-    setLastFeedback(feedbackData); // Update lastFeedback with the newly submitted feedback
-  };
-
-  const [showAllCategories, setShowAllCategories] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState('');
-  const [newCategoryTarget, setNewCategoryTarget] = useState(0);
-  const [showAddCategoryInput, setShowAddCategoryInput] = useState(false);
-
-  const handleAddCategory = () => {
-    if (newCategoryName && newCategoryTarget > 0) {
-      setMonthlyCategories(prev => [...prev, { id: prev.length + 1, name: newCategoryName, current: 0, target: newCategoryTarget, color: '#D3D3D3' }]); // Desaturated Gray
-      setNewCategoryName('');
-      setNewCategoryTarget(0);
-      setShowAddCategoryInput(false);
-    } else {
-      alert('카테고리 이름과 목표 금액을 입력해주세요.');
-    }
-  };
-
-  const [showUpdateMonthlyConsumptionPopup, setShowUpdateMonthlyConsumptionPopup] = useState(false);
-
-  const [showAllWeeklyCategories, setShowAllWeeklyCategories] = useState(false);
-  const [newWeeklyCategoryName, setNewWeeklyCategoryName] = useState('');
-  const [newWeeklyCategoryTarget, setNewWeeklyCategoryTarget] = useState(0);
-  const [showAddWeeklyCategoryInput, setShowAddWeeklyCategoryInput] = useState(false);
-
-  const handleAddWeeklyCategory = () => {
-    if (newWeeklyCategoryName && newWeeklyCategoryTarget > 0) {
-      setWeeklyCategories(prev => [...prev, { id: prev.length + 1, name: newWeeklyCategoryName, current: 0, target: newWeeklyCategoryTarget, color: '#D3D3D3' }]); // Desaturated Gray
-      setNewWeeklyCategoryName('');
-      setNewWeeklyCategoryTarget(0);
-      setShowAddWeeklyCategoryInput(false);
-    } else {
-      alert('주간 카테고리 이름과 목표 금액을 입력해주세요.');
-    }
-  };
-
-  const [showUpdateWeeklyConsumptionPopup, setShowUpdateWeeklyConsumptionPopup] = useState(false);
-
-  // Calculate total weekly consumption and target
-  const weeklyCurrentConsumption = useMemo(() => {
-    return weeklyCategories.reduce((sum, category) => sum + category.current, 0);
-  }, [weeklyCategories]);
-
-  const weeklyTargetConsumption = useMemo(() => {
-    return weeklyCategories.reduce((sum, category) => sum + category.target, 0);
-  }, [weeklyCategories]);
-
-  // Calculate total monthly consumption and target
-  const monthlyCurrentConsumption = useMemo(() => {
-    return monthlyCategories.reduce((sum, category) => sum + category.current, 0);
-  }, [monthlyCategories]);
-
-  const monthlyTargetConsumption = useMemo(() => {
-    return monthlyCategories.reduce((sum, category) => sum + category.target, 0);
-  }, [monthlyCategories]);
-
-  useEffect(() => {
-    fetch("/api/hello")
-      .then((res) => res.text())
-      .then(setApiMessage)
-      .catch(err => console.error("Failed to fetch API message:", err));
-  }, []);
+  
 
   return (
     <BrowserRouter>
@@ -683,6 +717,8 @@ function App() {
                   lastFeedback={lastFeedback}
                   points={points}
                   handleAttend={handleAttend}
+                  attendanceHistory={attendanceHistory}
+                  isAttendedToday={isAttendedToday}
                 />
               } 
             />
@@ -695,30 +731,8 @@ function App() {
                   currentUser={currentUser}
                   monthlyCategories={monthlyCategories}
                   setMonthlyCategories={setMonthlyCategories}
-                  showAllCategories={showAllCategories}
-                  setShowAllCategories={setShowAllCategories}
-                  newCategoryName={newCategoryName}
-                  setNewCategoryName={setNewCategoryName}
-                  newCategoryTarget={newCategoryTarget}
-                  setNewCategoryTarget={setNewCategoryTarget}
-                  showAddCategoryInput={showAddCategoryInput}
-                  setShowAddCategoryInput={setShowAddCategoryInput}
-                  handleAddCategory={handleAddCategory}
-                  showUpdateMonthlyConsumptionPopup={showUpdateMonthlyConsumptionPopup}
-                  setShowUpdateMonthlyConsumptionPopup={setShowUpdateMonthlyConsumptionPopup}
                   weeklyCategories={weeklyCategories}
                   setWeeklyCategories={setWeeklyCategories}
-                  showAllWeeklyCategories={showAllWeeklyCategories}
-                  setShowAllWeeklyCategories={setShowAllWeeklyCategories}
-                  newWeeklyCategoryName={newWeeklyCategoryName}
-                  setNewWeeklyCategoryName={setNewWeeklyCategoryName}
-                  newWeeklyCategoryTarget={newWeeklyCategoryTarget}
-                  setNewWeeklyCategoryTarget={newWeeklyCategoryTarget}
-                  showAddWeeklyCategoryInput={showAddWeeklyCategoryInput}
-                  setShowAddWeeklyCategoryInput={setShowAddWeeklyCategoryInput}
-                  handleAddWeeklyCategory={handleAddWeeklyCategory}
-                  showUpdateWeeklyConsumptionPopup={showUpdateWeeklyConsumptionPopup}
-                  setShowUpdateWeeklyConsumptionPopup={setShowUpdateWeeklyConsumptionPopup}
                   submittedFeedback={submittedFeedback}
                   handleFeedbackSubmit={handleFeedbackSubmit}
                   weeklyCurrentConsumption={weeklyCurrentConsumption}
@@ -742,6 +756,7 @@ function App() {
                   lastFeedback={lastFeedback}
                   weeklyCurrentConsumption={weeklyCurrentConsumption}
                   weeklyTargetConsumption={weeklyTargetConsumption}
+                  handleAttend={handleAttend}
                 />
               } 
             />

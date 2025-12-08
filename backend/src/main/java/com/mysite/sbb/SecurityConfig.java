@@ -57,6 +57,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // 아래 경로들은 인증 없이 접근 허용
                 .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
+                .requestMatchers("/api/consumption/**").authenticated() // 소비계획 API 인증 명시
+                .requestMatchers(HttpMethod.POST, "/api/attendance").authenticated() // 출석 체크 인증 명시
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/view").permitAll() // 조회수 업데이트
                 .requestMatchers(HttpMethod.GET, "/api/reviews/me").authenticated() // /me 경로는 인증 필요
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() // 나머지 GET 요청은 허용
@@ -72,8 +74,7 @@ public class SecurityConfig {
             // 로그아웃 설정 (필요 시 커스터마이징)
             .logout((logout) -> logout
                     .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                    .logoutSuccessUrl("/")
-                    .invalidateHttpSession(true))
+                    .logoutSuccessUrl("/"))
             
             // 우리가 만든 JWT 필터를 Spring Security 필터 체인에 추가
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

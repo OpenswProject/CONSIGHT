@@ -2,6 +2,9 @@
 FROM node:lts-alpine AS builder
 WORKDIR /app
 
+# Clean up previous build artifacts and node_modules to ensure a fresh start
+RUN rm -rf node_modules dist
+
 # Copy package.json and package-lock.json to install dependencies
 COPY package.json package-lock.json ./
 
@@ -10,6 +13,10 @@ RUN npm install
 
 # Copy the rest of the application code
 COPY . .
+
+# Debugging: List contents to verify files are copied
+RUN ls -la /app
+RUN ls -la /app/src/pages
 
 # Build the React application
 RUN npm run build

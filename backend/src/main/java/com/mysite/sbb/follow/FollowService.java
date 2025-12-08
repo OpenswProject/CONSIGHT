@@ -21,6 +21,10 @@ public class FollowService {
 
     @Transactional
     public void follow(String followeeUsername, String followerUsername) {
+        if (followerUsername.equals(followeeUsername)) {
+            throw new IllegalStateException("Users cannot follow themselves.");
+        }
+        log.info("Attempting to create follow relationship: follower='{}', followee='{}'", followerUsername, followeeUsername);
         SiteUser followee = userService.getUser(followeeUsername);
         SiteUser follower = userService.getUser(followerUsername);
 
@@ -48,9 +52,7 @@ public class FollowService {
     public List<SiteUser> getFollowers(String username) {
         log.info("Fetching followers for user: {}", username);
         SiteUser user = userService.getUser(username);
-        List<SiteUser> followers = followRepository.findByFollowee(user).stream()
-                .map(Follow::getFollower)
-                .collect(Collectors.toList());
+        List<SiteUser> followers = followRepository.findFollowersOf(user.getId());
         log.info("Found {} followers for user {}: {}", followers.size(), username, followers.stream().map(SiteUser::getUsername).collect(Collectors.joining(", ")));
         return followers;
     }

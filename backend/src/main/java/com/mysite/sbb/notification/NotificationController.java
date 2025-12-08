@@ -21,9 +21,9 @@ public class NotificationController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<APIResponse<List<Notification>>> getNotifications(Principal principal) {
+    public ResponseEntity<APIResponse<List<NotificationDto>>> getNotifications(Principal principal) {
         SiteUser user = userService.getUser(principal.getName());
-        List<Notification> notifications = notificationService.getNotificationsForUser(user);
+        List<NotificationDto> notifications = notificationService.getNotificationsForUser(user);
         return ResponseEntity.ok(APIResponse.success("Notifications fetched successfully.", notifications));
     }
 

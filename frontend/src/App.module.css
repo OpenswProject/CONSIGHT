@@ -238,13 +238,21 @@
   padding: 12px 111px 0px 111px;
   display: flex;
   flex-direction: row;
-  gap: 45px;
+  gap: 20px; /* Adjusted gap */
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 100%; /* Adjusted for responsiveness */
   height: 347px;
   position: relative;
+}
+
+.consumptionAndVisitSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Gap between ConsumptionStatus and VisitHistory */
+  width: 100%; /* Ensure it takes full width of its parent */
+  align-items: flex-start; /* Align items to the top */
 }
 
 .line1 { /* Corresponds to .line-1 */
@@ -1353,11 +1361,11 @@
 .notificationsCard {
   background-color: var(--gray-f3);
   border-radius: 20px; /* Changed from 12px to 20px */
-  padding: 11px 14px 110px 14px; /* Matches frame-199 padding */
+  padding: 11px 14px 20px 14px; /* Adjusted padding */
   border: 1.5px solid #dadee1; /* Matches frame-199 border */
   width: 100%;
   box-shadow: none; /* Removed box-shadow */
-  height: 318px; /* Matches frame-199 height */
+  height: 265px; /* Increased height */
   position: relative;
   display: flex;
   flex-direction: column;
