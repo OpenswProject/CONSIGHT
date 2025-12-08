@@ -6,7 +6,7 @@ const UpdateConsumptionPopup = ({ onClose, title, categories, setCategories }) =
   const [categoryInputs, setCategoryInputs] = useState(() => {
     const initialInputs = {};
     categories.forEach(category => {
-      initialInputs[category.id] = category.current;
+      initialInputs[category.id] = category.currentAmount;
     });
     return initialInputs;
   });
@@ -27,8 +27,8 @@ const UpdateConsumptionPopup = ({ onClose, title, categories, setCategories }) =
 
     const updatedCategories = await Promise.all(
       categories.map(async category => {
-        const newCurrent = categoryInputs[category.id] !== undefined ? categoryInputs[category.id] : category.current;
-        if (category.id && newCurrent !== category.current) { // Only update if ID exists and value changed
+        const newCurrent = categoryInputs[category.id] !== undefined ? categoryInputs[category.id] : category.currentAmount;
+        if (category.id && newCurrent !== category.currentAmount) { // Only update if ID exists and value changed
           try {
             const response = await fetch(`/api/consumption/categories/${category.id}`, {
               method: 'PUT',
@@ -40,7 +40,7 @@ const UpdateConsumptionPopup = ({ onClose, title, categories, setCategories }) =
                 id: category.id,
                 name: category.name,
                 type: category.type,
-                targetAmount: category.target,
+                targetAmount: category.targetAmount,
                 currentAmount: newCurrent,
                 color: category.color
               })
@@ -62,7 +62,7 @@ const UpdateConsumptionPopup = ({ onClose, title, categories, setCategories }) =
             return category; // Return original on error
           }
         }
-        return { ...category, current: newCurrent }; // Return with new current if not updated via API (e.g. no ID)
+        return { ...category, currentAmount: newCurrent }; // Return with new current if not updated via API (e.g. no ID)
       })
     );
     setCategories(updatedCategories);

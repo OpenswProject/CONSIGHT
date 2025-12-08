@@ -56,4 +56,8 @@ public class ConsumptionCategoryService {
             // Optionally throw an exception if user is not authorized
         });
     }
+
+    public void deleteAllByUser(SiteUser user) {
+        consumptionCategoryRepository.deleteAllByUser(user);
+    }
 }

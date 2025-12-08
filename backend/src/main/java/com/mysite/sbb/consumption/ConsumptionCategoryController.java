@@ -50,4 +50,11 @@ public class ConsumptionCategoryController {
         return category.map(value -> ResponseEntity.ok(APIResponse.success("Category updated successfully", value)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResponse.error("Category not found or permission denied", HttpStatus.NOT_FOUND.value(), null)));
     }
+
+    @DeleteMapping("/categories/all")
+    public ResponseEntity<APIResponse<Void>> deleteAllCategories(Principal principal) {
+        SiteUser user = userService.getUser(principal.getName());
+        consumptionCategoryService.deleteAllByUser(user);
+        return ResponseEntity.ok(APIResponse.success("All categories deleted successfully", null));
+    }
 }

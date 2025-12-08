@@ -19,81 +19,6 @@ import NameChangePopup from "./components/NameChangePopup/NameChangePopup";
 import ReviewPopup from "./components/ReviewPopup";
 import NotificationItem from "./components/NotificationItem/NotificationItem";
 
-const ReviewCard = ({ review, onClick, styles }) => (
-  <div className={styles.frame120} onClick={() => onClick(review)}>
-    <div className={styles.frame107}>
-      <div className={styles.frame138}>
-        <div className={styles.frame194}>
-          <div className={styles.frame134}>
-            <div className={styles.frame109}>
-              <div className={styles.frame113}>
-                <div className={styles.frame1072}>
-                  <div className={styles.frame106}>
-                    <div className={styles.frame243}>
-                      <div className={styles.frame1092}>
-                        <div className={styles.profile}></div>
-                        <div className={styles.username}>{review.author?.username || 'Unknown'}</div>
-                      </div>
-                      <img className={styles.riMoreLine} src="/More_info.svg" alt="More Options" />
-                    </div>
-                    <div className={styles.frame251}>
-                      <div className={styles.div}>{review.title}</div>
-                      {review.receiptImagePath && <img className={styles.maskGroup} src={review.receiptImagePath} alt="Product Image" />}
-                    </div>
-                    <div className={styles.iconParkSolidCheckOne}></div>
-                  </div>
-                  <div className={styles.frame108}>
-                    <div className={styles._20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
-                    <div className={styles.frame91}>
-                      <div className={styles.div2}>{review.category}</div>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.frame110}>
-                  <div className={styles.div3}>
-                    {review.content}
-                  </div>
-                  {review.productLink && (
-                    <div className={styles.frame111}>
-                      <div className={styles.frame912}>
-                        <a href={review.productLink} target="_blank" rel="noopener noreferrer" className={styles.div4}>제품 링크</a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className={styles.frame129}></div>
-          </div>
-          <div className={styles.frame156}>
-            <div className={styles.line5}></div>
-            <div className={styles.frame246}>
-              <div className={styles.frame248}>
-                <img className={styles.frame131} src="/bookmark_icon.svg" alt="Bookmark" />
-                <div className={styles.frame247}>
-                  <div className={styles._10}>{review.bookmarkCount}</div>
-                </div>
-              </div>
-              <div className={styles.frame249}>
-                <img className={styles.frame132} src="/comment_icon.svg" alt="Comment" />
-                <div className={styles.frame247}>
-                  <div className={styles._10}>{review.commentCount}</div>
-                </div>
-              </div>
-              <div className={styles.frame250}>
-                <img className={styles.frame130} src="/like.svg" alt="Like" />
-                <div className={styles.frame247}>
-                  <div className={styles._10}>{review.likeCount}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
 const HomePage = ({ 
   apiMessage, 
   currentUser, 
@@ -116,6 +41,81 @@ const HomePage = ({
 
   const [isReviewPopupOpen, setIsReviewPopupOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+
+  const ReviewCard = ({ review, onClick, styles }) => (
+    <div className={styles.frame120} onClick={() => onClick(review)}>
+      <div className={styles.frame107}>
+        <div className={styles.frame138}>
+          <div className={styles.frame194}>
+            <div className={styles.frame134}>
+              <div className={styles.frame109}>
+                <div className={styles.frame113}>
+                  <div className={styles.frame1072}>
+                    <div className={styles.frame106}>
+                      <div className={styles.frame243}>
+                        <div className={styles.frame1092}>
+                          <div className={styles.profile}></div>
+                          <div className={styles.username}>{review.author?.username || 'Unknown'}</div>
+                        </div>
+                        <img className={styles.riMoreLine} src="/More_info.svg" alt="More Options" />
+                      </div>
+                      <div className={styles.frame251}>
+                        <div className={styles.div}>{review.title}</div>
+                        {review.receiptImagePath && <img className={styles.maskGroup} src={review.receiptImagePath} alt="Product Image" />}
+                      </div>
+                      <div className={styles.iconParkSolidCheckOne}></div>
+                    </div>
+                    <div className={styles.frame108}>
+                      <div className={styles._20251116}>{new Date(review.createDate).toLocaleDateString()}</div>
+                      <div className={styles.frame91}>
+                        <div className={styles.div2}>{review.category}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.frame110}>
+                    <div className={styles.div3}>
+                      {review.content}
+                    </div>
+                    {review.productLink && (
+                      <div className={styles.frame111}>
+                        <div className={styles.frame912}>
+                          <a href={review.productLink} target="_blank" rel="noopener noreferrer" className={styles.div4}>제품 링크</a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.frame129}></div>
+            </div>
+            <div className={styles.frame156}>
+              <div className={styles.line5}></div>
+              <div className={styles.frame246}>
+                <div className={styles.frame248}>
+                  <img className={styles.frame131} src="/bookmark_icon.svg" alt="Bookmark" />
+                  <div className={styles.frame247}>
+                    <div className={styles._10}>{review.bookmarkCount}</div>
+                  </div>
+                </div>
+                <div className={styles.frame249}>
+                  <img className={styles.frame132} src="/comment_icon.svg" alt="Comment" />
+                  <div className={styles.frame247}>
+                    <div className={styles._10}>{review.commentCount}</div>
+                  </div>
+                </div>
+                <div className={styles.frame250}>
+                  <img className={styles.frame130} src="/like.svg" alt="Like" />
+                  <div className={styles.frame247}>
+                    <div className={styles._10}>{review.likeCount}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -265,8 +265,20 @@ const HomePage = ({
     "핸드워시 구매"
   ];
 
-  // RecommendedReviews에 전달할 첫 번째 쇼핑 항목을 구성합니다.
-  const firstShoppingItem = shoppingItems.length > 0 ? `1번 ${shoppingItems[0]}` : "추천 항목 없음";
+  // 현재 선택된 쇼핑 항목 상태
+  const [selectedShoppingItem, setSelectedShoppingItem] = useState(
+    shoppingItems.length > 0 ? { index: 0, name: shoppingItems[0] } : null
+  );
+
+  // 쇼핑 항목 클릭 핸들러
+  const handleShoppingItemClick = (index, name) => {
+    setSelectedShoppingItem({ index, name });
+  };
+
+  // RecommendedReviews에 전달할 선택된 쇼핑 항목을 구성합니다.
+  const recommendedReviewItem = selectedShoppingItem 
+    ? `${selectedShoppingItem.index + 1}번 ${selectedShoppingItem.name}` 
+    : "추천 항목 없음";
 
   const fetchReviews = async (page) => {
     setLoadingReviews(true);
@@ -305,6 +317,8 @@ const HomePage = ({
     }
     return <div>{pages}</div>;
   };
+
+  console.log("HomePage rendering, openReviewPopup:", openReviewPopup);
 
   return (
     <>
@@ -404,8 +418,11 @@ const HomePage = ({
         <div className={styles.frame142}>
           <div className={styles.line42}></div>
           <div className={styles.frame117}>
-            <ShoppingList />
-            <RecommendedReviews shoppingItem={firstShoppingItem} />
+            <ShoppingList 
+              shoppingItems={shoppingItems} 
+              onItemClick={handleShoppingItemClick} 
+            />
+            <RecommendedReviews shoppingItem={recommendedReviewItem} />
           </div>
         </div>
         <div className={styles.frame145}>
@@ -422,9 +439,10 @@ const HomePage = ({
             ) : (
               <div className={styles.frame144}>
                 {reviews.length > 0 ? (
-                  reviews.map(review => (
-                    <ReviewCard key={review.id} review={review} onClick={openReviewPopup} styles={styles} />
-                  ))
+                  reviews.map(review => {
+                    console.log("ReviewCard rendering, onClick prop:", openReviewPopup);
+                    return <ReviewCard key={review.id} review={review} onClick={openReviewPopup} styles={styles} />;
+                  })
                 ) : (
                   <div>리뷰가 없습니다.</div>
                 )}
@@ -471,9 +489,9 @@ function App() {
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [isAttendedToday, setIsAttendedToday] = useState(false);
 
-  const handleFeedbackSubmit = (feedbackText, satisfactionRating) => {
-    setSubmittedFeedback({ text: feedbackText, rating: satisfactionRating, date: new Date().toISOString() });
-    setLastFeedback({ text: feedbackText, rating: satisfactionRating, date: new Date().toISOString() });
+  const handleFeedbackSubmit = (feedbackData) => {
+    setSubmittedFeedback(prevFeedbacks => [...prevFeedbacks, feedbackData]);
+    setLastFeedback(feedbackData);
   };
 
   const handleAttend = async () => {

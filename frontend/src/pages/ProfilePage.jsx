@@ -21,7 +21,7 @@ const ProfilePage = ({ currentUser }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token'); // Assuming token is in localStorage
+        const token = localStorage.getItem('jwtToken'); // Assuming token is in localStorage
 
         const [profileRes, countsRes, statusRes, reviewsRes] = await Promise.all([
           fetch(`/api/users/${username}`),
@@ -60,7 +60,7 @@ const ProfilePage = ({ currentUser }) => {
   }, [username]);
 
   const handleFollow = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;
@@ -88,7 +88,7 @@ const ProfilePage = ({ currentUser }) => {
   };
 
   const handleUnfollow = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('jwtToken');
     if (!token) {
       alert('로그인이 필요합니다.');
       return;

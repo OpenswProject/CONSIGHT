@@ -16,7 +16,7 @@ const RecommendedReviews = ({ shoppingItem }) => {
             {/* 여기에 shoppingItem에 따른 동적인 추천 리뷰 내용을 표시할 수 있습니다. */}
             {/* 현재는 예시 텍스트로 대체합니다. */}
             <div className="recommended-review-content">
-              "{shoppingItem}" 관련 추천 리뷰 내용이 여기에 표시됩니다.
+              {shoppingItem ? `"${shoppingItem}" 관련 추천 리뷰 내용이 여기에 표시됩니다.` : "항목을 선택해주세요."}
               <br />
               예시: "소프트 터치 라운드 니트"는 촉감이 부드럽고 까슬거림이 전혀 없어요.
             </div>

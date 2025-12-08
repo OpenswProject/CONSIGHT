@@ -39,7 +39,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                              (method.equals("POST") && path.matches("/api/reviews/\\d+/view")) || // 조회수 업데이트
                              (method.equals("POST") && path.matches("/api/reviews/\\d+/like")) || // 좋아요
                              (method.equals("POST") && path.matches("/api/reviews/\\d+/bookmark")) || // 북마크
-                             path.startsWith("/api/follow/") ||
                              path.equals("/api/test") ||
                              path.equals("/api/hello") ||
                              path.equals("/") ||

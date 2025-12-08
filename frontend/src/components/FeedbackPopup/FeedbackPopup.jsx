@@ -78,8 +78,8 @@ const FeedbackPopup = ({ onClose, onSubmit, monthEndDate, monthlyCategories, mon
                                 <div className={styles.ellipseFill} style={{ backgroundColor: category.color }}></div>
                                 <div className={styles.div5}>{category.name}</div>
                               </div>
-                              <ProgressBar value={category.current} max={category.target} isThick={false} percentageColor={category.color} />
-                              <div className={styles.labelValue2}>{category.current}/{category.target}</div>
+                              <ProgressBar value={category.currentAmount} max={category.targetAmount} isThick={false} percentageColor={category.color} />
+                              <div className={styles.labelValue2}>{category.currentAmount}/{category.targetAmount}</div>
                             </div>
                           ))}
                         </div>

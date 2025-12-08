@@ -8,6 +8,8 @@ import NameChangePopup from '../components/NameChangePopup/NameChangePopup';
 import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 import UpdateConsumptionPopup from '../components/UpdateConsumptionPopup/UpdateConsumptionPopup';
 
+const colorPalette = ['#AEC6CF', '#BCE2B5', '#C3CDE6', '#D4D4D4', '#BDBBB6'];
+
 const ConsumePlanPage = (props) => {
   const {
     currentUser,
@@ -71,6 +73,7 @@ const ConsumePlanPage = (props) => {
         return;
       }
       try {
+        const color = colorPalette[monthlyCategories.length % colorPalette.length];
         const response = await fetch('/api/consumption/categories', {
           method: 'POST',
           headers: {
@@ -82,7 +85,7 @@ const ConsumePlanPage = (props) => {
             type: 'MONTHLY',
             targetAmount: newCategoryTarget,
             currentAmount: 0,
-            color: '#D3D3D3' // Default color
+            color: color
           })
         });
         if (response.ok) {
@@ -129,6 +132,7 @@ const ConsumePlanPage = (props) => {
         return;
       }
       try {
+        const color = colorPalette[weeklyCategories.length % colorPalette.length];
         const response = await fetch('/api/consumption/categories', {
           method: 'POST',
           headers: {
@@ -140,7 +144,7 @@ const ConsumePlanPage = (props) => {
             type: 'WEEKLY',
             targetAmount: newWeeklyCategoryTarget,
             currentAmount: 0,
-            color: '#D3D3D3' // Default color
+            color: color
           })
         });
         if (response.ok) {
@@ -182,9 +186,40 @@ const ConsumePlanPage = (props) => {
     return '/leaf_point_icon.svg'; // Default icon
   };
 
-  const handleInitializeConfirm = () => {
-    console.log("Initialize confirmed");
-    setShowInitializePopup(false);
+  const handleInitializeConfirm = async () => {
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        alert("로그인이 필요합니다.");
+        setShowInitializePopup(false);
+        return;
+    }
+    try {
+        const response = await fetch('/api/consumption/categories/all', {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // Clear the state in the parent component
+                setWeeklyCategories([]);
+                setMonthlyCategories([]);
+                alert("소비 계획이 초기화되었습니다.");
+            } else {
+                alert(data.message || "초기화에 실패했습니다.");
+            }
+        } else {
+            alert("초기화 중 오류가 발생했습니다.");
+        }
+    } catch (error) {
+        console.error("Error initializing categories:", error);
+        alert("초기화 중 오류가 발생했습니다.");
+    } finally {
+        setShowInitializePopup(false);
+    }
   };
 
   const handleFeedbackButtonClick = () => {
@@ -201,6 +236,7 @@ const ConsumePlanPage = (props) => {
 
   const [dDay, setDDay] = useState(0);
   const [monthEndDate, setMonthEndDate] = useState('');
+  const [currentMonth, setCurrentMonth] = useState(0);
 
   const [followersCount, setFollowersCount] = useState(123); // 임시 팔로워 수
   const [followingCount, setFollowingCount] = useState(456); // 임시 팔로잉 수
@@ -232,6 +268,7 @@ const ConsumePlanPage = (props) => {
     const today = new Date();
     const year = today.getFullYear();
     const month = today.getMonth(); // 0-indexed
+    setCurrentMonth(month + 1);
 
     const lastDayOfMonth = new Date(year, month + 1, 0);
     setMonthEndDate(`${year}.${month + 1}.${lastDayOfMonth.getDate()}`);
@@ -377,7 +414,7 @@ const ConsumePlanPage = (props) => {
                         </div>
                         <div className={styles.frame2732}>
                           <img className={styles.polygon13} src="/listup_icon.svg" alt="list" />
-                          <div className={styles._11}>12월 분야별 소비금액</div>
+                          <div className={styles._11}>{currentMonth}월 분야별 소비금액</div>
                           <button onClick={() => setShowUpdateWeeklyConsumptionPopup(true)} className={styles.updateConsumptionButton}>
                             사용금액 갱신
                           </button>
@@ -388,16 +425,19 @@ const ConsumePlanPage = (props) => {
                           <div className={styles.frame34}>
                             <div className={styles.frame252}>
                               <div className={styles.frame258}>
-                                {weeklyCategories.slice(0, showAllWeeklyCategories ? weeklyCategories.length : 8).map(category => (
-                                  <div className={styles.categoryItem} key={category.id}>
-                                    <div className={styles.frame26}>
-                                      <div className={styles.ellipseFill} style={{ backgroundColor: category.color }}></div>
-                                      <div className={styles.div5}>{category.name}</div>
+                                {weeklyCategories.slice(0, showAllWeeklyCategories ? weeklyCategories.length : 8).map((category, index) => {
+                                  const color = colorPalette[(index) % colorPalette.length];
+                                  return (
+                                    <div className={styles.categoryItem} key={category.id}>
+                                      <div className={styles.frame26}>
+                                        <div className={styles.ellipseFill} style={{ backgroundColor: color }}></div>
+                                        <div className={styles.div5}>{category.name}</div>
+                                      </div>
+                                      <ProgressBar value={category.currentAmount} max={category.targetAmount} isThick={false} percentageColor={color} />
+                                      <div className={styles.labelValue2}>{category.currentAmount}/{category.targetAmount}</div>
                                     </div>
-                                    <ProgressBar value={category.current} max={category.target} isThick={false} percentageColor={category.color} />
-                                    <div className={styles.labelValue2}>{category.current}/{category.target}</div>
-                                  </div>
-                                ))}
+                                  );
+                                })}
                                 {showAddWeeklyCategoryInput && (
                                   <div className={styles.addCategoryInput}>
                                     <input
@@ -460,7 +500,7 @@ const ConsumePlanPage = (props) => {
                         <div className={styles.frame2772}>
                           <div className={styles.frame2732}>
                             <img className={styles.polygon13} src="/listup_icon.svg" alt="list" />
-                            <div className={styles._11}>12월 분야별 소비금액</div>
+                            <div className={styles._11}>{currentMonth}월 분야별 소비금액</div>
                             <button onClick={() => setShowUpdateMonthlyConsumptionPopup(true)} className={styles.updateConsumptionButton}>
                               사용금액 갱신
                             </button>
@@ -468,16 +508,19 @@ const ConsumePlanPage = (props) => {
                           <div className={styles.frame34}>
                             <div className={styles.frame252}>
                               <div className={styles.frame258}>
-                                {monthlyCategories.slice(0, showAllCategories ? monthlyCategories.length : 8).map(category => (
+                                {monthlyCategories.slice(0, showAllCategories ? monthlyCategories.length : 8).map((category, index) => {
+                                  const color = colorPalette[index % colorPalette.length];
+                                  return (
                                   <div className={styles.categoryItem} key={category.id}>
                                     <div className={styles.frame26}>
-                                      <div className={styles.ellipseFill} style={{ backgroundColor: category.color }}></div>
+                                      <div className={styles.ellipseFill} style={{ backgroundColor: color }}></div>
                                       <div className={styles.div5}>{category.name}</div>
                                     </div>
-                                    <ProgressBar value={category.current} max={category.target} isThick={false} percentageColor={category.color} />
-                                    <div className={styles.labelValue2}>{category.current}/{category.target}</div>
+                                    <ProgressBar value={category.currentAmount} max={category.targetAmount} isThick={false} percentageColor={color} />
+                                    <div className={styles.labelValue2}>{category.currentAmount}/{category.targetAmount}</div>
                                   </div>
-                                ))}
+                                  );
+                                })}
                                 {showAddCategoryInput && (
                                   <div className={styles.addCategoryInput}>
                                     <input
