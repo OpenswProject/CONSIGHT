@@ -61,9 +61,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/attendance").authenticated() // 출석 체크 인증 명시
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/view").permitAll() // 조회수 업데이트
                 .requestMatchers(HttpMethod.GET, "/api/reviews/me").authenticated() // /me 경로는 인증 필요
+                .requestMatchers(HttpMethod.GET, "/api/reviews/liked-by-me").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/reviews/bookmarked-by-me").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll() // 나머지 GET 요청은 허용
-                .requestMatchers(HttpMethod.POST, "/api/reviews/*/like").permitAll() // 좋아요 (인증 필요하지만 테스트를 위해 임시 허용)
-                .requestMatchers(HttpMethod.POST, "/api/reviews/*/bookmark").permitAll() // 북마크 (인증 필요하지만 테스트를 위해 임시 허용)
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/like").authenticated() // 좋아요 (인증 필요)
+                .requestMatchers(HttpMethod.POST, "/api/reviews/*/bookmark").authenticated() // 북마크 (인증 필요)
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/comments").authenticated() // 댓글 작성 (인증 필요)
                 .requestMatchers("/api/follow/**").authenticated() // 팔로우 관련 (인증 필요)
                 .requestMatchers("/api/test", "/hello", "/", "/h2-console/**", "/user/signup").permitAll()

@@ -35,10 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // permitAll()로 설정된 경로들을 여기에 추가
         boolean skipFilter = (path.startsWith("/api/user/login") ||
-                             (method.equals("GET") && path.startsWith("/api/reviews/") && !path.equals("/api/reviews/me")) || // /me를 제외한 모든 리뷰 관련 GET 요청
+                             (method.equals("GET") && path.startsWith("/api/reviews/") && !path.equals("/api/reviews/me") && !path.equals("/api/reviews/liked-by-me") && !path.equals("/api/reviews/bookmarked-by-me")) || // 인증이 필요한 GET /api/reviews 경로들을 제외
                              (method.equals("POST") && path.matches("/api/reviews/\\d+/view")) || // 조회수 업데이트
-                             (method.equals("POST") && path.matches("/api/reviews/\\d+/like")) || // 좋아요
-                             (method.equals("POST") && path.matches("/api/reviews/\\d+/bookmark")) || // 북마크
                              path.equals("/api/test") ||
                              path.equals("/api/hello") ||
                              path.equals("/") ||

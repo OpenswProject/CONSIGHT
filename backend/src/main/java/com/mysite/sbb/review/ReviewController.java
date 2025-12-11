@@ -9,6 +9,9 @@ import com.mysite.sbb.comment.Comment; // 추가
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable; // 추가
+import org.springframework.data.domain.PageRequest; // 추가
+import org.springframework.data.domain.Sort; // 추가
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,6 +101,63 @@ public class ReviewController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(APIResponse.error("내 리뷰 정보를 불러오는 중 오류 발생: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/commented-by-me")
+    public ResponseEntity<APIResponse<Page<Review>>> getCommentedReviews(
+            Principal principal,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            SiteUser user = userService.getUser(principal.getName());
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+            Page<Review> reviewPage = reviewService.getCommentedReviews(user, pageable);
+            return ResponseEntity.ok(APIResponse.success("사용자가 댓글을 단 리뷰 목록을 성공적으로 불러왔습니다.", reviewPage));
+        } catch (Exception e) {
+            log.error("댓글 단 리뷰 목록 조회 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(APIResponse.error("댓글 단 리뷰 목록 조회 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/liked-by-me")
+    public ResponseEntity<APIResponse<Page<Review>>> getLikedReviews(
+            Principal principal,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            SiteUser user = userService.getUser(principal.getName());
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+            Page<Review> reviewPage = reviewService.getLikedReviews(user, pageable);
+            return ResponseEntity.ok(APIResponse.success("사용자가 좋아요한 리뷰 목록을 성공적으로 불러왔습니다.", reviewPage));
+        } catch (Exception e) {
+            log.error("좋아요한 리뷰 목록 조회 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(APIResponse.error("좋아요한 리뷰 목록 조회 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
+        }
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/bookmarked-by-me")
+    public ResponseEntity<APIResponse<Page<Review>>> getBookmarkedReviews(
+            Principal principal,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        try {
+            SiteUser user = userService.getUser(principal.getName());
+            Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"));
+            Page<Review> reviewPage = reviewService.getBookmarkedReviews(user, pageable);
+            return ResponseEntity.ok(APIResponse.success("사용자가 북마크한 리뷰 목록을 성공적으로 불러왔습니다.", reviewPage));
+        } catch (Exception e) {
+            log.error("북마크한 리뷰 목록 조회 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(APIResponse.error("북마크한 리뷰 목록 조회 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
 

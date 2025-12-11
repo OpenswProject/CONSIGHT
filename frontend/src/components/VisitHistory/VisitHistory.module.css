@@ -89,7 +89,7 @@
 }
 
 .attended {
-  background-color: rgba(102, 205, 170, 0.7); /* Desaturated green-blue */
+  background-color: #9CB0A4; /* Darker, antique green */
 }
 
 .notAttended {

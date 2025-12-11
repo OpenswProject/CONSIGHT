@@ -14,11 +14,15 @@
 
 .unread {
   font-weight: bold;
-  background-color: #e6f7ff; /* Light blue for unread */
+  background-color: #E8F5E9; /* Very low saturation green */
 }
 
 .read {
   color: #555;
+  background-color: transparent;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 9px; /* Adjust padding to account for border */
 }
 
 .message {
@@ -34,7 +38,7 @@
 .unreadIndicator {
   width: 8px;
   height: 8px;
-  background-color: #1890ff; /* Blue dot for unread */
+  background-color: #a5d6a7; /* Matching green for unread */
   border-radius: 50%;
   margin-left: 10px;
 }

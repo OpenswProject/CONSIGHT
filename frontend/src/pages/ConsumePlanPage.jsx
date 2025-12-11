@@ -8,7 +8,7 @@ import NameChangePopup from '../components/NameChangePopup/NameChangePopup';
 import { ProgressBar } from '../components/ProgressBar/ProgressBar';
 import UpdateConsumptionPopup from '../components/UpdateConsumptionPopup/UpdateConsumptionPopup';
 
-const colorPalette = ['#AEC6CF', '#BCE2B5', '#C3CDE6', '#D4D4D4', '#BDBBB6'];
+const colorPalette = ['#D2DADC', '#DDE6DB', '#DADCED', '#E0E0E0', '#CAC8C5'];
 
 const ConsumePlanPage = (props) => {
   const {

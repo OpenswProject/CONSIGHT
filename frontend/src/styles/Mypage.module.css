@@ -385,7 +385,7 @@
   border-style: solid;
   border-color: #e3e5e7;
   border-width: 2px;
-  padding: 12px 118px 12px 118px;
+  padding: 12px 20px;
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -395,15 +395,16 @@
   flex-shrink: 0;
   height: 43.37px;
   position: relative;
+  cursor: pointer;
 }
 .div3 {
   color: #595e69;
-  text-align: left;
+  text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 14px;
   font-weight: 700;
   position: relative;
-  width: 55px;
+  flex-grow: 1;
 }
 .frame6 {
   background: linear-gradient(
@@ -415,7 +416,7 @@
   border-style: solid;
   border-color: #e3e5e7;
   border-width: 2px;
-  padding: 12px 111px 12px 111px;
+  padding: 12px 20px;
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -425,267 +426,67 @@
   flex-shrink: 0;
   height: 43.37px;
   position: relative;
+  cursor: pointer;
 }
 .a {
-  color: #595e69;
-  text-align: left;
-  font-family: "Inter-Bold", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  width: 300px;
-}
-.frame199 {
-  background: linear-gradient(
-    180deg,
-    rgba(245, 245, 245, 1) 0%,
-    rgba(243, 243, 243, 1) 100%
-  );
-  border-radius: 20px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 1.5px;
-  padding: 11px 14px 110px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  justify-content: flex-start;
-  align-self: stretch;
-  flex-shrink: 0;
-  height: 270px;
-  position: relative;
-}
-.frame204 {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.frame198 {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 196px;
-  position: relative;
-}
-.a2 {
   color: #595e69;
   text-align: center;
   font-family: "Inter-Bold", sans-serif;
   font-size: 14px;
   font-weight: 700;
-  position: relative;
-  align-self: stretch;
-  height: 17px;
+  flex-grow: 1;
 }
-.line5 {
-  margin-top: -1.5px;
-  border-style: solid;
-  border-color: #dbdfe0;
-  border-width: 1.5px 0 0 0;
-  align-self: stretch;
-  flex-shrink: 0;
-  height: 0px;
+.notificationsCard {
+  background-color: var(--gray-f3);
+  border-radius: 20px;
+  padding: 11px 14px 20px 14px;
+  border: 1.5px solid #dadee1;
+  width: 100%;
+  box-shadow: none;
+  height: 295px;
   position: relative;
-}
-.frame205 {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
 }
-.frame203 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.frame174 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 200px;
-  height: 38px;
-  position: relative;
-}
-.frame106 {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 201px;
-  position: relative;
-}
-.frame141 {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 201px;
-  position: relative;
-}
-.frame140 {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  position: relative;
-}
-.profile2 {
-  background: #dbdfe0;
-  border-radius: 50%;
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  position: relative;
-  transform-origin: 0 0;
-  transform: rotate(0deg) scale(1, 1);
-}
-.username2 {
-  color: #575757;
-  text-align: left;
-  font-family: "-", sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  position: relative;
-  width: 164px;
-}
-.username2Span {
-  font-family: "Inter-Regular", sans-serif;
-}
-.username2Span2 {
-  font-family: "Inter-Bold", sans-serif;
+
+.notificationsHeader {
+  font-size: 14px;
   font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--gray-59);
+  text-align: center;
 }
-.line6 {
-  margin-top: -1.5px;
-  border-style: solid;
-  border-color: #eaedee;
-  border-width: 1.5px 0 0 0;
-  align-self: stretch;
-  flex-shrink: 0;
-  height: 0px;
-  position: relative;
-}
-.frame2052 {
+
+.notificationsList {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 200px;
-  height: 38px;
-  position: relative;
 }
-.frame2042 {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 200px;
-  height: 38px;
-  position: relative;
+
+.noNotifications {
+  padding: 10px;
+  text-align: center;
+  color: #888;
 }
-.frame220 {
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  height: 15px;
-  position: relative;
-}
-.frame191 {
-  display: flex;
-  flex-direction: row;
-  gap: 5px; /* 적절한 간격 */
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 45px;
-  position: relative;
-}
-.frame187 {
-  display: flex;
-  flex-direction: row;
-  gap: 5px; /* 적절한 간격 */
-  align-items: center;
-  justify-content: flex-start;
-  flex-shrink: 0;
-  width: 125px;
-  position: relative;
-}
-.frame2053 {
+
+.markAllAsReadButton {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 1.5px;
-  padding: 6px 7px 6px 8px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 19px;
-  height: 16px;
-  position: relative;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  align-self: center;
+  font-size: 0.9em;
 }
-.group2095 {
-  flex-shrink: 0;
-  width: 5px;
-  height: 6px;
-  position: relative;
-  overflow: visible;
+
+.markAllAsReadButton:hover {
+  background-color: #e0e0e0;
 }
-.frame188 {
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #dadee1;
-  border-width: 1.5px;
-  padding: 6px 7px 6px 8px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 19px;
-  height: 16px;
-  position: relative;
-}
-.group20952 {
-  flex-shrink: 0;
-  width: 5px;
-  height: 6px;
-  position: relative;
-  overflow: visible;
-}
+
 .frame8 {
   border-radius: 20px;
   flex-direction: row;

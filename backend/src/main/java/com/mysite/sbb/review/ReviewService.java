@@ -1,5 +1,7 @@
 package com.mysite.sbb.review;
 
+import com.mysite.sbb.comment.Comment;
+import com.mysite.sbb.comment.CommentRepository;
 import com.mysite.sbb.DataNotFoundException;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService; // 추가
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,7 +33,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewBookmarkRepository reviewBookmarkRepository;
-    private final ReviewCommentRepository reviewCommentRepository;
+    private final CommentRepository commentRepository;
     private final UserService userService; // 추가
     private final NotificationService notificationService; // 추가
 
@@ -181,6 +184,7 @@ public class ReviewService {
             ReviewLike reviewLike = new ReviewLike();
             reviewLike.setReview(review);
             reviewLike.setUser(user);
+            reviewLike.setCreateDate(LocalDateTime.now());
             reviewLikeRepository.save(reviewLike);
             review.setLikeCount(review.getLikeCount() + 1);
         }
@@ -201,6 +205,7 @@ public class ReviewService {
             ReviewBookmark reviewBookmark = new ReviewBookmark();
             reviewBookmark.setReview(review);
             reviewBookmark.setUser(user);
+            reviewBookmark.setCreateDate(LocalDateTime.now());
             reviewBookmarkRepository.save(reviewBookmark);
             review.setBookmarkCount(review.getBookmarkCount() + 1);
         }
@@ -214,33 +219,50 @@ public class ReviewService {
         return reviewRepository.findByAuthor(author, pageable);
     }
 
+    public Page<Review> getCommentedReviews(SiteUser user, Pageable pageable) {
+        return reviewRepository.findCommentedReviewsByAuthor(user, pageable);
+    }
+
+    public Page<Review> getLikedReviews(SiteUser user, Pageable pageable) {
+        Page<ReviewLike> likedReviewLikes = reviewLikeRepository.findByUser(user, pageable);
+        return likedReviewLikes.map(ReviewLike::getReview);
+    }
+
+    public Page<Review> getBookmarkedReviews(SiteUser user, Pageable pageable) {
+        Page<ReviewBookmark> bookmarkedReviewBookmarks = reviewBookmarkRepository.findByUser(user, pageable);
+        return bookmarkedReviewBookmarks.map(ReviewBookmark::getReview);
+    }
+
     public MyReviewResponse getMyReviews(SiteUser siteUser) {
-        log.info("Fetching 'My Page' data for user: {}", siteUser.getUsername());
+        log.info("DEBUG: Fetching 'My Page' data for user: {} (ID: {})", siteUser.getUsername(), siteUser.getId());
 
         // Written reviews
         List<Review> writtenReviews = reviewRepository.findByAuthor(siteUser);
-        log.info("Found {} written reviews for user {}", writtenReviews.size(), siteUser.getUsername());
-
+        log.info("DEBUG: Found {} written reviews for user {}", writtenReviews.size(), siteUser.getUsername());
 
         // Liked reviews
         List<ReviewLike> likedReviewLikes = reviewLikeRepository.findByUser(siteUser);
         List<Review> likedReviews = likedReviewLikes.stream()
                 .map(ReviewLike::getReview)
-                .collect(java.util.stream.Collectors.toList());
-        log.info("Found {} liked reviews for user {}", likedReviews.size(), siteUser.getUsername());
+                .collect(Collectors.toList());
+        log.info("DEBUG: Found {} liked reviews for user {}", likedReviews.size(), siteUser.getUsername());
 
         // Bookmarked reviews
         List<ReviewBookmark> bookmarkedReviewBookmarks = reviewBookmarkRepository.findByUser(siteUser);
         List<Review> bookmarkedReviews = bookmarkedReviewBookmarks.stream()
                 .map(ReviewBookmark::getReview)
-                .collect(java.util.stream.Collectors.toList());
-        log.info("Found {} bookmarked reviews for user {}", bookmarkedReviews.size(), siteUser.getUsername());
-
+                .collect(Collectors.toList());
+        log.info("DEBUG: Found {} bookmarked reviews for user {}", bookmarkedReviews.size(), siteUser.getUsername());
 
         // Comments
-        List<ReviewComment> comments = reviewCommentRepository.findByAuthor(siteUser);
-        log.info("Found {} comments for user {}", comments.size(), siteUser.getUsername());
-
+        List<Comment> comments = commentRepository.findByAuthor(siteUser);
+        log.info("DEBUG: Found {} comments for user {}", comments.size(), siteUser.getUsername());
+        
+        // 추가된 로그: 발견된 댓글의 실제 작성자 이름 목록을 출력
+        List<String> commentAuthors = comments.stream()
+                                              .map(c -> c.getAuthor().getUsername())
+                                              .collect(Collectors.toList());
+        log.info("DEBUG: Authors of found comments: {}", commentAuthors);
 
         return new MyReviewResponse(writtenReviews, likedReviews, bookmarkedReviews, comments);
     }

@@ -209,8 +209,7 @@
   font-family: "Inter-Bold", sans-serif;
   font-size: 20px;
   font-weight: 700;
-  position: relative;
-  align-self: stretch;
+  /* Removed position: relative; and align-self: stretch; */
 }
 
 .div2Wrapper { /* Corresponds to div2 */
@@ -1365,7 +1364,7 @@
   border: 1.5px solid #dadee1; /* Matches frame-199 border */
   width: 100%;
   box-shadow: none; /* Removed box-shadow */
-  height: 265px; /* Increased height */
+  height: 295px; /* Increased height by 20px */
   position: relative;
   display: flex;
   flex-direction: column;

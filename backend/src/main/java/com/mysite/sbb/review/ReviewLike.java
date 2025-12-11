@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -31,4 +32,6 @@ public class ReviewLike {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private SiteUser user;
+
+    private LocalDateTime createDate;
 }

@@ -75,17 +75,12 @@ export const ConsumptionStatus = ({
   // Weekly Consumption
   const weeklyPercentage = weeklyTargetConsumption > 0 ? Math.round((weeklyCurrentConsumption / weeklyTargetConsumption) * 100) : 0;
 
-  // Pie Chart Data
-  const pieData = monthlyCategories && monthlyCategories.length > 0
-    ? monthlyCategories.map(cat => ({ name: cat.name, value: cat.current }))
-    : [
-        { name: '주거비', value: 300000 },
-        { name: '식비', value: 200000 },
-        { name: '교통비', value: 150000 },
-        { name: '기타', value: 50000 },
-      ];
+  // Pie Chart Data - Use props directly, ensure it's an array.
+  const pieData = Array.isArray(monthlyCategories) 
+    ? monthlyCategories.map(cat => ({ name: cat.name, value: cat.currentAmount }))
+    : [];
 
-  const COLORS = ['#9BC4B0', '#AEC6CF', '#D3D3D3', '#F0F0F0']; // Desaturated green, blue, gray, light gray
+  const COLORS = ['#9BC4B0', '#AEC6CF', '#D3D3D3', '#F0F0F0', '#BDBBB6', '#C3CDE6'];
 
   // Custom Tooltip for Pie Chart
   const CustomTooltip = ({ active, payload, label }) => {
@@ -110,66 +105,67 @@ export const ConsumptionStatus = ({
                   <div className={styles.div3}>{currentUser ? currentUser.username : "USERNAME"} 님의 소비현황</div>
                   <div className={styles.line4}></div>
                 </div>
-                <div className={styles._11}>11월 소비현황</div>
+                <div className={styles._11}>월 소비현황</div>
               </div>
               <div className={styles.frame22}> {/* Corresponds to frame-22 */}
                 <div className={styles.frame23}> {/* Corresponds to frame-23 */}
                   <div className={styles.frame44}> {/* Corresponds to frame-44 */}
-                    <div className={styles.legends}> {/* Corresponds to legends */}
-                      <div className={styles.frame35}> {/* Corresponds to frame-35 */}
-                        {pieData.map((entry, index) => (
-                          <div className={styles.legend} key={`legend-${index}`}>
-                            <div className={styles.frame27}>
-                              <div className={styles.ellipseFill} style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
-                              <div className={styles.div4}>{entry.name}</div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className={styles.mainChart}> {/* Corresponds to main-chart */}
-                      <ResponsiveContainer width="100%" height={200}>
-                        <PieChart>
-                          <Pie
-                            data={pieData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={20} // 1/3로 줄임
-                            outerRadius={80}
-                            fill="#8884d8"
-                            paddingAngle={5}
-                            dataKey="value"
-                            labelLine={false}
-                            // label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} // 잘림 문제 확인을 위해 임시 제거
-                          >
+                    {pieData.length > 0 ? (
+                      <>
+                        <div className={styles.legends}> {/* Corresponds to legends */}
+                          <div className={styles.frame35}> {/* Corresponds to frame-35 */}
                             {pieData.map((entry, index) => (
-                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                              <div className={styles.legend} key={`legend-${index}`}>
+                                <div className={styles.frame27}>
+                                  <div className={styles.ellipseFill} style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                                  <div className={styles.div4}>{entry.name}</div>
+                                </div>
+                              </div>
                             ))}
-                          </Pie>
-                          <Tooltip content={<CustomTooltip />} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
+                          </div>
+                        </div>
+                        <div className={styles.mainChart}> {/* Corresponds to main-chart */}
+                          <ResponsiveContainer width="100%" height={200}>
+                            <PieChart>
+                              <Pie
+                                data={pieData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={20}
+                                outerRadius={80}
+                                fill="#8884d8"
+                                paddingAngle={5}
+                                dataKey="value"
+                                labelLine={false}
+                              >
+                                {pieData.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                              </Pie>
+                              <Tooltip content={<CustomTooltip />} />
+                            </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </>
+                    ) : (
+                      <div className={styles.noDataMessage}>월간 소비 데이터가 없습니다.</div>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className={styles.frame34}> {/* Corresponds to frame-34 */}
-            <div className={styles.frame31}> {/* Corresponds to frame-31 */}
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill4}></div>
-                <div className={styles.div4}>식비</div>
+          {/* Dynamic Progress Bars based on monthlyCategories */}
+          <div className={styles.frame34}>
+            {monthlyCategories.slice(0, 4).map((category, index) => (
+              <div className={styles.frame31} key={category.id || index}>
+                <div className={styles.frame26}>
+                  <div className={styles.ellipseFill} style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                  <div className={styles.div4}>{category.name}</div>
+                </div>
+                <ProgressBar value={category.currentAmount} max={category.targetAmount} label={`${category.currentAmount}/${category.targetAmount}`} percentageColor={COLORS[index % COLORS.length]} />
               </div>
-              <ProgressBar value={50} max={100} label="50/100" percentageColor="#C9D3D0" />
-            </div>
-            <div className={styles.frame322}> {/* Corresponds to frame-322 */}
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill5}></div>
-                <div className={styles.div4}>교통비</div>
-              </div>
-              <ProgressBar value={20} max={40} label="20/40" percentageColor="#C9D3D0" />
-            </div>
+            ))}
           </div>
         </div>
       </div>
@@ -225,7 +221,7 @@ export const ConsumptionStatus = ({
 
       <div className={styles.frame18}> {/* Corresponds to frame-18 */}
         <div className={styles.frame196}>
-          <div className={styles.div3}>오늘의 소비현황</div>
+          <div className={styles.div3}>주간 소비현황</div>
           <div className={styles.line4}></div>
         </div>
         <div className={styles.frame195}> {/* Corresponds to frame-195 */}
@@ -251,35 +247,10 @@ export const ConsumptionStatus = ({
               </div>
             </div>
           </div>
-          <div className={styles.frame342}> {/* Corresponds to frame-342 */}
-            <div className={styles.frame31}>
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill4}></div>
-                <div className={styles.div4}>식비</div>
-              </div>
-              <ProgressBar value={50} max={100} label="50/100" percentageColor="#C9D3D0" />
-            </div>
-            <div className={styles.frame322}>
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill5}></div>
-                <div className={styles.div4}>교통비</div>
-              </div>
-              <ProgressBar value={20} max={40} label="20/40" percentageColor="#C9D3D0" />
-            </div>
-            <div className={styles.frame332}>
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill5}></div>
-                <div className={styles.div4}>교통비</div>
-              </div>
-              <ProgressBar value={20} max={40} label="20/40" percentageColor="#C9D3D0" />
-            </div>
-            <div className={styles.frame343}>
-              <div className={styles.frame26}>
-                <div className={styles.ellipseFill5}></div>
-                <div className={styles.div4}>교통비</div>
-              </div>
-              <ProgressBar value={20} max={40} label="20/40" percentageColor="#C9D3D0" />
-            </div>
+          {/* Dynamic weekly progress bars */}
+          <div className={styles.frame342}>
+            {/* Assuming weeklyCategories is also passed as a prop if needed here */}
+            {/* For now, this section is left without the hardcoded values */}
           </div>
         </div>
       </div>

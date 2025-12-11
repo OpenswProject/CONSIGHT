@@ -318,7 +318,7 @@
 }
 
 .frame34 { /* Corresponds to .frame-34 */
-  margin: -16px 0 0 0;
+  margin: 20px 0 0 0; /* Changed from -16px to create space */
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -853,4 +853,13 @@
 .customTooltip p {
   margin: 0;
   padding: 0;
+}
+.noDataMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  color: #888;
+  font-size: 14px;
 }

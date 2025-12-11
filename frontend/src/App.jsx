@@ -328,7 +328,7 @@ const HomePage = ({
           <div className={styles.frame192}>
             <div className={styles.headerRow}>
               <div className={styles.usernameTitle}>
-                {currentUser?.username ? `${currentUser.username}님` : 'Guest'}의 소비현황
+                
               </div>
               <div className={styles.frame282}>
                 <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
@@ -477,12 +477,7 @@ function App() {
   const [apiMessage, setApiMessage] = useState("Loading...");
   const [currentUser, setCurrentUser] = useState(null);
   const [monthlyCategories, setMonthlyCategories] = useState([]);
-  const [weeklyCategories, setWeeklyCategories] = useState([
-    { id: 1, name: '식비', current: 5, target: 10, color: '#A7C7E7' },
-    { id: 2, name: '교통', current: 2, target: 3, color: '#B0E0E6' },
-    { id: 3, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0' },
-    { id: 4, name: '문화생활', current: 1, target: 4, color: '#FFFACD' },
-  ]);
+  const [weeklyCategories, setWeeklyCategories] = useState([]);
   const [lastFeedback, setLastFeedback] = useState(null);
   const [submittedFeedback, setSubmittedFeedback] = useState([]); // submittedFeedback 상태를 빈 배열로 초기화
   const [points, setPoints] = useState(0);
@@ -522,35 +517,35 @@ function App() {
           setAttendanceHistory(prevHistory => [...prevHistory, new Date()]);
           setIsAttendedToday(true);
         } else {
-          alert(data.error?.message || "출석 체크에 실패했습니다.");
+          console.error(data.error?.message || "출석 체크에 실패했습니다.");
         }
       } else {
-        alert("출석 체크 서버 오류.");
+        console.error("출석 체크 서버 오류.");
       }
     } catch (error) {
       console.error("Error during attendance:", error);
-      alert("출석 체크 중 오류가 발생했습니다.");
+      console.error("출석 체크 중 오류가 발생했습니다.");
     }
   };
 
   const weeklyCurrentConsumption = useMemo(() => {
     if (!Array.isArray(weeklyCategories)) return 0;
-    return weeklyCategories.reduce((sum, category) => sum + category.current, 0);
+    return weeklyCategories.reduce((sum, category) => sum + category.currentAmount, 0);
   }, [weeklyCategories]);
 
   const weeklyTargetConsumption = useMemo(() => {
     if (!Array.isArray(weeklyCategories)) return 0;
-    return weeklyCategories.reduce((sum, category) => sum + category.target, 0);
+    return weeklyCategories.reduce((sum, category) => sum + category.targetAmount, 0);
   }, [weeklyCategories]);
 
   const monthlyCurrentConsumption = useMemo(() => {
     if (!Array.isArray(monthlyCategories)) return 0;
-    return monthlyCategories.reduce((sum, category) => sum + category.current, 0);
+    return monthlyCategories.reduce((sum, category) => sum + category.currentAmount, 0);
   }, [monthlyCategories]);
 
   const monthlyTargetConsumption = useMemo(() => {
     if (!Array.isArray(monthlyCategories)) return 0;
-    return monthlyCategories.reduce((sum, category) => sum + category.target, 0);
+    return monthlyCategories.reduce((sum, category) => sum + category.targetAmount, 0);
   }, [monthlyCategories]);
 
   const validateToken = async (token) => {
@@ -664,50 +659,24 @@ function App() {
           if (data.success && data.data) {
             const fetchedMonthly = data.data.filter(cat => cat.type === 'MONTHLY');
             const fetchedWeekly = data.data.filter(cat => cat.type === 'WEEKLY');
-            setMonthlyCategories(fetchedMonthly.length > 0 ? fetchedMonthly : [
-              { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
-              { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
-              { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
-              { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
-            ]);
-            setWeeklyCategories(fetchedWeekly.length > 0 ? fetchedWeekly : [
-              { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
-              { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
-              { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
-              { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
-            ]);
+            setMonthlyCategories(fetchedMonthly);
+            setWeeklyCategories(fetchedWeekly);
+          } else {
+            // If fetch is ok but no data or success is false, set to empty
+            setMonthlyCategories([]);
+            setWeeklyCategories([]);
           }
         } else {
           console.error("Failed to fetch consumption categories:", response.statusText);
-          // Fallback to default hardcoded values if fetch fails
-          setMonthlyCategories([
-            { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
-            { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
-            { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
-            { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
-          ]);
-          setWeeklyCategories([
-            { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
-            { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
-            { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
-            { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
-          ]);
+          // If fetch fails, set to empty
+          setMonthlyCategories([]);
+          setWeeklyCategories([]);
         }
       } catch (error) {
         console.error("Error fetching consumption categories:", error);
-        // Fallback to default hardcoded values on error
-        setMonthlyCategories([
-          { id: null, name: '식비', current: 0, target: 0, color: '#A7C7E7', type: 'MONTHLY' },
-          { id: null, name: '교통', current: 0, target: 0, color: '#B0E0E6', type: 'MONTHLY' },
-          { id: null, name: '쇼핑', current: 0, target: 0, color: '#D8F2D0', type: 'MONTHLY' },
-          { id: null, name: '문화생활', current: 0, target: 0, color: '#FFFACD', type: 'MONTHLY' },
-        ]);
-        setWeeklyCategories([
-          { id: null, name: '식비', current: 5, target: 10, color: '#A7C7E7', type: 'WEEKLY' },
-          { id: null, name: '교통', current: 2, target: 3, color: '#B0E0E6', type: 'WEEKLY' },
-          { id: null, name: '쇼핑', current: 7, target: 8, color: '#D8F2D0', type: 'WEEKLY' },
-          { id: null, name: '문화생활', current: 1, target: 4, color: '#FFFACD', type: 'WEEKLY' },
-        ]);
+        // On error, set to empty
+        setMonthlyCategories([]);
+        setWeeklyCategories([]);
       }
     };
     fetchData();
@@ -769,6 +738,7 @@ function App() {
                 <Mypage 
                   currentUser={currentUser}
                   monthlyCategories={monthlyCategories}
+                  setMonthlyCategories={setMonthlyCategories}
                   monthlyCurrentConsumption={monthlyCurrentConsumption}
                   monthlyTargetConsumption={monthlyTargetConsumption}
                   lastFeedback={lastFeedback}

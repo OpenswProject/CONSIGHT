@@ -1,5 +1,6 @@
 package com.mysite.sbb.review;
 
+import com.mysite.sbb.comment.Comment;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -11,5 +12,5 @@ public class MyReviewResponse {
     private List<Review> written;
     private List<Review> liked;
     private List<Review> bookmarked;
-    private List<ReviewComment> comments;
+    private List<Comment> comments;
 }
