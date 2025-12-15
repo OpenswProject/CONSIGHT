@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.mysite.sbb.follow.UserDto;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.security.Principal; // Missing import
+import java.util.Map;
+
 import org.springframework.security.access.prepost.PreAuthorize; // Missing import
 
 
@@ -116,9 +118,16 @@ public class UserController {
 		// 인증 성공 후 UserDetails 로드 및 JWT 생성
 		final UserDetails userDetails = userSecurityService.loadUserByUsername(loginRequest.username());
 		final String jwt = jwtUtil.generateToken(userDetails);
-		final SiteUser siteUser = userService.getUser(loginRequest.username()); // Get SiteUser to retrieve email
+		final SiteUser siteUser = userService.getUser(loginRequest.username());
 
-		return ResponseEntity.ok(new LoginResponse(jwt, siteUser.getUsername(), siteUser.getEmail(), true, "로그인 성공"));
+		// Create DTO and data map
+		UserDto userDto = new UserDto(siteUser);
+		Map<String, Object> responseData = Map.of(
+				"token", jwt,
+				"user", userDto
+		);
+
+		return ResponseEntity.ok(APIResponse.success("로그인 성공", responseData));
 	}
 
     

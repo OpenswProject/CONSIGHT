@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import styles from "./App.module.css";
 import { Header } from "./components/Header/Header";
@@ -457,19 +457,81 @@ function App() {
   const [monthlyCategories, setMonthlyCategories] = useState([]);
   const [weeklyCategories, setWeeklyCategories] = useState([]);
   const [lastFeedback, setLastFeedback] = useState(null);
-  const [submittedFeedback, setSubmittedFeedback] = useState([]); // submittedFeedback 상태를 빈 배열로 초기화
+  const [submittedFeedback, setSubmittedFeedback] = useState([]);
   const [points, setPoints] = useState(0);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [isAttendedToday, setIsAttendedToday] = useState(false);
-  const [shoppingItems, setShoppingItems] = useState([]); // Moved to App component top level
+  const [shoppingItems, setShoppingItems] = useState([]);
 
-  const shoppingCategories = useMemo(() => {
-    if (!Array.isArray(shoppingItems)) return [];
-    const categories = shoppingItems.map(item => item.category);
-    const uniqueCategories = [...new Set(categories)];
-    console.log("Recalculating shoppingCategories:", uniqueCategories); // DEBUG
-    return uniqueCategories;
-  }, [shoppingItems]);
+  const fetchData = useCallback(async () => {
+    console.log("fetchData called");
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      console.log("No token found, clearing states.");
+      setPoints(0);
+      setAttendanceHistory([]);
+      setIsAttendedToday(false);
+      setMonthlyCategories([]);
+      setWeeklyCategories([]);
+      setShoppingItems([]);
+      return;
+    }
+
+    try {
+      console.log("Fetching all data with token.");
+      const [
+        userResponse, 
+        attendanceHistoryResponse, 
+        attendanceTodayResponse, 
+        consumptionCategoriesResponse, 
+        shoppingItemsResponse
+      ] = await Promise.all([
+        fetch(`/api/users/me`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`/api/attendance/history`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`/api/attendance/today`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`/api/consumption/categories`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch('/api/shopping-items', { headers: { 'Authorization': `Bearer ${token}` } })
+      ]);
+
+      if (userResponse.ok) {
+        const data = await userResponse.json();
+        if (data.success && data.data) setPoints(data.data.points);
+      } else console.error("Failed to fetch user info");
+
+      if (attendanceHistoryResponse.ok) {
+        const data = await attendanceHistoryResponse.json();
+        setAttendanceHistory(data.map(dateString => new Date(dateString)));
+      } else console.error("Failed to fetch attendance history");
+
+      if (attendanceTodayResponse.ok) {
+        const data = await attendanceTodayResponse.json();
+        setIsAttendedToday(data.attended);
+      } else console.error("Failed to check today's attendance");
+
+      if (consumptionCategoriesResponse.ok) {
+        const data = await consumptionCategoriesResponse.json();
+        if (data.success && data.data) {
+          setMonthlyCategories(data.data.filter(cat => cat.type === 'MONTHLY'));
+          setWeeklyCategories(data.data.filter(cat => cat.type === 'WEEKLY'));
+        } else {
+          setMonthlyCategories([]);
+          setWeeklyCategories([]);
+        }
+      } else console.error("Failed to fetch consumption categories");
+
+      if (shoppingItemsResponse.ok) {
+        const data = await shoppingItemsResponse.json();
+        if (data.success && Array.isArray(data.data)) {
+          setShoppingItems(data.data);
+        } else {
+          setShoppingItems([]);
+        }
+      } else console.error("Failed to fetch shopping items");
+
+    } catch (error) {
+      console.error("An error occurred during data fetching:", error);
+    }
+  }, []);
 
   const handleFeedbackSubmit = (feedbackData) => {
     setSubmittedFeedback(prevFeedbacks => [...prevFeedbacks, feedbackData]);
@@ -500,18 +562,16 @@ function App() {
         const data = await response.json();
         if (data.success) {
           alert("출석 체크 완료! " + data.pointsEarned + " 포인트를 획득했습니다.");
-          setPoints(prevPoints => prevPoints + data.pointsEarned);
-          setAttendanceHistory(prevHistory => [...prevHistory, new Date()]);
-          setIsAttendedToday(true);
+          await fetchData(); // Re-fetch all data to update UI
         } else {
-          console.error(data.error?.message || "출석 체크에 실패했습니다.");
+          alert(data.error?.message || "출석 체크에 실패했습니다.");
         }
       } else {
-        console.error("출석 체크 서버 오류.");
+        alert("출석 체크 서버 오류.");
       }
     } catch (error) {
       console.error("Error during attendance:", error);
-      console.error("출석 체크 중 오류가 발생했습니다.");
+      alert("출석 체크 중 오류가 발생했습니다.");
     }
   };
 
@@ -574,124 +634,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (!currentUser || !currentUser.id) {
-        setPoints(0);
-        setAttendanceHistory([]);
-        setIsAttendedToday(false);
-        setMonthlyCategories([]); // Clear categories on logout
-        setWeeklyCategories([]); // Clear categories on logout
-        setShoppingItems([]); // Clear shopping items on logout
-        return;
-      }
-      const token = localStorage.getItem('jwtToken');
-      if (!token) {
-        setPoints(0);
-        setAttendanceHistory([]);
-        setIsAttendedToday(false);
-        setMonthlyCategories([]); // Clear categories if no token
-        setWeeklyCategories([]); // Clear categories if no token
-        setShoppingItems([]); // Clear shopping items if no token
-        return;
-      }
-
-      // Fetch user info (including points)
-      try {
-        const response = await fetch(`/api/users/me`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data) {
-            setPoints(data.data.points);
-          }
-        } else {
-          console.error("Failed to fetch user info (points)");
-        }
-      } catch (error) {
-        console.error("Error fetching user info (points):", error);
-      }
-
-      // Fetch attendance history
-      try {
-        const response = await fetch(`/api/attendance/history`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setAttendanceHistory(data.map(dateString => new Date(dateString)));
-        }
-      } catch (error) {
-        console.error("Error fetching attendance history:", error);
-      }
-
-      // Check if attended today
-      try {
-        const response = await fetch(`/api/attendance/today`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setIsAttendedToday(data.attended);
-        }
-        } catch (error) {
-        console.error("Error checking today's attendance:", error);
-      }
-
-      // Fetch consumption categories
-      try {
-        const response = await fetch(`/api/consumption/categories`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.data) {
-            const fetchedMonthly = data.data.filter(cat => cat.type === 'MONTHLY');
-            const fetchedWeekly = data.data.filter(cat => cat.type === 'WEEKLY');
-            setMonthlyCategories(fetchedMonthly);
-            setWeeklyCategories(fetchedWeekly);
-          } else {
-            // If fetch is ok but no data or success is false, set to empty
-            setMonthlyCategories([]);
-            setWeeklyCategories([]);
-          }
-        } else {
-          console.error("Failed to fetch consumption categories:", response.statusText);
-          // If fetch fails, set to empty
-          setMonthlyCategories([]);
-          setWeeklyCategories([]);
-        }
-      } catch (error) {
-        console.error("Error fetching consumption categories:", error);
-        // On error, set to empty
-        setMonthlyCategories([]);
-        setWeeklyCategories([]);
-      }
-
-      // Fetch shopping items
-      try {
-        const response = await fetch('/api/shopping-items', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.success && Array.isArray(data.data)) {
-            setShoppingItems(data.data);
-          } else {
-            console.error("Failed to fetch shopping items or data is not an array:", data);
-            setShoppingItems([]);
-          }
-        } else {
-          console.error("Failed to fetch shopping items:", response.statusText);
-          setShoppingItems([]);
-        }
-      } catch (error) {
-        console.error("Error fetching shopping items:", error);
-        setShoppingItems([]);
-      }
-    };
-    fetchData();
-  }, [currentUser]);
+    if (currentUser) {
+      fetchData();
+    } else {
+      setPoints(0);
+      setAttendanceHistory([]);
+      setIsAttendedToday(false);
+      setMonthlyCategories([]);
+      setWeeklyCategories([]);
+      setShoppingItems([]);
+    }
+  }, [currentUser, fetchData]);
 
   const handleSaveShoppingItem = async (text, category) => {
     if (!currentUser) {
@@ -705,7 +658,6 @@ function App() {
     }
 
     try {
-      console.log('API call started for:', text, category);
       const response = await fetch('/api/shopping-items', {
         method: 'POST',
         headers: {
@@ -714,11 +666,8 @@ function App() {
         },
         body: JSON.stringify({ text, category })
       });
-      console.log('Response status:', response.status);
       if (response.ok) {
         const data = await response.json();
-        console.log('Response data:', data);
-        console.log('Data success:', data.success, 'Data data:', data.data);
         if (data.success && data.data) {
           setShoppingItems(prevItems => [...prevItems, data.data]);
           return data.data;
@@ -766,8 +715,6 @@ function App() {
       console.error("Error removing shopping item:", error);
     }
   };
-
-  
 
   return (
     <BrowserRouter>
@@ -841,7 +788,7 @@ function App() {
               } 
             />
             <Route path="/review-write" element={<ReviewWritePage />} />
-            <Route path="/login" element={<LoginPage setCurrentUser={setCurrentUser} />} />
+            <Route path="/login" element={<LoginPage setCurrentUser={setCurrentUser} fetchData={fetchData} />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/user/:username" element={<ProfileRedirector />} />
           </Routes>

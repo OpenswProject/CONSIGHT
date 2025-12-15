@@ -2,46 +2,58 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LoginPage.module.css';
 
-const LoginPage = ({ setCurrentUser }) => {
+const LoginPage = ({ setCurrentUser, fetchData }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validateToken = async (token) => {
+    try {
+      const response = await fetch('/api/users/me', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        return data.success ? data.data : null;
+      }
+      return null;
+    } catch (error) {
+      console.error("Token validation failed:", error);
+      return null;
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     setError('');
 
     try {
       const response = await fetch('/api/user/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Store token and user info in localStorage
-        localStorage.setItem('jwtToken', data.token);
-        localStorage.setItem('username', data.username);
-        localStorage.setItem('email', data.email);
-        
-        // Update the user state in App.jsx
-        setCurrentUser({
-          username: data.username,
-          email: data.email,
-        });
-        
-        // Navigate to the home page
-        navigate('/');
+        localStorage.setItem('jwtToken', data.data.token);
+        const userDto = data.data.user; // Get user DTO directly from login response
+        if (userDto) {
+          setCurrentUser({ username: userDto.username, email: userDto.email, id: userDto.id });
+          await fetchData(); // Fetch all app data after setting user
+          navigate('/'); // Navigate to home page
+        } else {
+          setError('로그인 응답이 올바르지 않습니다.');
+          localStorage.removeItem('jwtToken');
+        }
       } else {
-        throw new Error(data.message || 'Login failed. Please check your credentials.');
+        setError(data.error?.message || '아이디 또는 비밀번호가 일치하지 않습니다.');
       }
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('로그인 중 오류가 발생했습니다. 서버 상태를 확인해주세요.');
     }
   };
 
