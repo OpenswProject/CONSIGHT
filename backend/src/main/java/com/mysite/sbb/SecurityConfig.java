@@ -115,7 +115,7 @@ public class SecurityConfig {
         @Override
         public void addCorsMappings(CorsRegistry registry) {
             registry.addMapping("/**") // 모든 경로에 대해
-                    .allowedOrigins("http://localhost:3000") // 이 출처에서의 요청만 허용
+                    .allowedOrigins("http://localhost:3000", "https://consight.vercel.app") // 로컬 및 Vercel 배포 주소 허용
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                     .allowedHeaders("*") // 모든 헤더 허용
                     .allowCredentials(true); // 자격 증명 허용
