@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import styles from './ReviewWritePage.module.css';
 import { Link } from 'react-router-dom'; // Link 컴포넌트 추가
-import { ShoppingList } from '../components/ShoppingList/ShoppingList'; // ShoppingList 컴포넌트 import
+import { ShoppingList, CATEGORIES } from '../components/ShoppingList/ShoppingList'; // ShoppingList와 CATEGORIES import
 
 const ReviewWritePage = () => {
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('의류');
+  const [category, setCategory] = useState(CATEGORIES[0]); // 기본값을 CATEGORIES의 첫 번째 항목으로 설정
   const [receiptImage, setReceiptImage] = useState(null);
   const [productLink, setProductLink] = useState('');
   const [reviewContent, setReviewContent] = useState('');
@@ -59,7 +59,7 @@ const ReviewWritePage = () => {
       // Optionally navigate to the review feed page
       // navigate('/review-feed');
       setTitle('');
-      setCategory('의류');
+      setCategory(CATEGORIES[0]);
       setReceiptImage(null);
       setProductLink('');
       setReviewContent('');
@@ -104,11 +104,9 @@ const ReviewWritePage = () => {
                               value={category}
                               onChange={(e) => setCategory(e.target.value)}
                             >
-                              <option value="의류">의류</option>
-                              <option value="식품">식품</option>
-                              <option value="생활·가전">생활·가전</option>
-                              <option value="청소·욕실">청소·욕실</option>
-                              {/* 다른 카테고리 옵션 추가 */}
+                              {CATEGORIES.map(cat => (
+                                <option key={cat} value={cat}>{cat}</option>
+                              ))}
                             </select>
                            
                           </div>

@@ -59,6 +59,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
                 .requestMatchers("/api/consumption/**").authenticated() // 소비계획 API 인증 명시
                 .requestMatchers(HttpMethod.POST, "/api/attendance").authenticated() // 출석 체크 인증 명시
+                .requestMatchers("/api/shopping-items/**").authenticated() // 쇼핑 아이템 API 인증 명시
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/view").permitAll() // 조회수 업데이트
                 .requestMatchers(HttpMethod.GET, "/api/reviews/me").authenticated() // /me 경로는 인증 필요
                 .requestMatchers(HttpMethod.GET, "/api/reviews/liked-by-me").authenticated()

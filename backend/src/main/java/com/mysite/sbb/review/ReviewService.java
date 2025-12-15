@@ -268,7 +268,11 @@ public class ReviewService {
     }
 
     public List<Review> getRecommendedReviewsByCategory(String category) {
-        return reviewRepository.findByCategoryOrderByLikeCountDesc(category);
+        return reviewRepository.findTop6ByCategoryOrderByLikeCountDesc(category);
+    }
+
+    public List<Review> getRecommendedReviewsByCategories(List<String> categories) {
+        return reviewRepository.findTop6ByCategoryInOrderByLikeCountDesc(categories);
     }
 
     public List<Review> getRecommendedReviews() {

@@ -23,6 +23,7 @@ const HomePage = ({
   apiMessage, 
   currentUser, 
   monthlyCategories,
+  weeklyCategories,
   weeklyCurrentConsumption,
   weeklyTargetConsumption,
   monthlyCurrentConsumption,
@@ -31,7 +32,11 @@ const HomePage = ({
   points,
   handleAttend,
   attendanceHistory,
-  isAttendedToday
+  isAttendedToday,
+  shoppingItems,
+  setShoppingItems,
+  handleSaveShoppingItem,
+  handleRemoveShoppingItem
 }) => {
   const navigate = useNavigate();
   const [showMyProfileMoreInfoPopup, setShowMyProfileMoreInfoPopup] = useState(false);
@@ -257,29 +262,6 @@ const HomePage = ({
   const [loadingReviews, setLoadingReviews] = useState(true);
   const [errorReviews, setErrorReviews] = useState(null);
 
-  // ShoppingList에서 사용할 항목들을 정의합니다.
-  const shoppingItems = [
-    "겨울 옷 구매",
-    "12월 식재료 구매",
-    "전기장판 구매",
-    "핸드워시 구매"
-  ];
-
-  // 현재 선택된 쇼핑 항목 상태
-  const [selectedShoppingItem, setSelectedShoppingItem] = useState(
-    shoppingItems.length > 0 ? { index: 0, name: shoppingItems[0] } : null
-  );
-
-  // 쇼핑 항목 클릭 핸들러
-  const handleShoppingItemClick = (index, name) => {
-    setSelectedShoppingItem({ index, name });
-  };
-
-  // RecommendedReviews에 전달할 선택된 쇼핑 항목을 구성합니다.
-  const recommendedReviewItem = selectedShoppingItem 
-    ? `${selectedShoppingItem.index + 1}번 ${selectedShoppingItem.name}` 
-    : "추천 항목 없음";
-
   const fetchReviews = async (page) => {
     setLoadingReviews(true);
     setErrorReviews(null);
@@ -326,18 +308,6 @@ const HomePage = ({
       <div className={styles.mainContentArea}>
         <div className={styles.frame193}>
           <div className={styles.frame192}>
-            <div className={styles.headerRow}>
-              <div className={styles.usernameTitle}>
-                
-              </div>
-              <div className={styles.frame282}>
-                <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
-                <div className={styles.frame914}>
-                  <div className={styles._4000}>{points}</div>
-                </div>
-                <div className={styles._6000pt}>승급까지 -6000PT</div>
-              </div>
-            </div>
             <div className={styles.div2Wrapper}>
               <div className={styles.frame45}>
                 <div className={styles.consumptionAndVisitContainer}>
@@ -345,12 +315,15 @@ const HomePage = ({
                     <ConsumptionStatus 
                       username={currentUser?.username || 'Guest'} 
                       currentUser={currentUser} 
+                      points={points}
                       monthlyCategories={monthlyCategories}
+                      weeklyCategories={weeklyCategories}
                       weeklyCurrentConsumption={weeklyCurrentConsumption}
                       weeklyTargetConsumption={weeklyTargetConsumption}
                       monthlyCurrentConsumption={monthlyCurrentConsumption}
                       monthlyTargetConsumption={monthlyTargetConsumption}
                       lastFeedback={lastFeedback}
+                      navigate={navigate}
                     />
                     <VisitHistory onAttend={handleAttend} currentUser={currentUser} attendanceHistory={attendanceHistory} isAttendedToday={isAttendedToday} />
                   </div>
@@ -420,9 +393,14 @@ const HomePage = ({
           <div className={styles.frame117}>
             <ShoppingList 
               shoppingItems={shoppingItems} 
-              onItemClick={handleShoppingItemClick} 
+              setShoppingItems={setShoppingItems}
+              handleSaveShoppingItem={handleSaveShoppingItem}
+              handleRemoveShoppingItem={handleRemoveShoppingItem}
             />
-            <RecommendedReviews shoppingItem={recommendedReviewItem} />
+            <RecommendedReviews 
+              shoppingItems={shoppingItems}
+              openReviewPopup={openReviewPopup} 
+            />
           </div>
         </div>
         <div className={styles.frame145}>
@@ -483,6 +461,15 @@ function App() {
   const [points, setPoints] = useState(0);
   const [attendanceHistory, setAttendanceHistory] = useState([]);
   const [isAttendedToday, setIsAttendedToday] = useState(false);
+  const [shoppingItems, setShoppingItems] = useState([]); // Moved to App component top level
+
+  const shoppingCategories = useMemo(() => {
+    if (!Array.isArray(shoppingItems)) return [];
+    const categories = shoppingItems.map(item => item.category);
+    const uniqueCategories = [...new Set(categories)];
+    console.log("Recalculating shoppingCategories:", uniqueCategories); // DEBUG
+    return uniqueCategories;
+  }, [shoppingItems]);
 
   const handleFeedbackSubmit = (feedbackData) => {
     setSubmittedFeedback(prevFeedbacks => [...prevFeedbacks, feedbackData]);
@@ -594,6 +581,7 @@ function App() {
         setIsAttendedToday(false);
         setMonthlyCategories([]); // Clear categories on logout
         setWeeklyCategories([]); // Clear categories on logout
+        setShoppingItems([]); // Clear shopping items on logout
         return;
       }
       const token = localStorage.getItem('jwtToken');
@@ -603,6 +591,7 @@ function App() {
         setIsAttendedToday(false);
         setMonthlyCategories([]); // Clear categories if no token
         setWeeklyCategories([]); // Clear categories if no token
+        setShoppingItems([]); // Clear shopping items if no token
         return;
       }
 
@@ -645,7 +634,7 @@ function App() {
           const data = await response.json();
           setIsAttendedToday(data.attended);
         }
-      } catch (error) {
+        } catch (error) {
         console.error("Error checking today's attendance:", error);
       }
 
@@ -678,9 +667,105 @@ function App() {
         setMonthlyCategories([]);
         setWeeklyCategories([]);
       }
+
+      // Fetch shopping items
+      try {
+        const response = await fetch('/api/shopping-items', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data.success && Array.isArray(data.data)) {
+            setShoppingItems(data.data);
+          } else {
+            console.error("Failed to fetch shopping items or data is not an array:", data);
+            setShoppingItems([]);
+          }
+        } else {
+          console.error("Failed to fetch shopping items:", response.statusText);
+          setShoppingItems([]);
+        }
+      } catch (error) {
+        console.error("Error fetching shopping items:", error);
+        setShoppingItems([]);
+      }
     };
     fetchData();
   }, [currentUser]);
+
+  const handleSaveShoppingItem = async (text, category) => {
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      console.log('API call started for:', text, category);
+      const response = await fetch('/api/shopping-items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ text, category })
+      });
+      console.log('Response status:', response.status);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Response data:', data);
+        console.log('Data success:', data.success, 'Data data:', data.data);
+        if (data.success && data.data) {
+          setShoppingItems(prevItems => [...prevItems, data.data]);
+          return data.data;
+        } else {
+          console.error("Failed to save shopping item:", data.error || "Invalid data structure");
+          return null;
+        }
+      } else {
+        console.error("Failed to save shopping item:", response.statusText);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error saving shopping item:", error);
+      return null;
+    }
+  };
+
+  const handleRemoveShoppingItem = async (id) => {
+    if (!currentUser) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/shopping-items/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setShoppingItems(prevItems => prevItems.filter(item => item.id !== id));
+        } else {
+          console.error("Failed to remove shopping item:", data.error || "Invalid data structure");
+        }
+      } else {
+        console.error("Failed to remove shopping item:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error removing shopping item:", error);
+    }
+  };
 
   
 
@@ -697,6 +782,7 @@ function App() {
                   apiMessage={apiMessage}
                   currentUser={currentUser}
                   monthlyCategories={monthlyCategories}
+                  weeklyCategories={weeklyCategories}
                   weeklyCurrentConsumption={weeklyCurrentConsumption}
                   weeklyTargetConsumption={weeklyTargetConsumption}
                   monthlyCurrentConsumption={monthlyCurrentConsumption}
@@ -706,6 +792,10 @@ function App() {
                   handleAttend={handleAttend}
                   attendanceHistory={attendanceHistory}
                   isAttendedToday={isAttendedToday}
+                  shoppingItems={shoppingItems}
+                  setShoppingItems={setShoppingItems}
+                  handleSaveShoppingItem={handleSaveShoppingItem}
+                  handleRemoveShoppingItem={handleRemoveShoppingItem}
                 />
               } 
             />
@@ -744,6 +834,8 @@ function App() {
                   lastFeedback={lastFeedback}
                   weeklyCurrentConsumption={weeklyCurrentConsumption}
                   weeklyTargetConsumption={weeklyTargetConsumption}
+                  weeklyCategories={weeklyCategories}
+                  setWeeklyCategories={setWeeklyCategories}
                   handleAttend={handleAttend}
                 />
               } 

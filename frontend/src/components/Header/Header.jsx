@@ -75,8 +75,8 @@ export const Header = ({ currentUser, setCurrentUser }) => {
             </>
           ) : (
             <>
-              <Link to="/login" className={styles.navItem}>로그인</Link>
-              <Link to="/signup" className={styles.navItem}>회원가입</Link>
+              <Link to="/login" className={`${styles.navItem} ${styles.loginButton}`}>로그인</Link>
+              <Link to="/signup" className={`${styles.navItem} ${styles.signupButton}`}>회원가입</Link>
             </>
           )}
         </div>

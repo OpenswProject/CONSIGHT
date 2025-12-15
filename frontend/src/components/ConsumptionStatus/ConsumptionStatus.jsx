@@ -62,12 +62,15 @@ export const ProgressBar = ({ value, max, label, percentageColor, isThick }) => 
 export const ConsumptionStatus = ({ 
   username, 
   currentUser, 
+  points,
   monthlyCategories,
+  weeklyCategories,
   weeklyCurrentConsumption,
   weeklyTargetConsumption,
   monthlyCurrentConsumption,
   monthlyTargetConsumption,
-  lastFeedback
+  lastFeedback,
+  navigate
 }) => {
   // Monthly Consumption
   const monthlyPercentage = monthlyTargetConsumption > 0 ? Math.round((monthlyCurrentConsumption / monthlyTargetConsumption) * 100) : 0;
@@ -102,10 +105,25 @@ export const ConsumptionStatus = ({
             <div className={styles.frame33}> {/* Corresponds to frame-33 */}
               <div className={styles.frame24}> {/* Corresponds to frame-24 */}
                 <div className={styles.frame196}> {/* Corresponds to frame-196 */}
-                  <div className={styles.div3}>{currentUser ? currentUser.username : "USERNAME"} 님의 소비현황</div>
-                  <div className={styles.line4}></div>
+                  <div className={styles.consumptionTitleContainer}>
+                    <div className={styles.div3}>
+                      {currentUser ? `${currentUser.username}님의 소비현황` : "Guest님의 소비현황"}
+                    </div>
+                    {currentUser && (
+                      <div className={styles.pointsInfo}>
+                        <img className={styles.vector} src="/leaf_point_icon.svg" alt="Leaf Point Icon" />
+                        <div className={styles.frame914}>
+                          <div className={styles._4000}>{points}</div>
+                        </div>
+                        <div className={styles._6000pt}>승급까지 -6000PT</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className={styles._11}>월 소비현황</div>
+                <div className={styles.frame196}>
+                  <div className={styles.div3}>월 소비현황</div>
+                  <div className={styles.line4_short}></div>
+                </div>
               </div>
               <div className={styles.frame22}> {/* Corresponds to frame-22 */}
                 <div className={styles.frame23}> {/* Corresponds to frame-23 */}
@@ -183,7 +201,7 @@ export const ConsumptionStatus = ({
                 <div className={styles.frame36}>
                     <div className={styles.viewAmountWrapper}>
                         <div className={styles._140}>{monthlyCurrentConsumption}</div>
-                        <div className={styles._200}>/{monthlyTargetConsumption} 만원</div>
+                        <div className={styles._200}>{`/`}{monthlyTargetConsumption} 만원</div>
                     </div>
                 </div>
                 <ProgressBar
@@ -203,7 +221,7 @@ export const ConsumptionStatus = ({
                 <div className={styles.frame37}>
                   <div className={styles.frame36}>
                     <div className={styles._240}>{lastFeedback ? lastFeedback.currentConsumption : 0}</div>
-                    <div className={styles._2002}>/{lastFeedback ? lastFeedback.targetConsumption : 0} 만원</div>
+                    <div className={styles._2002}>{`/`}{lastFeedback ? lastFeedback.targetConsumption : 0} 만원</div>
                   </div>
                   <ProgressBar
                     value={lastFeedback ? lastFeedback.currentConsumption : 0}
@@ -233,7 +251,7 @@ export const ConsumptionStatus = ({
                   <div className={styles.frame36}>
                     <div className={styles.viewAmountWrapper}>
                         <div className={styles._140}>{weeklyCurrentConsumption}</div>
-                        <div className={styles._200}>/{weeklyTargetConsumption} 만원</div>
+                        <div className={styles._200}>{`/`}{weeklyTargetConsumption} 만원</div>
                     </div>
                   </div>
                   <ProgressBar
@@ -249,8 +267,18 @@ export const ConsumptionStatus = ({
           </div>
           {/* Dynamic weekly progress bars */}
           <div className={styles.frame342}>
-            {/* Assuming weeklyCategories is also passed as a prop if needed here */}
-            {/* For now, this section is left without the hardcoded values */}
+            {(weeklyCategories || []).slice(0, 3).map((category, index) => (
+              <div className={styles.frame31} key={category.id || index}>
+                <div className={styles.frame26}>
+                  <div className={styles.ellipseFill} style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
+                  <div className={styles.div4}>{category.name}</div>
+                </div>
+                <ProgressBar value={category.currentAmount} max={category.targetAmount} label={`${category.currentAmount}/${category.targetAmount}`} percentageColor={COLORS[index % COLORS.length]} />
+              </div>
+            ))}
+          </div>
+          <div className={styles.seeMoreButton} onClick={() => navigate('/consume-plan')}>
+            더보기
           </div>
         </div>
       </div>

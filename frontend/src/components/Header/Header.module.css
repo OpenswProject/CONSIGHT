@@ -19,7 +19,7 @@
 
 .container { /* Corresponds to .bar */
   border-radius: 0px 0px 10px 10px;
-  padding: 11px 13px 8px 40px; /* padding-left 40px로 수정 */
+  padding: 11px 13px 8px 40px; /* padding-right 100px로 수정 */
   display: flex;
   flex-direction: row;
   /* gap: 552px; Removed fixed gap for responsiveness */
@@ -39,7 +39,7 @@
 .logoContainer { /* Corresponds to .frame-38 */
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 0px;
   align-items: center;
   justify-content: flex-start;
   flex-shrink: 0;
@@ -131,7 +131,7 @@
   align-items: center;
   justify-content: flex-start;
   flex-shrink: 0;
-  width: 63px;
+  width: auto;
   height: 17px;
   position: relative;
 }
@@ -226,4 +226,24 @@
   width: 80px;
   height: 0px;
   position: relative;
+}
+
+.loginButton {
+  background-color: transparent;
+  color: #82b79e;
+  border: 1.5px solid #82b79e;
+  width: 90px;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.loginButton:hover {
+  background-color: rgba(130, 183, 158, 0.05);
+}
+
+.signupButton {
+  border: 1.5px solid #aaaaaa;
+  width: 90px;
+  justify-content: center;
+  transition: background-color 0.2s;
 }

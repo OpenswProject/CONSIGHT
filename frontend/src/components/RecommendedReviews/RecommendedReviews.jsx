@@ -1,63 +1,147 @@
-import React, { useState, useEffect } from "react"; // useState, useEffect import
+import React, { useState, useEffect, useMemo } from "react";
 import styles from "./RecommendedReviews.module.css";
 import ReviewPopup from "../ReviewPopup";
 
-export const RecommendedReviews = ({ openReviewPopup }) => {
-  const [dynamicRecommendedReviews, setDynamicRecommendedReviews] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어 상태 추가
-  const [filteredReviews, setFilteredReviews] = useState([]); // 필터링된 리뷰 상태 추가
+export const RecommendedReviews = ({ shoppingItems, openReviewPopup }) => {
+  const [reviews, setReviews] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // 1. Get unique categories from shopping list
+  const recommendationCategories = useMemo(() => {
+    if (!shoppingItems || shoppingItems.length === 0) return [];
+    const categories = shoppingItems.map(item => item.category);
+    return [...new Set(categories)];
+  }, [shoppingItems]);
+
+  // 2. Fetch reviews when categories change
   useEffect(() => {
-    const fetchRecommendedReviews = async () => {
+    const fetchReviews = async () => {
+      // If there are no categories, fetch general recommendations
+      let url = '/api/reviews/recommended';
+      if (recommendationCategories.length > 0) {
+        url = `/api/reviews/most-liked-by-categories?categories=${recommendationCategories.join(',')}`;
+      }
+      
       try {
-        const response = await fetch('/api/reviews/recommended'); // Assuming this endpoint exists
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        console.log('Fetching reviews from URL:', url);
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
         const data = await response.json();
-        if (data.success && data.data) {
-          setDynamicRecommendedReviews(data.data);
-          setFilteredReviews(data.data); // 초기에는 모든 리뷰를 보여줌
+        if (data.success && Array.isArray(data.data)) {
+          setReviews(data.data);
         } else {
-          console.error("Failed to fetch recommended reviews:", data.error || "Invalid data structure");
+          setReviews([]);
         }
       } catch (error) {
-        console.error("Error fetching recommended reviews:", error);
+        console.error("Error fetching reviews:", error);
+        setReviews([]);
       }
     };
 
-    fetchRecommendedReviews();
-  }, []); // Empty dependency array means this runs once on mount
+    fetchReviews();
+  }, [recommendationCategories]);
 
-  // 검색어 변경 핸들러
+  // 3. Helper function to generate label for a review
+  const getLabelForReview = (review) => {
+    if (!shoppingItems || shoppingItems.length === 0) {
+      return null;
+    }
+
+    const matchingIndices = [];
+    shoppingItems.forEach((item, index) => {
+      if (item.category === review.category) {
+        matchingIndices.push(index + 1);
+      }
+    });
+
+    if (matchingIndices.length > 0) {
+      return `추천리뷰: ${matchingIndices.join(', ')}번`;
+    }
+
+    return null; // Or a generic label like "추천리뷰" if needed
+  };
+  
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  // 검색 실행 핸들러
-  const handleSearch = () => {
+  // Filter final display reviews based on search term
+  const filteredReviews = useMemo(() => {
+    if (!searchTerm) {
+      return reviews;
+    }
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    const newFilteredReviews = dynamicRecommendedReviews.filter(review =>
+    return reviews.filter(review => 
       review.title.toLowerCase().includes(lowerCaseSearchTerm)
     );
-    setFilteredReviews(newFilteredReviews);
-  };
+  }, [searchTerm, reviews]);
 
-  // 엔터 키 입력 핸들러
+
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      handleSearch();
+      // Search is now handled by the useMemo hook as user types
     }
+  };
+
+  const renderReviewItem = (review) => {
+    const label = getLabelForReview(review);
+    return (
+      <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}>
+        <div className={styles.reviewContentWrapper}>
+          <div className={styles.reviewHeader}>
+            <div className={styles.userInfo}>
+              <div className={styles.avatar}></div>
+              <div className={styles.usernameAndMore}>
+                <span className={styles.username}>{review.author?.username || 'Unknown'}</span>
+                <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
+              </div>
+              <div className={styles.titleContainer}>
+                {label && <span className={styles.recommendationContext}>{label}</span>}
+                <span className={styles.reviewTitle}>{review.title}</span>
+              </div>
+            </div>
+            <div className={styles.reviewMeta}>
+              <span className={styles.date}>{new Date(review.createDate).toLocaleDateString()}</span>
+              <div className={styles.categoryTagWrapper}>
+                <span className={styles.categoryTag}>{review.category}</span>
+              </div>
+            </div>
+          </div>
+          <div className={styles.reviewTextWrapper}>
+            <p className={styles.reviewText}>{review.content}</p>
+            <div className={styles.productLinkWrapper}>
+              <button className={styles.productLinkButton}>제품 링크</button>
+            </div>
+          </div>
+        </div>
+        <div className={styles.reviewActions}>
+          <div className={styles.actionItemGroup}>
+            <div className={styles.actionItem}>
+              <img src="/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
+              <span className={styles.actionCount}>{review.bookmarkCount}</span>
+            </div>
+            <div className={styles.actionItem}>
+              <img src="/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
+              <span className={styles.actionCount}>{review.commentCount}</span>
+            </div>
+            <div className={styles.actionItem}>
+              <img src="/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
+              <span className={styles.actionCount}>{review.likeCount}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
     <>
-      <div className={styles.card}> {/* Corresponds to .frame-60 */}
-        <div className={styles.headerAndSearchBar}> {/* New wrapper */}
-          <div className={styles.titleWrapper}> {/* Corresponds to .frame-123, .frame-1222, .frame-124 */}
+      <div className={styles.card}>
+        <div className={styles.headerAndSearchBar}>
+          <div className={styles.titleWrapper}>
             <h2 className={styles.title}>추천 리뷰</h2>
           </div>
-          {/* Search bar from mainpage reference */}
           <div className={styles.frame147}>
             <div className={styles.frame146}>
               <img className={styles.group1} src="/search_icon.svg" alt="Search icon" />
@@ -66,108 +150,31 @@ export const RecommendedReviews = ({ openReviewPopup }) => {
                 type="text"
                 placeholder="검색..."
                 className={styles.searchInput}
-                value={searchTerm} // 검색어 상태와 연결
-                onChange={handleSearchTermChange} // 검색어 변경 핸들러
-                onKeyDown={handleKeyDown} // 엔터 키 핸들러
+                value={searchTerm}
+                onChange={handleSearchTermChange}
+                onKeyDown={handleKeyDown}
               />
             </div>
           </div>
         </div>
-        <div className={styles.reviewList}> {/* Corresponds to .frame-116 */}
-          <div className={styles.reviewColumn}> {/* Corresponds to .frame-114 */}
-            {filteredReviews.slice(0, 3).map((review) => ( // filteredReviews 사용
-              <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
-                <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
-                  <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}
-                    <div className={styles.userInfo}> {/* Corresponds to .frame-1065 */}
-                      <div className={styles.avatar}></div> {/* Corresponds to .profile3 */}
-                      <div className={styles.usernameAndMore}> {/* New wrapper */}
-                        <span className={styles.username}>{review.author?.username || 'Unknown'}</span>
-                        <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
-                      </div>
-                      <span className={styles.reviewTitle}>{review.title}</span>
-                    </div>
-                    <div className={styles.reviewMeta}> {/* Corresponds to .frame-108 */}
-                      <span className={styles.date}>{new Date(review.createDate).toLocaleDateString()}</span>
-                      <div className={styles.categoryTagWrapper}> {/* Corresponds to .frame-91 */}
-                        <span className={styles.categoryTag}>{review.category}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.reviewTextWrapper}> {/* Corresponds to .frame-1103 */}
-                    <p className={styles.reviewText}>{review.content}</p>
-                    <div className={styles.productLinkWrapper}> {/* Corresponds to .frame-111 */}
-                      <button className={styles.productLinkButton}>제품 링크</button> {/* Corresponds to .frame-912, .div12 */}
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.reviewActions}> {/* Corresponds to .frame-155 */}
-                  <div className={styles.actionItemGroup}>
-                    <div className={styles.actionItem}>
-                      <img src="/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
-                      <span className={styles.actionCount}>{review.bookmarkCount}</span>
-                    </div>
-                    <div className={styles.actionItem}>
-                      <img src="/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
-                      <span className={styles.actionCount}>{review.commentCount}</span>
-                    </div>
-                    <div className={styles.actionItem}>
-                      <img src="/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
-                      <span className={styles.actionCount}>{review.likeCount}</span>
-                    </div>
-                  </div>
-                </div>
+        <div className={styles.reviewList}>
+          {filteredReviews.length > 0 ? (
+            <>
+              <div className={styles.reviewColumn}>
+                {filteredReviews.slice(0, 3).map(renderReviewItem)}
               </div>
-            ))}
-          </div>
-          <div className={styles.reviewColumn}> {/* Corresponds to .frame-115 */}
-            {filteredReviews.slice(3, 6).map((review) => ( // filteredReviews 사용
-              <div key={review.id} className={styles.reviewItem} onClick={() => openReviewPopup(review)}> {/* Corresponds to .frame-832, .frame-1053 */}
-                <div className={styles.reviewContentWrapper}> {/* Corresponds to .frame-1133 */}
-                  <div className={styles.reviewHeader}> {/* Corresponds to .frame-1076 */}
-                    <div className={styles.userInfo}> {/* Corresponds to .frame-1065 */}
-                      <div className={styles.avatar}></div> {/* Corresponds to .profile3 */}
-                      <div className={styles.usernameAndMore}> {/* New wrapper */}
-                        <span className={styles.username}>{review.author?.username || 'Unknown'}</span>
-                        <img className={styles.moreIcon} src="/More_info.svg" alt="More options" />
-                      </div>
-                      <span className={styles.reviewTitle}>{review.title}</span>
-                    </div>
-                    <div className={styles.reviewMeta}> {/* Corresponds to .frame-108 */}
-                      <span className={styles.date}>{new Date(review.createDate).toLocaleDateString()}</span>
-                      <div className={styles.categoryTagWrapper}> {/* Corresponds to .frame-91 */}
-                        <span className={styles.categoryTag}>{review.category}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.reviewTextWrapper}> {/* Corresponds to .frame-1103 */}
-                    <p className={styles.reviewText}>{review.content}</p>
-                    <div className={styles.productLinkWrapper}> {/* Corresponds to .frame-111 */}
-                      <button className={styles.productLinkButton}>제품 링크</button> {/* Corresponds to .frame-912, .div12 */}
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.reviewActions}> {/* Corresponds to .frame-155 */}
-                  <div className={styles.actionItemGroup}>
-                    <div className={styles.actionItem}>
-                      <img src="/bookmark_icon.svg" alt="Bookmark" className={styles.actionIcon} />
-                      <span className={styles.actionCount}>{review.bookmarkCount}</span>
-                    </div>
-                    <div className={styles.actionItem}>
-                      <img src="/comment_icon.svg" alt="Comment" className={styles.actionIcon} />
-                      <span className={styles.actionCount}>{review.commentCount}</span>
-                    </div>
-                    <div className={styles.actionItem}>
-                      <img src="/like.svg" alt="Like" className={`${styles.actionIcon} ${styles.likeIcon}`} />
-                      <span className={styles.actionCount}>{review.likeCount}</span>
-                    </div>
-                  </div>
-                </div>
+              <div className={styles.reviewColumn}>
+                {filteredReviews.slice(3, 6).map(renderReviewItem)}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <div className={`${styles.reviewColumn} ${styles.noReviewsPlaceholder}`}>
+              <p>추천 리뷰가 없습니다.</p>
+            </div>
+          )}
         </div>
       </div>
-      </>
+    </>
   );
 };
+

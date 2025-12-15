@@ -26,12 +26,13 @@
 }
 
 .div {
-  color: #000000;
-  font-family: "Inter-SemiBold", Helvetica;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: normal;
+  color: var(--gray-51);
+  text-align: left;
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  position: relative;
+  white-space: nowrap;
 }
 
 .frame914 {
@@ -50,7 +51,7 @@
 }
 
 .attendButton {
-  background-color: #88B04B; /* Desaturated Green */
+  background-color: #a9c3b9; /* Desaturated Green */
   border: none;
   color: white;
   padding: 8px 16px;
@@ -65,7 +66,7 @@
 }
 
 .attendButton:hover:not(:disabled) {
-  background-color: #799c42;
+  background-color: #82b79e;
 }
 
 .attendButton:disabled {

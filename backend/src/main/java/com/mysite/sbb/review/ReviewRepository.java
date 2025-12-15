@@ -18,5 +18,9 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     @Query("SELECT DISTINCT c.review FROM Comment c WHERE c.author = :author")
     Page<Review> findCommentedReviewsByAuthor(@Param("author") SiteUser author, Pageable pageable);
     List<Review> findByAuthor(SiteUser author); // Add this for getMyReviews
-    List<Review> findByCategoryOrderByLikeCountDesc(String category); // New method for recommended reviews
+    List<Review> findTop6ByOrderByLikeCountDesc();
+
+    List<Review> findTop6ByCategoryOrderByLikeCountDesc(String category);
+
+    List<Review> findTop6ByCategoryInOrderByLikeCountDesc(List<String> categories);
 }

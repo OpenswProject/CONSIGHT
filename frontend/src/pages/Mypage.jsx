@@ -14,7 +14,9 @@ const Mypage = ({
   monthlyCategories,
   lastFeedback,
   weeklyCurrentConsumption,
-  weeklyTargetConsumption
+  weeklyTargetConsumption,
+  weeklyCategories, // 추가된 prop
+  setWeeklyCategories // 추가된 prop
 }) => {
   const navigate = useNavigate();
   const [isPopupOpen, setPopupOpen] = useState(false);
@@ -35,6 +37,11 @@ const Mypage = ({
   const [followingCount, setFollowingCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   
+  // 소비 기록하기 관련 상태
+  const [selectedWeeklyCategoryIndex, setSelectedWeeklyCategoryIndex] = useState(0);
+  const [inputAmount, setInputAmount] = useState('');
+  const [updateType, setUpdateType] = useState('add'); // 'add' 또는 'set'
+
   const moreOptionsRef = useRef(null);
   const currentMonth = new Date().getMonth() + 1;
 
@@ -291,7 +298,19 @@ const Mypage = ({
       }));
   }, [monthlyCategories]);
 
-  const COLORS = ['#D2DADC', '#DDE6DB', '#DADCED', '#E0E0E0', '#CAC8C5', '#9BC4B0', '#BDB5D5'];
+  const COLORS = ['#9BC4B0', '#AEC6CF', '#D3D3D3', '#F0F0F0', '#BDBBB6', '#C3CDE6'];
+
+  // Custom Tooltip for Pie Chart
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className={styles.customTooltip}>
+          <p className="label">{`${payload[0].name} : ${payload[0].value.toLocaleString()}원`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   // --- Pagination Logic ---
   const itemsPerPage = 6;
@@ -401,6 +420,118 @@ const Mypage = ({
 
   const activeDataInfo = getActiveDataInfo();
 
+  // 소비 기록하기 관련 로직
+  const handleCategoryChange = (e) => {
+    setSelectedWeeklyCategoryIndex(parseInt(e.target.value, 10));
+  };
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    // 정수만 허용 (음수 포함)
+    if (/^-?\d*$/.test(value) || value === '-') { // 음수 입력 시작을 위해 '-' 허용
+      setInputAmount(value);
+    }
+  };
+
+  const handleUpdateTypeChange = (e) => {
+    setUpdateType(e.target.value);
+  };
+
+  const handleRecordConsumption = async () => {
+    if (!currentUser || !currentUser.id) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+    if (inputAmount === '' || inputAmount === '-' || isNaN(parseInt(inputAmount, 10))) {
+      alert("유효한 금액을 입력해주세요.");
+      return;
+    }
+
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    const amount = parseInt(inputAmount, 10);
+    const selectedCategory = weeklyCategories[selectedWeeklyCategoryIndex];
+
+    if (!selectedCategory) {
+      alert("카테고리를 선택해주세요.");
+      return;
+    }
+
+    let newCurrentAmount = selectedCategory.currentAmount;
+    if (updateType === 'add') {
+      newCurrentAmount += amount;
+    } else { // updateType === 'set'
+      newCurrentAmount = amount;
+    }
+
+    // 목표 금액을 초과하지 않도록 (음수 값은 허용)
+    // 현재 금액이 0 미만이 되는 것을 방지
+    if (newCurrentAmount < 0) {
+        newCurrentAmount = 0;
+    }
+    // 목표 금액을 초과하는 경우 경고 (단, 음수 입력으로 인해 목표 금액이 초과되는 경우는 제외)
+    if (newCurrentAmount > selectedCategory.targetAmount && amount > 0) {
+      alert("현재 금액이 목표 금액을 초과할 수 없습니다.");
+      return;
+    }
+
+    const updatedCategory = {
+      ...selectedCategory,
+      currentAmount: newCurrentAmount
+    };
+
+    try {
+      const response = await fetch(`/api/consumption/categories/${selectedCategory.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedCategory)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setWeeklyCategories(prev =>
+            prev.map((cat, idx) =>
+              idx === selectedWeeklyCategoryIndex ? updatedCategory : cat
+            )
+          );
+          alert("소비 기록이 성공적으로 갱신되었습니다.");
+          setInputAmount(''); // 입력 필드 초기화
+        } else {
+          alert(`소비 기록 갱신 실패: ${data.error?.message || '알 수 없는 오류'}`);
+        }
+      } else {
+        const errorData = await response.json();
+        alert(`소비 기록 갱신 실패: ${errorData.message || response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error updating consumption:", error);
+      alert("소비 기록 갱신 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 현재 선택된 카테고리 정보
+  const currentSelectedCategory = weeklyCategories[selectedWeeklyCategoryIndex];
+  const beforeUpdateAmount = currentSelectedCategory ? currentSelectedCategory.currentAmount : 0;
+  let afterUpdateAmount = beforeUpdateAmount;
+
+  if (inputAmount !== '' && inputAmount !== '-' && !isNaN(parseInt(inputAmount, 10))) {
+    const amountValue = parseInt(inputAmount, 10);
+    if (updateType === 'add') {
+      afterUpdateAmount = beforeUpdateAmount + amountValue;
+    } else {
+      afterUpdateAmount = amountValue;
+    }
+    if (afterUpdateAmount < 0) afterUpdateAmount = 0; // 0 미만 방지
+  }
+
   return (
     <>
       <div className={styles.div}>
@@ -500,18 +631,18 @@ const Mypage = ({
                           data={pieChartData}
                           cx="50%"
                           cy="50%"
-                          labelLine={false}
+                          innerRadius={20}
                           outerRadius={80}
                           fill="#8884d8"
+                          paddingAngle={5}
                           dataKey="value"
-                          nameKey="name"
+                          labelLine={false}
                         >
                           {pieChartData.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                           ))}
                         </Pie>
-                        <Tooltip />
-                        <Legend />
+                        <Tooltip content={<CustomTooltip />} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -674,54 +805,7 @@ const Mypage = ({
                       </div>
                     </div>
                     <div className={styles.frame342}>
-                      <div className={styles.frame314}>
-                        <div className={styles.frame26}>
-                          <div className={styles.ellipseFill4}></div>
-                          <div className={styles.div4}>식비</div>
-                        </div>
-                        <ProgressBar value={30} max={100} isThick={false} percentageColor="#c9d3d0" />
-                        <div className={styles.labelValue2}>30/100</div>
-                      </div>
-                      <div className={styles.frame325}>
-                        <div className={styles.frame26}>
-                          <div className={styles.ellipseFill7}></div>
-                          <div className={styles.div4}>교통비</div>
-                        </div>
-                        <ProgressBar value={30} max={40} isThick={false} percentageColor="#e0e4e6" />
-                        <div className={styles.frame49}>
-                          <div className={styles.labelValue2}>30/40</div>
-                        </div>
-                      </div>
-                      <div className={styles.frame33}>
-                        <div className={styles.frame26}>
-                          <div className={styles.ellipseFill7}></div>
-                          <div className={styles.div4}>교통비</div>
-                        </div>
-                        <ProgressBar value={30} max={40} isThick={false} percentageColor="#e0e4e6" />
-                        <div className={styles.frame49}>
-                          <div className={styles.labelValue2}>30/40</div>
-                        </div>
-                      </div>
-                      <div className={styles.frame343}>
-                        <div className={styles.frame26}>
-                          <div className={styles.ellipseFill7}></div>
-                          <div className={styles.div4}>교통비</div>
-                        </div>
-                        <ProgressBar value={30} max={40} isThick={false} percentageColor="#e0e4e6" />
-                        <div className={styles.frame49}>
-                          <div className={styles.labelValue2}>30/40</div>
-                        </div>
-                      </div>
-                      <div className={styles.frame352}>
-                        <div className={styles.frame26}>
-                          <div className={styles.ellipseFill7}></div>
-                          <div className={styles.div4}>교통비</div>
-                        </div>
-                        <ProgressBar value={30} max={40} isThick={false} percentageColor="#e0e4e6" />
-                        <div className={styles.frame49}>
-                          <div className={styles.labelValue2}>30/40</div>
-                        </div>
-                      </div>
+                      {/* 기존 하드코딩된 주간 카테고리 목록 삭제 */}
                     </div>
                   </div>
                 </div>
@@ -732,22 +816,53 @@ const Mypage = ({
                         <div className={styles.frame92}>
                           <div className={styles.frame26}>
                             <div className={styles.ellipseFill7}></div>
-                            <div className={styles.div4}>교통비</div>
+                            {/* 카테고리 선택 드롭다운 */}
+                            <select 
+                              className={styles.categorySelect} 
+                              value={selectedWeeklyCategoryIndex} 
+                              onChange={handleCategoryChange}
+                            >
+                              {weeklyCategories.map((category, index) => (
+                                <option key={category.id} value={index}>
+                                  {category.name}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </div>
-                        <div className={styles.frame912}>
-                          <div className={styles.div12}>추가</div>
+                        {/* 추가/갱신 라디오 버튼 */}
+                        <div className={styles.updateTypeToggle}>
+                          <label>
+                            <input 
+                              type="radio" 
+                              value="add" 
+                              checked={updateType === 'add'} 
+                              onChange={handleUpdateTypeChange} 
+                            /> 추가
+                          </label>
+                          <label>
+                            <input 
+                              type="radio" 
+                              value="set" 
+                              checked={updateType === 'set'} 
+                              onChange={handleUpdateTypeChange} 
+                            /> 갱신
+                          </label>
                         </div>
                       </div>
                       <div className={styles.frame218}>
-                        <div className={styles.a3}>
-                          <span>
-                            <span className={styles.a3Span}>+</span>
-                            <span className={styles.a3Span2}>15</span>
-                            <span className={styles.a3Span}>만 원</span>
-                          </span>
+                        <div className={styles.amountInputWrapper}> {/* 새로운 div 추가 */}
+                          {updateType === 'add' && <span className={styles.a3Span}>+</span>}
+                          {/* 금액 입력 필드 */}
+                          <input 
+                            type="text" 
+                            className={styles.amountInput} 
+                            value={inputAmount} 
+                            onChange={handleAmountChange} 
+                            placeholder="0"
+                          />
+                          <span className={styles.a3Span}>만 원</span>
                         </div>
-                        <div className={styles.line45}></div>
                       </div>
                     </div>
                     <div className={styles.frame217}>
@@ -756,9 +871,14 @@ const Mypage = ({
                           <div className={styles.ellipseFill4}></div>
                           <div className={styles.div4}>갱신 전</div>
                         </div>
-                        <ProgressBar value={20} max={40} isThick={false} percentageColor="#c9d3d0" />
+                        <ProgressBar 
+                          value={beforeUpdateAmount} 
+                          max={currentSelectedCategory ? currentSelectedCategory.targetAmount : 0} 
+                          isThick={false} 
+                          percentageColor="#c9d3d0" 
+                        />
                         <div className={styles.frame49}>
-                          <div className={styles.labelValue2}>20/40</div>
+                          <div className={styles.labelValue2}>{beforeUpdateAmount}/{currentSelectedCategory ? currentSelectedCategory.targetAmount : 0}</div>
                         </div>
                       </div>
                       <div className={styles.frame215}>
@@ -766,14 +886,19 @@ const Mypage = ({
                           <div className={styles.ellipseFill8}></div>
                           <div className={styles.div4}>갱신 후</div>
                         </div>
-                        <ProgressBar value={35} max={40} isThick={false} percentageColor="#abcebe" />
+                        <ProgressBar 
+                          value={afterUpdateAmount} 
+                          max={currentSelectedCategory ? currentSelectedCategory.targetAmount : 0} 
+                          isThick={false} 
+                          percentageColor="#abcebe" 
+                        />
                         <div className={styles.frame49}>
-                          <div className={styles.labelValue6}>35/40</div>
+                          <div className={styles.labelValue6}>{afterUpdateAmount}/{currentSelectedCategory ? currentSelectedCategory.targetAmount : 0}</div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className={styles.frame62}>
+                  <div className={styles.frame62} onClick={handleRecordConsumption}>
                     <div className={styles.a}>소비 기록하기</div>
                   </div>
                 </div>

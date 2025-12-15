@@ -166,6 +166,7 @@
   box-sizing: border-box; /* Include padding in width */
   margin: 0 auto; /* 중앙 정렬 */
   top: 0px; /* mainpage reference의 top 값 */
+  margin-bottom: 40px;
 }
 
 .frame192 { /* Corresponds to frame-192 */
@@ -249,9 +250,10 @@
 .consumptionAndVisitSection {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Gap between ConsumptionStatus and VisitHistory */
-  width: 100%; /* Ensure it takes full width of its parent */
-  align-items: flex-start; /* Align items to the top */
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+  margin-top: 30px;
 }
 
 .line1 { /* Corresponds to .line-1 */
@@ -1364,7 +1366,7 @@
   border: 1.5px solid #dadee1; /* Matches frame-199 border */
   width: 100%;
   box-shadow: none; /* Removed box-shadow */
-  height: 295px; /* Increased height by 20px */
+  height: 315px; /* Increased height by 20px */
   position: relative;
   display: flex;
   flex-direction: column;

@@ -70,7 +70,7 @@ const LoginPage = ({ setCurrentUser }) => {
             required
           />
         </div>
-        <button type="submit" className={styles.loginButton}>Log In</button>
+        <button type="submit" className={styles.loginButton}>로그인</button>
       </form>
     </div>
   );

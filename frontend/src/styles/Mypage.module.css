@@ -1001,12 +1001,13 @@
   border-style: solid;
   border-color: #e3e5e7;
   border-width: 2px;
-  padding: 12px 111px 12px 111px;
+  padding: 12px 20px; /* 수정된 부분 */
   display: flex;
   flex-direction: row;
   gap: 10px;
   align-items: center;
   justify-content: center;
+  align-self: stretch;
   flex-shrink: 0;
   width: 253px;
   height: 44px;
@@ -1979,25 +1980,219 @@
   border-style: solid;
   border-color: #e3e5e7;
   border-width: 2px;
-  padding: 20px 118px 12px 118px;
+  padding: 15px; /* padding 줄임 */
   display: flex;
   flex-direction: column;
-  gap: 27px;
-  align-items: center;
-  justify-content: center;
+  gap: 15px; /* gap 줄임 */
+  align-items: flex-start; /* 변경: center -> flex-start */
+  justify-content: flex-start; /* 변경: center -> flex-start */
   align-self: stretch;
   flex-shrink: 0;
-  height: 207px;
+  width: auto; /* width 유연하게 */
+  height: auto; /* height 유연하게 */
   position: relative;
 }
 .frame293 {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px; /* gap 줄임 */
+  align-items: flex-start; /* 변경: center -> flex-start */
+  justify-content: flex-start;
+  flex-shrink: 0;
+  width: 100%; /* width 100%로 설정 */
+}
+
+/* New styles for consumption recording box */
+.categorySelect {
+  background-color: #f3f3f3;
+  border: 1.5px solid #e3e5e7;
+  border-radius: 8px;
+  padding: 3px 5px; /* padding 줄임 */
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px; /* font-size 줄임 */
+  color: #595e69;
+  appearance: none; /* Remove default select arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  width: 80px; /* width 줄임 */
+  text-align: center;
+}
+
+.updateTypeToggle {
+  display: flex;
+  flex-direction: column; /* 변경: row -> column */
+  gap: 3px; /* 간격 줄임 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 10px; /* font-size 줄임 */
+  color: #595e69;
+}
+
+.updateTypeToggle label {
+  display: flex;
   align-items: center;
+  cursor: pointer;
+}
+
+.updateTypeToggle input[type="radio"] {
+  margin-right: 3px; /* margin 줄임 */
+  accent-color: #4b858f; /* Custom color for radio button */
+}
+
+.amountInputWrapper { /* 새로 추가된 div */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  gap: 3px; /* 간격 줄임 */
+  width: 100%; /* width 100%로 설정 */
+}
+
+.amountInput {
+  background-color: transparent;
+  border: none; /* border-bottom 제거 */
+  font-family: "Inter-Bold", sans-serif;
+  font-size: 20px; /* font-size 줄임 */
+  font-weight: 700;
+  color: var(--green-ab);
+  text-align: left; /* text-align 왼쪽 정렬 */
+  width: 60px; /* width 줄임 */
+  outline: none; /* 포커스 시 아웃라인 제거 */
+}
+
+.amountInput::placeholder {
+  color: #d3d3d3;
+}
+
+.amountInput:focus {
+  border-bottom: none; /* border-bottom-color 제거 및 border-bottom: none; 추가 */
+}
+
+.a3Span { /* 기존 a3Span 수정 */
+  font-size: 12px; /* 글씨 크기 조정 */
+  color: #505050;
+}
+
+.labelValue2, .labelValue6 { /* 갱신 전/후 텍스트박스 길이 및 글씨 크기 조정 */
+  width: 100px; /* 길이 늘림 */
+  font-size: 8px; /* 글씨 크기 줄임 */
+}
+
+.frame49 { /* ProgressBar를 감싸는 div */
+  width: 120px; /* 길이 늘림 */
+}
+
+.frame2132 { /* 소비 기록하기 박스 내부의 상단 프레임 */
+  display: flex;
+  flex-direction: column; /* column으로 변경 */
+  gap: 10px; /* 간격 조정 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+}
+
+.frame216 { /* 카테고리 선택과 추가/갱신 라디오 버튼을 감싸는 프레임 */
+  display: flex;
+  flex-direction: row; /* row로 유지 */
+  gap: 10px; /* 간격 조정 */
+  align-items: center;
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+}
+
+.frame218 { /* 금액 입력 필드와 만 원 텍스트를 감싸는 프레임 */
+  display: flex;
+  flex-direction: column; /* column으로 변경 */
+  gap: 3px; /* gap 줄임 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+}
+
+.frame217 { /* 갱신 전/후 ProgressBar를 감싸는 프레임 */
+  display: flex;
+  flex-direction: column; /* column으로 변경 */
+  gap: 10px; /* 간격 조정 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+}
+
+.frame214, .frame215 { /* 갱신 전/후 개별 ProgressBar 프레임 */
+  display: flex;
+  flex-direction: column; /* column으로 변경 */
+  gap: 5px; /* 간격 조정 */
+  align-items: flex-start; /* 왼쪽 정렬 */
+  width: 100%;
+}
+
+.frame26 { /* 카테고리 이름과 원형 아이콘을 감싸는 프레임 */
+  display: flex;
+  flex-direction: row;
+  gap: 5px; /* 간격 조정 */
+  align-items: center;
+  justify-content: flex-start;
+  width: auto; /* width 유연하게 */
+}
+
+.div4 { /* 카테고리 이름 텍스트 */
+  font-size: 11px; /* font-size 줄임 */
+}
+
+.frame92 { /* 카테고리 선택 드롭다운을 감싸는 프레임 */
+  width: auto; /* width 유연하게 */
+}
+
+.frame912 { /* 추가/갱신 텍스트를 감싸는 프레임 */
+  width: auto; /* width 유연하게 */
+}
+
+.a3 { /* + 만원 텍스트 */
+  font-size: 12px; /* font-size 줄임 */
+}
+
+.a3Span2 { /* 15 텍스트 */
+  font-size: 20px; /* font-size 줄임 */
+}
+
+.line45 { /* 구분선 */
+  width: 80px; /* width 100%로 설정 -> 80px로 줄임 */
+}
+
+/* 의류 박스 (frame44) 조정 */
+.frame44 {
+  width: 120px; /* 절반 정도로 줄임 */
+  height: 60px; /* 살짝 늘림 */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* monthlyCategories를 감싸는 frame252에 flex-wrap 추가 */
+.frame252 {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; /* 여러 줄로 표시 */
+  gap: 10px; /* 간격 조정 */
+  align-items: flex-start;
   justify-content: flex-start;
   flex-shrink: 0;
   position: relative;
+}
+
+.customTooltip {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #333;
+}
+
+.customTooltip p {
+  margin: 0;
+  padding: 0;
 }
 .frame2132 {
   display: flex;
