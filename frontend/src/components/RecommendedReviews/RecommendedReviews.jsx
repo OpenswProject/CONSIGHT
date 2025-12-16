@@ -16,15 +16,26 @@ export const RecommendedReviews = ({ shoppingItems, openReviewPopup }) => {
   // 2. Fetch reviews when categories change
   useEffect(() => {
     const fetchReviews = async () => {
-      // If there are no categories, fetch general recommendations
-      let url = '/api/reviews/recommended';
+      const apiUrl = import.meta.env.VITE_API_URL;
+      let url;
+
       if (recommendationCategories.length > 0) {
-                const url = `${import.meta.env.VITE_API_URL}/api/reviews/most-liked-by-categories?categories=${recommendationCategories.join(',')}`;
+        url = `${apiUrl}/api/reviews/most-liked-by-categories?categories=${recommendationCategories.join(',')}`;
+      } else {
+        url = `${apiUrl}/api/reviews/recommended`;
       }
       
       try {
-        const response = await fetch(`${apiUrl}/api/reviews/recommended`, {
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
         const data = await response.json();
         if (data.success && Array.isArray(data.data)) {
