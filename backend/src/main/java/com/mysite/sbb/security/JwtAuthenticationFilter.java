@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                              path.equals("/api/hello") ||
                              path.equals("/") ||
                              path.startsWith("/h2-console/") ||
-                             path.equals("/user/signup"));
+                             path.equals("/api/user/signup"));
 
         logger.debug("Should skip JwtAuthenticationFilter: {}", skipFilter);
         return skipFilter;

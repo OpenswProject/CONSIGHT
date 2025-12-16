@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/bookmark").authenticated() // 북마크 (인증 필요)
                 .requestMatchers(HttpMethod.POST, "/api/reviews/*/comments").authenticated() // 댓글 작성 (인증 필요)
                 .requestMatchers("/api/follow/**").authenticated() // 팔로우 관련 (인증 필요)
-                .requestMatchers("/api/test", "/hello", "/", "/h2-console/**", "/user/signup").permitAll()
+                .requestMatchers("/api/test", "/hello", "/", "/h2-console/**", "/api/user/signup").permitAll()
                 // 그 외 모든 요청은 인증 필요
                 .anyRequest().authenticated()
             )
