@@ -268,7 +268,9 @@ const HomePage = ({
     try {
       const token = localStorage.getItem('jwtToken');
       const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/reviews?page=${page}&sort=createDate,desc`, { headers });
+      const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/api/reviews?page=${page}&sort=${sortParam}`
+        );
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       if (data.success && data.data) {

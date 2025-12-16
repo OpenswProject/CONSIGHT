@@ -23,8 +23,7 @@ export const RecommendedReviews = ({ shoppingItems, openReviewPopup }) => {
       }
       
       try {
-        console.log('Fetching reviews from URL:', url);
-        const response = await fetch(url);
+        const response = await fetch(`${apiUrl}/api/reviews/recommended`, {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         
         const data = await response.json();
