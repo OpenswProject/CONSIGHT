@@ -29,7 +29,7 @@ const LoginPage = ({ setCurrentUser, fetchData }) => {
     setError('');
 
     try {
-      const response = await fetch('/api/user/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

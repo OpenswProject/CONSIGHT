@@ -24,7 +24,6 @@ export const ShoppingList = ({ shoppingItems = [], handleSaveShoppingItem = () =
   };
 
   const handleSaveNewItem = async () => { // Made async
-    console.log('handleSaveNewItem called');
     if (newItemText.trim() === "") {
       return;
     }

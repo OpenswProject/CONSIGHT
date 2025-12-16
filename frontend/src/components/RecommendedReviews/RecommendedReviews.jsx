@@ -19,7 +19,7 @@ export const RecommendedReviews = ({ shoppingItems, openReviewPopup }) => {
       // If there are no categories, fetch general recommendations
       let url = '/api/reviews/recommended';
       if (recommendationCategories.length > 0) {
-        url = `/api/reviews/most-liked-by-categories?categories=${recommendationCategories.join(',')}`;
+                const url = `${import.meta.env.VITE_API_URL}/api/reviews/most-liked-by-categories?categories=${recommendationCategories.join(',')}`;
       }
       
       try {

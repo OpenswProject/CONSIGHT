@@ -41,7 +41,7 @@ const ReviewWritePage = () => {
     }
 
     try {
-      const response = await fetch('/api/reviews', { // Assuming /api/reviews is the endpoint
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews`, { // Assuming /api/reviews is the endpoint
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
