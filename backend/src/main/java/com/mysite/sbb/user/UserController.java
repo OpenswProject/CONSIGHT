@@ -67,7 +67,7 @@ public class UserController {
 		return "signup_form";
 	}
 
-	@PostMapping("/user/signup")
+	@PostMapping("/api/user/signup")
 	@ResponseBody // JSON 응답을 위해 추가
 	public ResponseEntity<?> signup(@Valid @RequestBody UserCreateForm userCreateForm, BindingResult bindingResult) {
 		log.info("회원가입 요청 수신: username={}, email={}", userCreateForm.getUsername(), userCreateForm.getEmail());
