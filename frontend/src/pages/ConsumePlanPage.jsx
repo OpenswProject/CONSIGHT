@@ -792,7 +792,7 @@ const ConsumePlanPage = (props) => {
         </div>
       </div>
       <div className={styles.rectangle8}></div>
-      <img className={styles.rectangle10} src="/rectangle-100.svg" alt="Rectangle" />
+      
       {showFeedbackPopup && <FeedbackPopup
         onClose={() => setShowFeedbackPopup(false)}
         onSubmit={handleFeedbackSubmit}
