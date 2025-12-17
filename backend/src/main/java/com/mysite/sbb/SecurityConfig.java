@@ -41,7 +41,7 @@ public class SecurityConfig {
         http
             // CSRF 보호 비활성화 (Stateless API에서는 일반적으로 비활성화)
             .csrf(csrf -> csrf.disable())
-            .cors(Customizer.withDefaults())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             
             // 폼 로그인 비활성화
             .formLogin(formLogin -> formLogin.disable()) // 이 줄 추가
@@ -110,15 +110,15 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Configuration
-    public static class WebConfig implements WebMvcConfigurer {
-        @Override
-        public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**") // 모든 경로에 대해
-                    .allowedOrigins("http://localhost:3000", "https://consight.vercel.app", "https://consight-git-main-oweles-projects-e30770f6.vercel.app") // 로컬 및 Vercel 배포 주소 허용
-                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
-                    .allowedHeaders("*") // 모든 헤더 허용
-                    .allowCredentials(true); // 자격 증명 허용
-        }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "https://consight.vercel.app", "https://consight-git-main-oweles-projects-e30770f6.vercel.app", "https://*.onrender.com"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
