@@ -568,6 +568,7 @@
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
+  min-height: 280px;
 }
 .frame45 {
   display: flex;

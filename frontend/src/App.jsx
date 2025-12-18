@@ -599,7 +599,7 @@ function App() {
 
   const validateToken = async (token) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
