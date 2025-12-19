@@ -150,7 +150,7 @@ const HomePage = ({
         return;
       }
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/notifications`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/notifications`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -174,7 +174,7 @@ const HomePage = ({
     const token = localStorage.getItem('jwtToken');
     if (!token) return;
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/notifications/${notificationId}/read`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/${notificationId}/read`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -196,7 +196,7 @@ const HomePage = ({
     const unreadNotificationIds = notifications.filter(notif => !notif.read).map(notif => notif.id);
     for (const id of unreadNotificationIds) {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL}/notifications/${id}/read`, {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/notifications/${id}/read`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -488,11 +488,11 @@ function App() {
         consumptionCategoriesResponse, 
         shoppingItemsResponse
       ] = await Promise.all([
-        fetch(`${import.meta.env.VITE_API_URL}/users/me`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${import.meta.env.VITE_API_URL}/attendance/history`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${import.meta.env.VITE_API_URL}/attendance/today`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${import.meta.env.VITE_API_URL}/consumption/categories`, { headers: { 'Authorization': `Bearer ${token}` } }),
-        fetch(`${import.meta.env.VITE_API_URL}/shopping-items`, { headers: { 'Authorization': `Bearer ${token}` } })
+        fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/attendance/history`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/attendance/today`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${import.meta.env.VITE_API_URL}/api/shopping-items`, { headers: { 'Authorization': `Bearer ${token}` } })
       ]);
 
       if (userResponse.ok) {
@@ -552,7 +552,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/attendance`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/attendance`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -598,6 +598,7 @@ function App() {
   }, [monthlyCategories]);
 
   const validateToken = async (token) => {
+    console.log("GEMINI_CLI_DEBUG: Validating token..."); // 디버깅 로그 추가
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/users/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -605,12 +606,14 @@ function App() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
+          console.log("GEMINI_CLI_DEBUG: Token validation successful."); // 성공 로그
           return data.data;
         }
       }
+      console.log("GEMINI_CLI_DEBUG: Token validation failed, response not ok or data.success is false."); // 실패 로그
       return null;
     } catch (error) {
-      console.error("Token validation failed:", error);
+      console.error("GEMINI_CLI_DEBUG: Token validation fetch failed:", error); // 예외 로그
       return null;
     }
   };
@@ -661,7 +664,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/shopping-items`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/shopping-items`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -700,7 +703,7 @@ function App() {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/shopping-items/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/shopping-items/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

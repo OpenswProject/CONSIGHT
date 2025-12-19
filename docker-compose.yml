@@ -36,8 +36,6 @@ services:
     container_name: consight-frontend
     ports:
       - "3000:80"
-    environment:
-      VITE_API_URL: http://backend:8080 # Assuming Vite and backend is accessible via 'backend' service name
     depends_on:
       - backend
 

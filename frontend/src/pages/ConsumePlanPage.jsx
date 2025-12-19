@@ -74,7 +74,7 @@ const ConsumePlanPage = (props) => {
       }
       try {
         const color = colorPalette[monthlyCategories.length % colorPalette.length];
-        const response = await fetch('/api/consumption/categories', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ const ConsumePlanPage = (props) => {
           const data = await response.json();
           if (data.success) {
             // Refetch all categories to ensure consistency
-            const fetchResponse = await fetch('/api/consumption/categories', {
+            const fetchResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             if (fetchResponse.ok) {
@@ -133,7 +133,7 @@ const ConsumePlanPage = (props) => {
       }
       try {
         const color = colorPalette[weeklyCategories.length % colorPalette.length];
-        const response = await fetch('/api/consumption/categories', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ const ConsumePlanPage = (props) => {
           const data = await response.json();
           if (data.success) {
             // Refetch all categories to ensure consistency
-            const fetchResponse = await fetch('/api/consumption/categories', {
+            const fetchResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories`, {
               headers: { 'Authorization': `Bearer ${token}` }
             });
             if (fetchResponse.ok) {
@@ -194,7 +194,7 @@ const ConsumePlanPage = (props) => {
         return;
     }
     try {
-        const response = await fetch('/api/consumption/categories/all', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/consumption/categories/all`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

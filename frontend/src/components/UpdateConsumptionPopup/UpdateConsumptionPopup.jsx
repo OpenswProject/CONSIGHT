@@ -24,45 +24,61 @@ const UpdateConsumptionPopup = ({ onClose, title, categories, setCategories }) =
       alert("로그인이 필요합니다.");
       return;
     }
+    console.log("Starting consumption update...");
 
     const updatedCategories = await Promise.all(
       categories.map(async category => {
         const newCurrent = categoryInputs[category.id] !== undefined ? categoryInputs[category.id] : category.currentAmount;
-        if (category.id && newCurrent !== category.currentAmount) { // Only update if ID exists and value changed
+        if (category.id && newCurrent !== category.currentAmount) {
+          const url = `${import.meta.env.VITE_API_URL}/api/consumption/categories/${category.id}`;
+          const body = {
+            id: category.id,
+            name: category.name,
+            type: category.type,
+            targetAmount: category.targetAmount,
+            currentAmount: newCurrent,
+            color: category.color
+          };
+          
+          console.log(`[DEBUG] Updating category ${category.id}`);
+          console.log(`[DEBUG] URL: ${url}`);
+          console.log(`[DEBUG] Body:`, JSON.stringify(body, null, 2));
+
           try {
-            const response = await fetch(`/api/consumption/categories/${category.id}`, {
+            const response = await fetch(url, {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
               },
-              body: JSON.stringify({
-                id: category.id,
-                name: category.name,
-                type: category.type,
-                targetAmount: category.targetAmount,
-                currentAmount: newCurrent,
-                color: category.color
-              })
+              body: JSON.stringify(body)
             });
+
+            console.log(`[DEBUG] Response for category ${category.id}:`, response.status, response.statusText);
+
             if (response.ok) {
               const data = await response.json();
+              console.log(`[DEBUG] Response data for category ${category.id}:`, data);
               if (data.success) {
-                return data.data; // Return the updated category from backend
+                return data.data;
               } else {
-                console.error(`Failed to update category ${category.name}:`, data.message);
-                return category; // Return original if update failed
+                console.error(`[ERROR] Failed to update category ${category.name}:`, data.message);
+                alert(`카테고리 '${category.name}' 업데이트 실패: ${data.message}`);
+                return category;
               }
             } else {
-              console.error(`Failed to update category ${category.name}:`, response.statusText);
-              return category; // Return original if update failed
+              const errorText = await response.text();
+              console.error(`[ERROR] Failed to update category ${category.name}. Status: ${response.status}. Response:`, errorText);
+              alert(`카테고리 '${category.name}' 업데이트 실패: 서버 오류 (상태: ${response.status})`);
+              return category;
             }
           } catch (error) {
-            console.error(`Error updating category ${category.name}:`, error);
-            return category; // Return original on error
+            console.error(`[ERROR] Network or other error updating category ${category.name}:`, error);
+            alert(`카테고리 '${category.name}' 업데이트 중 네트워크 오류가 발생했습니다.`);
+            return category;
           }
         }
-        return { ...category, currentAmount: newCurrent }; // Return with new current if not updated via API (e.g. no ID)
+        return { ...category, currentAmount: newCurrent };
       })
     );
     setCategories(updatedCategories);
